@@ -1,10 +1,9 @@
-import axios, { AxiosRequestConfig } from 'axios';
-import { compile } from 'path-to-regexp';
-import { createStore, ActionContext } from 'vuex';
-import { objToQueryString } from '@/helper';
-import { forEach } from 'lodash-es';
-import templates, { TemplatesProps } from './templates';
-import global, { GlobalStatus } from './global';
+import axios, { AxiosRequestConfig } from "axios";
+import { compile } from "path-to-regexp";
+import { createStore, ActionContext } from "vuex";
+import { forEach } from "lodash-es";
+import templates, { TemplatesProps } from "./templates";
+import global, { GlobalStatus } from "./global";
 
 export interface GlobalDataProps {
   templates: TemplatesProps;
@@ -16,9 +15,16 @@ export interface ActionPayload {
   searchParams?: { [key: string]: any };
 }
 // 第二步，确定参数
-export function actionWrapper(url: string, commitName: string, config: AxiosRequestConfig = { method: 'get' }) {
+export function actionWrapper(
+  url: string,
+  commitName: string,
+  config: AxiosRequestConfig = { method: "get" }
+) {
   // 第一步 不管三七二十一，先返回一个函数和原来的函数处理一摸一样
-  return async (context: ActionContext<any, any>, payload: ActionPayload = {}) => {
+  return async (
+    context: ActionContext<any, any>,
+    payload: ActionPayload = {}
+  ): Promise<void> => {
     // 第三部 写内部重复的逻辑
     const { urlParams, data, searchParams } = payload;
     const newConfig = { ...config, data, opName: commitName };

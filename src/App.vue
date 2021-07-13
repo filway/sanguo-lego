@@ -1,39 +1,47 @@
 <template>
   <div class="app-container">
-    <van-loading v-if="showLoading" style="text-align: center" size="24px">加载中...</van-loading>
+    <van-loading v-if="showLoading" style="text-align: center" size="24px"
+      >加载中...</van-loading
+    >
     <router-view />
   </div>
 </template>
 
 <script lang="ts">
-import { Notify } from 'vant';
-import {  computed, defineComponent, watch } from 'vue';
-import { useStore } from 'vuex';
-import { GlobalDataProps } from './store';
+import { Notify } from "vant";
+import { computed, defineComponent, watch } from "vue";
+import { useStore } from "vuex";
+import { GlobalDataProps } from "./store";
 
 export default defineComponent({
-  name: 'App',
+  name: "App",
   setup() {
     const store = useStore<GlobalDataProps>();
     const isLoading = computed(() => store.getters.isLoading);
     const showLoading = computed(() => isLoading.value);
     const error = computed(() => store.state.global.error);
-    watch(() => error.value.status, (errorValue) => {
-      if (errorValue) {
-        Notify({ type: 'danger', message: error.value.message || '未知错误'});
+    watch(
+      () => error.value.status,
+      (errorValue) => {
+        if (errorValue) {
+          Notify({
+            type: "danger",
+            message: error.value.message || "未知错误",
+          });
+        }
       }
-    });
+    );
     return {
-      showLoading
-    }
-  }
+      showLoading,
+    };
+  },
 });
 </script>
 
 <style>
-.app-container .global-spinner{
+.app-container .global-spinner {
   position: fixed;
   top: 10px;
-  right: 50%
+  right: 50%;
 }
 </style>

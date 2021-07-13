@@ -1,4 +1,4 @@
-import { ActionPayload } from './index';
+import { ActionPayload } from "./index";
 
 export interface RespData<T = []> {
   code: number;
@@ -13,5 +13,5 @@ export interface ListData<T> {
 export interface UploadData {
   urls: string[];
 }
-export type RespListData<T> = RespData<T>
-export type RespUploadData = RespData<UploadData>
+export type RespListData<T> = RespData<T>;
+export type RespUploadData = RespData<UploadData>;

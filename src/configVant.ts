@@ -1,9 +1,19 @@
 // import all used components in whole projects
 
 import {
-  Button, Row, Col, Icon, Empty, Loading, Notify
-} from 'vant';
-import { App } from 'vue';
+  Button,
+  Row,
+  Col,
+  Icon,
+  Empty,
+  Loading,
+  Notify,
+  Tab,
+  Tabs,
+  NavBar,
+  Image,
+} from "vant";
+import { App } from "vue";
 
 const components = [
   Button,
@@ -12,7 +22,11 @@ const components = [
   Icon,
   Empty,
   Loading,
-  Notify
+  Notify,
+  Tab,
+  Tabs,
+  NavBar,
+  Image,
 ];
 const install = (app: App) => {
   components.forEach((component) => {

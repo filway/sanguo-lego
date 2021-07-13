@@ -1,8 +1,8 @@
-import { Module } from 'vuex';
-import { GlobalDataProps } from '.';
+import { Module } from "vuex";
+import { GlobalDataProps } from ".";
 
 export interface GlobalStatus {
-  opNames: {[key: string]: boolean};
+  opNames: { [key: string]: boolean };
   requestNumber: number;
   error: {
     status: boolean;
