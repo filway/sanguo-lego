@@ -23,7 +23,14 @@
     <van-row class="content">
       <van-col span="24">
         <div class="logo-box" v-for="(logo, key) in logoList" :key="key">
+          <van-loading
+            class="logoLoading"
+            v-show="createLogoLoading"
+            type="spinner"
+            color="#1989fa"
+          />
           <svg
+            ref="svgRef"
             baseProfile="full"
             version="1.1"
             :class="'svg' + key"
@@ -33,32 +40,76 @@
         </div>
       </van-col>
     </van-row>
-    <van-tabs class="tabsWrapper" v-model:active="active">
+    <van-tabs background="#eee" class="tabsWrapper" v-model:active="active">
       <van-tab>
         <template #title> <van-icon name="photo" /></template>
-        <van-row>
-          <van-col span="16">
+        <van-row class="tab1Box">
+          <van-col class="imageBox" span="9">
             <van-image
-              width="3rem"
-              height="3rem"
+              width="2rem"
+              height="2rem"
               fit="contain"
+              :class="{ activeImage: imageActive === 1 }"
+              @click="selectPostionImage(1)"
               src="http://sj.songshuqf.com/dist/img/1.c4ac3a80.svg"
             />
             <van-image
-              width="3rem"
-              height="3rem"
+              width="2rem"
+              height="2rem"
               fit="contain"
+              :class="{ activeImage: imageActive === 2 }"
+              @click="selectPostionImage(2)"
               src="http://sj.songshuqf.com/dist/img/1.c4ac3a80.svg"
             />
             <van-image
-              width="3rem"
-              height="3rem"
+              width="2rem"
+              height="2rem"
               fit="contain"
+              :class="{ activeImage: imageActive === 3 }"
+              @click="selectPostionImage(3)"
               src="http://sj.songshuqf.com/dist/img/1.c4ac3a80.svg"
             />
           </van-col>
-          <van-col span="4"></van-col>
-          <van-col span="4"><van-icon name="setting" /></van-col>
+          <van-col span="3"><van-icon name="setting" /></van-col>
+          <van-col span="3">
+            <van-popover v-model:show="showImgPopover" placement="top">
+              <div class="sliderBox">
+                <div>
+                  <h5 style="margin-top: 0">左右: {{ lrImgValue }}</h5>
+                  <van-slider
+                    v-model="lrImgValue"
+                    :min="-200"
+                    :max="400"
+                    :button-size="18"
+                    @update:model-value="onSliderChange($event, 1)"
+                  />
+                </div>
+                <div>
+                  <h5>上下: {{ udImgValue }}</h5>
+                  <van-slider
+                    v-model="udImgValue"
+                    :min="-200"
+                    :max="200"
+                    :button-size="18"
+                    @update:model-value="onSliderChange($event, 2)"
+                  />
+                </div>
+                <div>
+                  <h5>大小: {{ lsImgValue }}</h5>
+                  <van-slider
+                    v-model="lsImgValue"
+                    :min="0"
+                    :max="200"
+                    :button-size="18"
+                    @update:model-value="onSliderChange($event, 3)"
+                  />
+                </div>
+              </div>
+              <template #reference>
+                <van-icon name="setting" />
+              </template>
+            </van-popover>
+          </van-col>
         </van-row>
       </van-tab>
       <van-tab>
@@ -79,31 +130,90 @@ import store from "@/store";
 import { TemplateProps } from "@/store/templates";
 import { computed, defineComponent, onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
+import { SVG } from "@svgdotjs/svg.js";
 
 export default defineComponent({
   name: "Editor",
   setup() {
     const route = useRoute();
+    const svgRef = ref<SVGElement | null>(null);
     let logoList = ref<TemplateProps[]>([]);
     const currentId = route.params.id as string;
-    console.log(currentId);
     const template = computed<TemplateProps>(() =>
       store.getters.getTemplateById(parseInt(currentId, 0))
     );
+    const createLogoLoading = ref(false);
     const active = ref(0);
+    const imageActive = ref(0);
+    const showImgPopover = ref(false);
+    const selectPostionImage = (index: number) => {
+      imageActive.value = index;
+      const svgChild = svgRef.value?.childNodes[0];
+      svgRef.value?.removeChild(svgChild as Node);
+      createLogoLoading.value = true;
+
+      setTimeout(() => {
+        useCreateLogo(logoList.value, true, {
+          randomIndex: index - 1,
+          randomTitleFamily: template.value.randomTitleFamily || "",
+          randomSubTitleFamily: template.value.randomSubTitleFamily || "",
+        });
+        createLogoLoading.value = false;
+      }, 500);
+    };
     logoList.value.push(template.value);
     onMounted(async () => {
       await useCreateLogo(logoList.value, false);
     });
+    // image slider滑动
+    const lrImgValue = ref(0);
+    const udImgValue = ref(0);
+    const lsImgValue = ref(0);
+    const onSliderChange = (value: number, type: number) => {
+      const draw = SVG(".logoImage0");
+      switch (type) {
+        case 1:
+          draw.move(value, udImgValue.value);
+          break;
+        case 2:
+          draw.move(lrImgValue.value, value);
+          break;
+        case 3:
+          draw.size(value, value);
+          break;
+      }
+
+      console.log(value, type);
+    };
     return {
       logoList,
       active,
+      selectPostionImage,
+      imageActive,
+      createLogoLoading,
+      svgRef,
+      showImgPopover,
+      lrImgValue,
+      udImgValue,
+      lsImgValue,
+      onSliderChange,
     };
   },
 });
 </script>
 
 <style scoped lang="scss">
+.activeImage {
+  border: 1px solid red !important;
+}
+.sliderBox {
+  padding: 0.5rem 1rem;
+  h5 {
+    margin-bottom: 0.2rem;
+  }
+  height: 8rem;
+  width: 8rem;
+}
 .editor-container {
   background: #eee;
   min-height: 100vh;
@@ -133,6 +243,10 @@ export default defineComponent({
     margin-left: 1rem;
     background: url("~@/assets/img/background-transparent.png");
     border-radius: 5px;
+    .logoLoading {
+      left: calc(50vw - 1rem - 20px);
+      top: 50%;
+    }
     .logo-box {
       height: 80%;
       svg {
@@ -149,6 +263,24 @@ export default defineComponent({
     margin-left: 2rem;
     position: absolute;
     bottom: 0.8rem;
+    .tab1Box {
+      display: flex;
+      align-items: center;
+      padding-bottom: 0.8rem;
+      justify-content: space-around;
+      .imageBox {
+        display: flex;
+        align-items: center;
+        .van-image {
+          margin-left: 0.1rem;
+          border: 1px solid #ccc;
+          box-sizing: border-box;
+          background: #fff;
+          display: flex;
+          align-items: center;
+        }
+      }
+    }
   }
 }
 </style>

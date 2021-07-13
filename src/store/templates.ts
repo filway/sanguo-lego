@@ -16,7 +16,7 @@ export interface TemplateProps {
   name: string;
   name_en: string;
   rgb: string;
-  randomIndex?: 0 | 1 | 2;
+  randomIndex?: number;
   randomTitleFamily?: string;
   randomSubTitleFamily?: string;
 }

@@ -14,9 +14,20 @@ import {
   randomIy,
 } from "../constants/random.constant";
 
+// 直接给定属性生成
+type givenSvgProps = Pick<
+  Required<TemplateProps>,
+  "randomIndex" | "randomTitleFamily" | "randomSubTitleFamily"
+>;
+
 const useCreateLogo = async (
   data: TemplateProps[],
-  isRandom = true
+  isRandom = true,
+  givenProps: givenSvgProps = {
+    randomIndex: 0,
+    randomTitleFamily: "",
+    randomSubTitleFamily: "",
+  }
 ): Promise<void> => {
   data.forEach((item, key) => {
     const rgb = `#${item.rgb}`;
@@ -29,6 +40,11 @@ const useCreateLogo = async (
       }
       titleFamily = randomFamily[Math.floor(Math.random() * Math.floor(7))];
       subTitleFamily = randomFamily[Math.floor(Math.random() * Math.floor(7))];
+      if (givenProps.randomSubTitleFamily.length > 0) {
+        randonI = givenProps.randomIndex;
+        titleFamily = givenProps.randomTitleFamily;
+        subTitleFamily = givenProps.randomSubTitleFamily;
+      }
       store.commit("setRandomProps", {
         materialId: item.materialId,
         randomIndex: randonI,
@@ -37,7 +53,6 @@ const useCreateLogo = async (
       });
     } else {
       //直接取对应属性
-      console.log(item);
       randonI = item.randomIndex || 0;
       titleFamily = item.randomTitleFamily || "";
       subTitleFamily = item.randomSubTitleFamily || "";
@@ -55,6 +70,7 @@ const useCreateLogo = async (
           "," +
           randomI2[randonI] +
           ") ",
+        class: `logoImage${key}`,
       });
     const group = draw.group().fill("dodgerblue").attr({
       transform: "matrix(1,0,0,1,160,40) ",

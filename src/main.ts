@@ -8,6 +8,8 @@ import "vant/es/col/style";
 import "vant/es/tab/style";
 import "vant/es/tabs/style";
 import "vant/es/nav-bar/style";
+import "vant/es/popover/style";
+import "vant/es/slider/style";
 import Vant from "./configVant";
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 import { RespData } from "./store/respTypes";

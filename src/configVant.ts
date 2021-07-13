@@ -12,6 +12,8 @@ import {
   Tabs,
   NavBar,
   Image,
+  Popover,
+  Slider,
 } from "vant";
 import { App } from "vue";
 
@@ -27,6 +29,8 @@ const components = [
   Tabs,
   NavBar,
   Image,
+  Popover,
+  Slider,
 ];
 const install = (app: App) => {
   components.forEach((component) => {
