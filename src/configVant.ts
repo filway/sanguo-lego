@@ -14,6 +14,8 @@ import {
   Image,
   Popover,
   Slider,
+  Dialog,
+  Field,
 } from "vant";
 import { App } from "vue";
 
@@ -31,6 +33,8 @@ const components = [
   Image,
   Popover,
   Slider,
+  Dialog.Component,
+  Field,
 ];
 const install = (app: App) => {
   components.forEach((component) => {

@@ -7,6 +7,7 @@ type editRandom = Pick<
   Required<TemplateProps>,
   "materialId" | "randomIndex" | "randomTitleFamily" | "randomSubTitleFamily"
 >;
+type templateProp = Partial<TemplateProps>;
 
 export interface TemplateProps {
   materialId: number;
@@ -48,6 +49,19 @@ const templates: Module<TemplatesProps, GlobalDataProps> = {
       currentTemplate.value.randomIndex = randomIndex;
       currentTemplate.value.randomTitleFamily = randomTitleFamily;
       currentTemplate.value.randomSubTitleFamily = randomSubTitleFamily;
+    },
+    setCurrentTemplateProp(state, prop: templateProp) {
+      if (prop.materialId) {
+        const currentTemplate = computed<TemplateProps>(() =>
+          store.getters.getTemplateById(prop.materialId)
+        );
+        if (prop.name) {
+          currentTemplate.value.name = prop.name;
+        }
+        if (prop.name_en) {
+          currentTemplate.value.name_en = prop.name_en;
+        }
+      }
     },
   },
   actions: {

@@ -47,7 +47,7 @@ const useCreateLogo = async (
       }
       store.commit("setRandomProps", {
         materialId: item.materialId,
-        randomIndex: randonI,
+        randomIndex: randonI + 3,
         randomTitleFamily: titleFamily,
         randomSubTitleFamily: subTitleFamily,
       });
@@ -70,7 +70,7 @@ const useCreateLogo = async (
           "," +
           randomI2[randonI] +
           ") ",
-        class: `logoImage${key}`,
+        class: `svg-logo${key}`,
       });
     const group = draw.group().fill("dodgerblue").attr({
       transform: "matrix(1,0,0,1,160,40) ",
@@ -89,6 +89,7 @@ const useCreateLogo = async (
         dx: randomIx[randonI],
         dy: randomIy[randonI],
         "text-anchor": "middle",
+        class: `svg-name${key}`,
       });
     const subTitle = draw
       .plain(item.name_en)
@@ -102,6 +103,7 @@ const useCreateLogo = async (
         dx: randomIx[randonI],
         dy: randomIy[randonI] + 40,
         "text-anchor": "middle",
+        class: `svg-slogan${key}`,
       });
     groupImage.add(img);
     group.add(title);
