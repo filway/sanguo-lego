@@ -14,6 +14,8 @@ import "vant/es/notify/style";
 import "vant/es/dialog/style";
 import "vant/es/field/style";
 import "vant/es/icon/style";
+import "vant/es/dropdown-item/style";
+import "vant/es/dropdown-menu/style";
 import Vant from "./configVant";
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 import { RespData } from "./store/respTypes";

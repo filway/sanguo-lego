@@ -20,7 +20,7 @@
         <van-icon name="down" size="1.2rem" />
       </van-col>
     </van-row>
-    <van-row class="content">
+    <van-row class="content" :style="{ backgroundColor: currentBackColor }">
       <van-col span="24">
         <div class="logo-box" v-for="(logo, key) in logoList" :key="key">
           <van-loading
@@ -135,7 +135,15 @@
               clearable
               label=""
               placeholder="请输入姓名"
-              v-model="editName"
+              v-model="template.name"
+              v-show="tab2ContentTitleActive === 0"
+            />
+            <van-field
+              clearable
+              label=""
+              placeholder="请输入姓名"
+              v-model="template.name_en"
+              v-show="tab2ContentTitleActive === 1"
             />
           </van-dialog>
           <span
@@ -153,11 +161,36 @@
             tab2ContentTitleActive ? template.name_en : template.name
           }}</span>
           <span>
-            <span>宋体</span>
-            <span><van-icon name="arrow-up" /></span>
+            <van-popover v-model:show="showFamilyPopover" placement="top-end">
+              <div
+                v-for="(item, index) in familyOptions"
+                :key="index"
+                role="menuitem"
+                class="van-popover__action"
+                style="height: 1.6rem; width: 10rem"
+                @click="selectFontFamily(item.text, item.value)"
+              >
+                <div
+                  :style="{ fontFamily: item.value }"
+                  class="van-popover__action-text van-hairline--bottom"
+                >
+                  {{ item.text }}
+                </div>
+              </div>
+              <template #reference>
+                <span v-show="tab2ContentTitleActive === 0">{{
+                  currentNameFamily
+                }}</span>
+                <span v-show="tab2ContentTitleActive === 1">{{
+                  currentSloganFamily
+                }}</span>
+
+                <span><van-icon name="arrow-up" /></span>
+              </template>
+            </van-popover>
           </span>
           <span>
-            <van-popover v-model:show="showImgPopover" placement="left">
+            <van-popover v-model:show="showImgPopover" placement="top-end">
               <div class="sliderBox2" v-show="tab2ContentTitleActive === 0">
                 <div>
                   <h5 style="margin-top: 0">左右: {{ lrLogoValue }}</h5>
@@ -209,9 +242,52 @@
           </span>
         </div>
       </van-tab>
-      <van-tab>
+      <van-tab class="tab2" style="margin-bottom: 1rem">
         <template #title> <van-icon name="setting" size="1.5rem" /></template>
-        内容 3
+        <div class="titleBox">
+          <span
+            :class="[
+              tab3ContentTitleActive == 0
+                ? 'tabContentTitle activeTitle'
+                : 'tabContentTitle noActiveTitle',
+            ]"
+            @click="toggleTab3Title(0)"
+            >名称</span
+          >
+          <span
+            :class="[
+              tab3ContentTitleActive == 1
+                ? 'tabContentTitle activeTitle'
+                : 'tabContentTitle noActiveTitle',
+            ]"
+            @click="toggleTab3Title(1)"
+            >口号</span
+          >
+          <span
+            :class="[
+              tab3ContentTitleActive == 2
+                ? 'tabContentTitle activeTitle'
+                : 'tabContentTitle noActiveTitle',
+            ]"
+            @click="toggleTab3Title(2)"
+            >背景</span
+          >
+        </div>
+        <color-picker
+          v-show="tab3ContentTitleActive === 0"
+          :value="currentNameColor"
+          @change="changeNameColor"
+        />
+        <color-picker
+          v-show="tab3ContentTitleActive === 1"
+          :value="currentSloganColor"
+          @change="changeSloganColor"
+        />
+        <color-picker
+          v-show="tab3ContentTitleActive === 2"
+          :value="currentBackColor"
+          @change="changeBackColor"
+        />
       </van-tab>
     </van-tabs>
   </div>
@@ -224,9 +300,14 @@ import { TemplateProps } from "@/store/templates";
 import { computed, defineComponent, onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 import { SVG } from "@svgdotjs/svg.js";
+import { fontFamilyArr } from "../constants/random.constant";
+import ColorPicker from "@/components/ColorPicker.vue";
 
 export default defineComponent({
   name: "Editor",
+  components: {
+    ColorPicker,
+  },
   setup() {
     const route = useRoute();
     const svgRef = ref<SVGElement | null>(null);
@@ -240,6 +321,7 @@ export default defineComponent({
     const imageActive = ref(0);
     const tab2ContentTitleActive = ref(0);
     const showImgPopover = ref(false);
+    const showFamilyPopover = ref(false);
     const isShowNameInput = ref(false);
     const initValues = () => {
       lrImgValue.value = 0;
@@ -290,7 +372,7 @@ export default defineComponent({
           draw.size(value, value);
           break;
         case 4:
-          drawName.dmove(1, 0);
+          drawName.move(value, udLogoValue.value);
           break;
         case 5:
           drawName.move(lrLogoValue.value, value);
@@ -306,11 +388,6 @@ export default defineComponent({
     // tab2的逻辑
     const toggleTab2Title = (value: number) => {
       tab2ContentTitleActive.value = value;
-      if (value === 0) {
-        editName.value = template.value.name;
-      } else {
-        editName.value = template.value.name_en;
-      }
     };
     const resetSvg = () => {
       initValues();
@@ -319,27 +396,71 @@ export default defineComponent({
       onSliderChange(220, 3);
     };
     // tab2弹窗输入的name
-    const editName = ref(template.value.name);
     const onCloseNameDialog = (action: string) =>
       new Promise((resolve) => {
+        if (action === "cancel") {
+          resolve(true);
+        }
         setTimeout(() => {
-          if (action === "confirm") {
-            //判断是名称还是口号的修改
-            if (tab2ContentTitleActive.value === 0) {
-              store.commit("setCurrentTemplateProp", {
-                materialId: template.value.materialId,
-                name: editName,
-              });
-            } else {
-              store.commit("setCurrentTemplateProp", {
-                materialId: template.value.materialId,
-                name_en: editName,
-              });
-            }
-            resolve(true);
+          //判断是名称还是口号的修改
+          let drawText;
+          if (tab2ContentTitleActive.value === 0) {
+            drawText = SVG(".svg-name0");
+            drawText.node.textContent = template.value.name;
+          } else {
+            drawText = SVG(".svg-slogan0");
+            drawText.node.textContent = template.value.name_en;
           }
+          resolve(true);
         }, 1000);
       });
+    const familyOptions = ref(fontFamilyArr);
+    const selectedFamily = ref("");
+    const selectFontFamily = (text: string, family: string) => {
+      showFamilyPopover.value = false;
+      console.log(family);
+      if (tab2ContentTitleActive.value === 0) {
+        SVG(".svg-name0").attr("font-family", family);
+        currentNameFamily.value = text;
+      } else {
+        SVG(".svg-slogan0").attr("font-family", family);
+        currentSloganFamily.value = text;
+      }
+    };
+    const currentNameFamily = ref("无");
+    const currentSloganFamily = ref("无");
+
+    //tab3 颜色
+    const toggleTab3Title = (value: number) => {
+      tab3ContentTitleActive.value = value;
+    };
+    const tab3ContentTitleActive = ref(0);
+    const currentNameColor = ref("");
+    const changeNameColor = (color: string) => {
+      if (color === "") {
+        color = "#000000";
+      }
+      currentNameColor.value = color;
+      SVG(".svg-name0").attr("fill", color);
+    };
+
+    const currentSloganColor = ref("");
+    const changeSloganColor = (color: string) => {
+      if (color === "") {
+        color = "#000000";
+      }
+      currentSloganColor.value = color;
+      SVG(".svg-slogan0").attr("fill", color);
+    };
+
+    //背景色
+    const currentBackColor = ref("#ffffff");
+    const changeBackColor = (color: string) => {
+      if (color === "") {
+        color = "#ffffff";
+      }
+      currentBackColor.value = color;
+    };
 
     return {
       logoList,
@@ -349,6 +470,7 @@ export default defineComponent({
       createLogoLoading,
       svgRef,
       showImgPopover,
+      showFamilyPopover,
       lrImgValue,
       udImgValue,
       lsImgValue,
@@ -362,14 +484,29 @@ export default defineComponent({
       udLogoValue,
       udSloganValue,
       isShowNameInput,
-      editName,
       onCloseNameDialog,
+      familyOptions,
+      selectedFamily,
+      selectFontFamily,
+      currentNameFamily,
+      currentSloganFamily,
+      currentNameColor,
+      changeNameColor,
+      currentSloganColor,
+      changeSloganColor,
+      currentBackColor,
+      changeBackColor,
+      tab3ContentTitleActive,
+      toggleTab3Title,
     };
   },
 });
 </script>
 
 <style scoped lang="scss">
+.lego-color-picker {
+  height: 4rem;
+}
 .activeImage {
   border: 1px solid red !important;
 }
@@ -423,7 +560,7 @@ export default defineComponent({
     height: 14rem;
     width: calc(100vw - 2rem);
     margin-left: 1rem;
-    background: url("~@/assets/img/background-transparent.png");
+    // background: url("~@/assets/img/background-transparent.png");
     border-radius: 5px;
     .logoLoading {
       left: calc(50vw - 1rem - 20px);
@@ -482,11 +619,19 @@ export default defineComponent({
           flex: 1;
           font-size: 14px;
           margin-right: 1rem;
-          padding: 0.4rem 0.8rem;
           display: flex;
           justify-content: space-around;
-          > span:first-child {
-            width: 80%;
+          /deep/ .van-popover__wrapper {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            padding: 0.4rem 0.8rem;
+            span {
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+              max-width: 5rem;
+            }
           }
         }
       }

@@ -16,6 +16,8 @@ import {
   Slider,
   Dialog,
   Field,
+  DropdownItem,
+  DropdownMenu,
 } from "vant";
 import { App } from "vue";
 
@@ -35,6 +37,8 @@ const components = [
   Slider,
   Dialog.Component,
   Field,
+  DropdownMenu,
+  DropdownItem,
 ];
 const install = (app: App) => {
   components.forEach((component) => {
