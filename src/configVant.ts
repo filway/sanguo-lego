@@ -18,6 +18,8 @@ import {
   Field,
   DropdownItem,
   DropdownMenu,
+  Swipe,
+  SwipeItem,
 } from "vant";
 import { App } from "vue";
 
@@ -39,6 +41,8 @@ const components = [
   Field,
   DropdownMenu,
   DropdownItem,
+  Swipe,
+  SwipeItem,
 ];
 const install = (app: App) => {
   components.forEach((component) => {

@@ -6,12 +6,21 @@
       </template>
     </van-nav-bar>
 
+    <preview-dialog
+      @close="closePreviewDialog"
+      :show="showPreview"
+      :parentView="'editor'"
+    ></preview-dialog>
     <van-row>
       <van-col span="24" class="editorTips"> 编辑好后点击下载即可 </van-col>
     </van-row>
     <van-row class="iconsWrapper">
       <van-col span="6" class="icon-left">
-        <van-icon name="browsing-history-o" size="1.2rem" />
+        <van-icon
+          @click="showPreview = true"
+          name="browsing-history-o"
+          size="1.2rem"
+        />
       </van-col>
       <van-col span="12" class="icon-center">
         <van-icon name="replay" @click="resetSvg" size="1.2rem" />
@@ -322,11 +331,13 @@ import { useRoute } from "vue-router";
 import { SVG } from "@svgdotjs/svg.js";
 import { fontFamilyArr } from "../constants/random.constant";
 import ColorPicker from "@/components/ColorPicker.vue";
+import PreviewDialog from "@/components/PreviewDialog.vue";
 
 export default defineComponent({
   name: "Editor",
   components: {
     ColorPicker,
+    PreviewDialog,
   },
   setup() {
     const route = useRoute();
@@ -482,6 +493,12 @@ export default defineComponent({
       currentBackColor.value = color;
     };
 
+    // 预览
+    const showPreview = ref(false);
+    const closePreviewDialog = () => {
+      showPreview.value = false;
+    };
+
     return {
       logoList,
       active,
@@ -518,6 +535,8 @@ export default defineComponent({
       changeBackColor,
       tab3ContentTitleActive,
       toggleTab3Title,
+      closePreviewDialog,
+      showPreview,
     };
   },
 });
@@ -671,9 +690,8 @@ export default defineComponent({
           background: #fff;
           display: flex;
           align-items: center;
-          img {
+          /deep/ img {
             width: 100%;
-            height: 100%;
           }
         }
       }
