@@ -2,6 +2,7 @@ import { createApp } from "vue";
 import App from "./App.vue";
 import store from "./store";
 import router from "./routes/index";
+import "./assets/font_2680766_ehesv5kit1a//iconfont.css";
 import "vant/es/button/style";
 import "vant/es/row/style";
 import "vant/es/col/style";

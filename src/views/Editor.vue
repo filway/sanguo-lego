@@ -42,7 +42,13 @@
     </van-row>
     <van-tabs background="#eee" class="tabsWrapper" v-model:active="active">
       <van-tab>
-        <template #title> <van-icon name="photo" size="1.5rem" /></template>
+        <template #title>
+          <van-icon
+            class="iconfont"
+            class-prefix="icon"
+            name="tubiao"
+            size="1.2rem"
+        /></template>
         <van-row class="tab1Box">
           <van-col class="imageBox" span="9">
             <van-image
@@ -70,7 +76,9 @@
               src="http://sj.songshuqf.com/dist/img/1.c4ac3a80.svg"
             />
           </van-col>
-          <van-col span="3"><van-icon name="setting" /></van-col>
+          <van-col span="3"
+            ><van-icon class="iconfont" class-prefix="icon" name="sucai"
+          /></van-col>
           <van-col span="3">
             <van-popover v-model:show="showImgPopover" placement="top">
               <div class="sliderBox">
@@ -113,7 +121,13 @@
         </van-row>
       </van-tab>
       <van-tab class="tab2">
-        <template #title> <van-icon name="chat" size="1.5rem" /></template>
+        <template #title>
+          <van-icon
+            class="iconfont"
+            class-prefix="icon"
+            name="hengxiangwenben"
+            size="1.2rem"
+        /></template>
         <div class="titleBox">
           <span
             :class="[
@@ -243,7 +257,13 @@
         </div>
       </van-tab>
       <van-tab class="tab2" style="margin-bottom: 1rem">
-        <template #title> <van-icon name="setting" size="1.5rem" /></template>
+        <template #title>
+          <van-icon
+            class="iconfont"
+            class-prefix="icon"
+            name="yanse"
+            size="1.2rem"
+        /></template>
         <div class="titleBox">
           <span
             :class="[
@@ -651,6 +671,10 @@ export default defineComponent({
           background: #fff;
           display: flex;
           align-items: center;
+          img {
+            width: 100%;
+            height: 100%;
+          }
         }
       }
     }
