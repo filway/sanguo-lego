@@ -11,7 +11,11 @@ export interface ListData<T> {
   count?: number;
 }
 export interface UploadData {
-  urls: string[];
+  url: string;
+}
+export interface getSvgData {
+  path: string;
+  svg: string;
 }
 export type RespListData<T> = RespData<T>;
 export type RespUploadData = RespData<UploadData>;

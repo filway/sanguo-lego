@@ -3,6 +3,7 @@
  * @author: filway
  */
 
+import { svgToBase64 } from "@/helper";
 import store from "@/store";
 import { TemplateProps } from "@/store/templates";
 import { SVG } from "@svgdotjs/svg.js";
@@ -32,6 +33,8 @@ const useCreateLogo = async (
   data.forEach((item, key) => {
     const rgb = `#${item.rgb}`;
     let randonI, titleFamily, subTitleFamily;
+    let trueMaterialPath = item.materialPath;
+    trueMaterialPath = svgToBase64(item.svg);
     if (isRandom) {
       //需要随机生成
       randonI = Math.floor(Math.random() * Math.floor(3)); //2//
@@ -75,7 +78,7 @@ const useCreateLogo = async (
     const group = draw.group().fill("dodgerblue").attr({
       transform: "matrix(1,0,0,1,160,40) ",
     });
-    const img = draw.image(item.materialPath);
+    const img = draw.image(trueMaterialPath);
     //debugger
     const title = draw
       .plain(item.name)

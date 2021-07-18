@@ -42,6 +42,7 @@
           icon="download iconfont"
           type="primary"
           plain
+          @click="clickDownload"
         >
           直接下载
         </van-button>
@@ -68,13 +69,16 @@ export default defineComponent({
       default: 0,
     },
   },
-  emits: ["close"],
+  emits: ["close", "clickDownload"],
   setup(props, context) {
     const dialogVisible = ref(props.show);
     const fromPage = ref(props.parentView);
     const materialId = ref(props.logoId);
     const close = () => {
       context.emit("close");
+    };
+    const clickDownload = () => {
+      context.emit("clickDownload");
     };
     watch(
       () => props.show,
@@ -88,17 +92,19 @@ export default defineComponent({
         materialId.value = newValue;
       }
     );
+
     return {
       dialogVisible,
       fromPage,
       materialId,
       close,
+      clickDownload,
     };
   },
 });
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .closeBox {
   height: 2.5rem;
   display: flex;

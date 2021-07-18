@@ -19,6 +19,7 @@ import "vant/es/dropdown-item/style";
 import "vant/es/dropdown-menu/style";
 import "vant/es/swipe/style";
 import "vant/es/swipe-item/style";
+import "vant/es/skeleton/style";
 import Vant from "./configVant";
 import "default-passive-events";
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
@@ -32,7 +33,7 @@ const app = createApp(App);
 
 const baseApiURL = "http://logo.yuangu06.cn";
 
-axios.defaults.baseURL = `${baseApiURL}/api/`;
+axios.defaults.baseURL = `${baseApiURL}/api/webapi`;
 axios.interceptors.request.use((config) => {
   const newConfig = config as ICustomAxiosConfig;
   store.commit("setError", { status: false, message: "" });

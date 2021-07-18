@@ -1,7 +1,7 @@
 import { computed } from "vue";
 import { Module } from "vuex";
 import store, { actionWrapper, GlobalDataProps } from "./index";
-import { RespListData } from "./respTypes";
+import { getSvgData, RespData, RespListData } from "./respTypes";
 
 type editRandom = Pick<
   Required<TemplateProps>,
@@ -17,6 +17,8 @@ export interface TemplateProps {
   name: string;
   name_en: string;
   rgb: string;
+  path: string;
+  svg: string;
   randomIndex?: number;
   randomTitleFamily?: string;
   randomSubTitleFamily?: string;
@@ -25,6 +27,7 @@ export interface TemplateProps {
 export interface TemplatesProps {
   data: TemplateProps[];
   totalTemplates?: number;
+  currentNameEn?: string;
 }
 
 const templates: Module<TemplatesProps, GlobalDataProps> = {
@@ -35,6 +38,9 @@ const templates: Module<TemplatesProps, GlobalDataProps> = {
   mutations: {
     fetchTemplates(state, rawData: RespListData<TemplateProps[]>) {
       state.data = rawData.data;
+    },
+    translate(state, rawData: RespData<string>) {
+      state.currentNameEn = rawData.data;
     },
     setRandomProps(state, random: editRandom) {
       const {
@@ -65,11 +71,13 @@ const templates: Module<TemplatesProps, GlobalDataProps> = {
     },
   },
   actions: {
-    fetchTemplates: actionWrapper("/webapi/match", "fetchTemplates"),
+    fetchTemplates: actionWrapper("/match", "fetchTemplates"),
+    translate: actionWrapper("/translate", "translate"),
   },
   getters: {
     getTemplateById: (state) => (id: number) =>
       state.data.find((t) => t.materialId === id),
+    getCurrentNameEn: (state) => state.currentNameEn,
   },
 };
 

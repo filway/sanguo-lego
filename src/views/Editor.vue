@@ -26,8 +26,13 @@
         <van-icon name="replay" @click="resetSvg" size="1.2rem" />
       </van-col>
       <van-col span="6" class="icon-right">
-        <van-icon name="down" size="1.2rem" />
+        <van-icon @click="download" name="down" size="1.2rem" />
       </van-col>
+      <download-dialog
+        @close="showDownload = false"
+        :show="showDownload"
+        :parentView="'editor'"
+      ></download-dialog>
     </van-row>
     <van-row class="content" :style="{ backgroundColor: currentBackColor }">
       <van-col span="24">
@@ -326,18 +331,20 @@
 import useCreateLogo from "@/hooks/useCreateLogo";
 import store from "@/store";
 import { TemplateProps } from "@/store/templates";
-import { computed, defineComponent, onMounted, ref } from "vue";
+import { computed, defineComponent, onMounted, provide, ref } from "vue";
 import { useRoute } from "vue-router";
 import { SVG } from "@svgdotjs/svg.js";
 import { fontFamilyArr } from "../constants/random.constant";
 import ColorPicker from "@/components/ColorPicker.vue";
 import PreviewDialog from "@/components/PreviewDialog.vue";
+import DownloadDialog from "@/components/DownloadDialog.vue";
 
 export default defineComponent({
   name: "Editor",
   components: {
     ColorPicker,
     PreviewDialog,
+    DownloadDialog,
   },
   setup() {
     const route = useRoute();
@@ -438,6 +445,17 @@ export default defineComponent({
           if (tab2ContentTitleActive.value === 0) {
             drawText = SVG(".svg-name0");
             drawText.node.textContent = template.value.name;
+            // 翻译
+            store
+              .dispatch("translate", {
+                searchParams: { keyword: template.value.name },
+              })
+              .then(() => {
+                drawText = SVG(".svg-slogan0");
+                const cNameEn = store.getters.getCurrentNameEn;
+                drawText.node.textContent = cNameEn;
+                template.value.name_en = cNameEn;
+              });
           } else {
             drawText = SVG(".svg-slogan0");
             drawText.node.textContent = template.value.name_en;
@@ -499,6 +517,13 @@ export default defineComponent({
       showPreview.value = false;
     };
 
+    //下载
+    const download = () => {
+      showDownload.value = true;
+    };
+    const showDownload = ref(false);
+    provide("key", 0);
+
     return {
       logoList,
       active,
@@ -537,6 +562,8 @@ export default defineComponent({
       toggleTab3Title,
       closePreviewDialog,
       showPreview,
+      download,
+      showDownload,
     };
   },
 });

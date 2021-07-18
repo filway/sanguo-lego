@@ -7,14 +7,22 @@
       @close="closePreviewDialog"
       :show="showPreview"
       :logoId="currentId"
+      @clickDownload="openDownloadDialog"
     ></preview-dialog>
+    <download-dialog
+      @close="showDownload = false"
+      :logoId="currentId"
+      :show="showDownload"
+    ></download-dialog>
     <div
-      @click="openPreviewDialog(logo.materialId)"
+      @click="openPreviewDialog(logo.materialId, key)"
       v-for="(logo, key) in logoList"
       :key="key"
       class="card-box"
     >
-      <div class="logo-box">
+      <van-skeleton class="skeletonBox" :row="2" :loading="showLoading">
+      </van-skeleton>
+      <div class="logo-box" v-show="!showLoading">
         <svg
           baseProfile="full"
           version="1.1"
@@ -23,7 +31,7 @@
           xmlns="http://www.w3.org/2000/svg"
         />
       </div>
-      <div class="text-box">点击选择此方案</div>
+      <div v-show="!showLoading" class="text-box">点击选择此方案</div>
     </div>
     <van-row v-if="!logoList.length">
       <van-col span="24" style="text-align: center">
@@ -34,30 +42,44 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onMounted, ref } from "vue";
+import { computed, defineComponent, onMounted, provide, ref } from "vue";
 import { GlobalDataProps } from "../store/index";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
 import useCreateLogo from "@/hooks/useCreateLogo";
 import PreviewDialog from "@/components/PreviewDialog.vue";
+import DownloadDialog from "@/components/DownloadDialog.vue";
 
 export default defineComponent({
   name: "Index",
   components: {
     PreviewDialog,
+    DownloadDialog,
   },
   setup() {
     const showPreview = ref(false);
+    const showDownload = ref(false);
+    const isLoading = computed(() => store.getters.isLoading);
+    const showLoading = computed(
+      () => isLoading.value && !route.meta.disableLoading
+    );
     const currentId = ref(0);
+    const currentIndex = ref(0);
     const route = useRoute();
     const store = useStore<GlobalDataProps>();
     const logoList = computed(() => store.state.templates.data);
-    const openPreviewDialog = (id: number) => {
+    provide("key", currentIndex);
+    const openPreviewDialog = (id: number, key: number) => {
       currentId.value = id;
+      currentIndex.value = key;
       showPreview.value = true;
     };
     const closePreviewDialog = () => {
       showPreview.value = false;
+    };
+    const openDownloadDialog = () => {
+      showPreview.value = false;
+      showDownload.value = true;
     };
     onMounted(async () => {
       let { sn } = route.query;
@@ -70,9 +92,13 @@ export default defineComponent({
     return {
       logoList,
       showPreview,
+      showDownload,
       openPreviewDialog,
       closePreviewDialog,
       currentId,
+      currentIndex,
+      openDownloadDialog,
+      showLoading,
     };
   },
 });
@@ -102,6 +128,15 @@ export default defineComponent({
       text-align: center;
       color: #ccc;
       font-size: 14px;
+    }
+    .skeletonBox {
+      padding-top: 1rem;
+      /deep/ .van-skeleton__row:first-child {
+        height: 10.2rem;
+      }
+      /deep/ .van-skeleton__row:nth-child(2) {
+        margin-left: 20%;
+      }
     }
   }
 }

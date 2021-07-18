@@ -20,6 +20,7 @@ import {
   DropdownMenu,
   Swipe,
   SwipeItem,
+  Skeleton,
 } from "vant";
 import { App } from "vue";
 
@@ -43,8 +44,9 @@ const components = [
   DropdownItem,
   Swipe,
   SwipeItem,
+  Skeleton,
 ];
-const install = (app: App) => {
+const install = (app: App): void => {
   components.forEach((component) => {
     app.component(component.name, component);
   });

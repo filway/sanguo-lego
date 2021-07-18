@@ -16,7 +16,7 @@ const router = createRouter({
       path: "/",
       name: "index",
       component: Index,
-      meta: { title: "logo智能设计" },
+      meta: { title: "logo智能设计", disableLoading: true },
     },
     {
       path: "/editor/:id",
