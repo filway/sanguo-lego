@@ -28,11 +28,6 @@
       <van-col span="6" class="icon-right">
         <van-icon @click="download" name="down" size="1.2rem" />
       </van-col>
-      <download-dialog
-        @close="showDownload = false"
-        :show="showDownload"
-        :parentView="'editor'"
-      ></download-dialog>
     </van-row>
     <van-row class="content" :style="{ backgroundColor: currentBackColor }">
       <van-col span="24">
@@ -44,6 +39,7 @@
             color="#1989fa"
           />
           <svg
+            :style="{ backgroundColor: currentBackColor }"
             ref="svgRef"
             baseProfile="full"
             version="1.1"
@@ -69,24 +65,24 @@
               width="2rem"
               height="2rem"
               fit="contain"
-              :class="{ activeImage: imageActive === 3 }"
-              @click="selectPostionImage(3)"
+              :class="{ activeImage: imageActive === 0 }"
+              @click="selectPostionImage(0)"
               src="http://sj.songshuqf.com/dist/img/4.64f529e3.svg"
             />
             <van-image
               width="2rem"
               height="2rem"
               fit="contain"
-              :class="{ activeImage: imageActive === 4 }"
-              @click="selectPostionImage(4)"
+              :class="{ activeImage: imageActive === 1 }"
+              @click="selectPostionImage(1)"
               src="http://sj.songshuqf.com/dist/img/4.64f529e3.svg"
             />
             <van-image
               width="2rem"
               height="2rem"
               fit="contain"
-              :class="{ activeImage: imageActive === 5 }"
-              @click="selectPostionImage(5)"
+              :class="{ activeImage: imageActive === 2 }"
+              @click="selectPostionImage(2)"
               src="http://sj.songshuqf.com/dist/img/1.c4ac3a80.svg"
             />
           </van-col>
@@ -337,14 +333,12 @@ import { SVG } from "@svgdotjs/svg.js";
 import { fontFamilyArr } from "../constants/random.constant";
 import ColorPicker from "@/components/ColorPicker.vue";
 import PreviewDialog from "@/components/PreviewDialog.vue";
-import DownloadDialog from "@/components/DownloadDialog.vue";
 
 export default defineComponent({
   name: "Editor",
   components: {
     ColorPicker,
     PreviewDialog,
-    DownloadDialog,
   },
   setup() {
     const route = useRoute();
@@ -384,6 +378,8 @@ export default defineComponent({
     };
     logoList.value.push(template.value);
     onMounted(async () => {
+      localStorage.setItem("currentNameColor", "");
+      localStorage.setItem("currentSloganColor", "");
       await useCreateLogo(logoList.value, false);
     });
     // image slider滑动
@@ -491,6 +487,7 @@ export default defineComponent({
       }
       currentNameColor.value = color;
       SVG(".svg-name0").attr("fill", color);
+      localStorage.setItem("currentNameColor", color);
     };
 
     const currentSloganColor = ref("");
@@ -500,6 +497,7 @@ export default defineComponent({
       }
       currentSloganColor.value = color;
       SVG(".svg-slogan0").attr("fill", color);
+      localStorage.setItem("currentSloganColor", color);
     };
 
     //背景色
@@ -519,9 +517,9 @@ export default defineComponent({
 
     //下载
     const download = () => {
-      showDownload.value = true;
+      console.log("editor 跳转下载");
     };
-    const showDownload = ref(false);
+
     provide("key", 0);
 
     return {
@@ -563,7 +561,6 @@ export default defineComponent({
       closePreviewDialog,
       showPreview,
       download,
-      showDownload,
     };
   },
 });

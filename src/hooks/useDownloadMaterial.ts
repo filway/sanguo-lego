@@ -2,9 +2,10 @@
  * @description: 下载素材，支持svg,png,jpg
  * @author: filway
  */
-import { enableImageDownloadType } from "@/defaultProps";
 import { materialDownLoad, svgToBase64 } from "@/helper";
+import { downloadUrlData } from "@/store/respTypes";
 import { SVG } from "@svgdotjs/svg.js";
+import axios, { AxiosResponse } from "axios";
 
 export const downloadSVG = (index: number): void => {
   const svg = SVG(`.svg${index}`);
@@ -15,11 +16,8 @@ export const downloadSVG = (index: number): void => {
 
   materialDownLoad(url, "svg");
 };
-export const downloadImage = (
-  index: number,
-  type: enableImageDownloadType
-): void => {
-  console.log(index, type);
+export const downloadImage = (index: number) => {
+  console.log(index);
   const img = new Image();
   img.src = svgToBase64(SVG(`.svg${index}`).node.innerHTML);
   img.crossOrigin = "anonymous";
@@ -33,6 +31,14 @@ export const downloadImage = (
     const ctx = canvas.getContext("2d");
     ctx?.drawImage(img, 0, 0);
     fstrImage = canvas.toDataURL();
-    materialDownLoad(fstrImage, type);
+    axios
+      .post("/downsvg", { base64: fstrImage })
+      .then((resp: AxiosResponse<downloadUrlData>) => {
+        return resp.data;
+      })
+      .catch((e: any) => {
+        console.error(e);
+      });
+    //materialDownLoad(fstrImage, type);
   };
 };

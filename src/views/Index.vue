@@ -7,13 +7,9 @@
       @close="closePreviewDialog"
       :show="showPreview"
       :logoId="currentId"
+      :previewData="previewData"
       @clickDownload="openDownloadDialog"
     ></preview-dialog>
-    <download-dialog
-      @close="showDownload = false"
-      :logoId="currentId"
-      :show="showDownload"
-    ></download-dialog>
     <div
       @click="openPreviewDialog(logo.materialId, key)"
       v-for="(logo, key) in logoList"
@@ -27,7 +23,7 @@
           baseProfile="full"
           version="1.1"
           :class="'svg' + key"
-          viewBox="0 0 500 400"
+          viewBox="0 0 686 358.38"
           xmlns="http://www.w3.org/2000/svg"
         />
       </div>
@@ -48,17 +44,16 @@ import { useRoute } from "vue-router";
 import { useStore } from "vuex";
 import useCreateLogo from "@/hooks/useCreateLogo";
 import PreviewDialog from "@/components/PreviewDialog.vue";
-import DownloadDialog from "@/components/DownloadDialog.vue";
+import { draw, svgToBase64 } from "@/helper";
+import { SVG } from "@svgdotjs/svg.js";
 
 export default defineComponent({
   name: "Index",
   components: {
     PreviewDialog,
-    DownloadDialog,
   },
   setup() {
     const showPreview = ref(false);
-    const showDownload = ref(false);
     const isLoading = computed(() => store.getters.isLoading);
     const showLoading = computed(
       () => isLoading.value && !route.meta.disableLoading
@@ -67,19 +62,30 @@ export default defineComponent({
     const currentIndex = ref(0);
     const route = useRoute();
     const store = useStore<GlobalDataProps>();
+
     const logoList = computed(() => store.state.templates.data);
     provide("key", currentIndex);
+    const previewData = ref<string[]>([]);
+
     const openPreviewDialog = (id: number, key: number) => {
       currentId.value = id;
       currentIndex.value = key;
+      // svgToBase64(SVG(`.svg${key}`).node.innerHTML);
+      const data = [
+        "https://oss.filway.cn/show1.jpg",
+        svgToBase64(SVG(`.svg${key}`).node.innerHTML),
+      ];
+      draw((b: string) => {
+        previewData.value = [];
+        previewData.value.push(b);
+      }, data);
       showPreview.value = true;
     };
     const closePreviewDialog = () => {
       showPreview.value = false;
     };
     const openDownloadDialog = () => {
-      showPreview.value = false;
-      showDownload.value = true;
+      console.log("跳转下载");
     };
     onMounted(async () => {
       let { sn } = route.query;
@@ -92,13 +98,13 @@ export default defineComponent({
     return {
       logoList,
       showPreview,
-      showDownload,
       openPreviewDialog,
       closePreviewDialog,
       currentId,
       currentIndex,
       openDownloadDialog,
       showLoading,
+      previewData,
     };
   },
 });

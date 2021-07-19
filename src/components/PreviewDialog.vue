@@ -10,10 +10,9 @@
         <van-icon @click="close" size="1.5rem" name="clear" />
       </div>
       <van-swipe class="my-swipe" :autoplay="3000" indicator-color="white">
-        <van-swipe-item>1</van-swipe-item>
-        <van-swipe-item>2</van-swipe-item>
-        <van-swipe-item>3</van-swipe-item>
-        <van-swipe-item>4</van-swipe-item>
+        <van-swipe-item v-for="(item, index) in previewData" :key="index">
+          <img :src="item" alt="" width="340" />
+        </van-swipe-item>
       </van-swipe>
       <div class="buttonBox">
         <van-button
@@ -52,7 +51,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch } from "vue";
+import { Array } from "@svgdotjs/svg.js";
+import { defineComponent, PropType, ref, watch } from "vue";
 
 export default defineComponent({
   props: {
@@ -68,16 +68,21 @@ export default defineComponent({
       type: Number,
       default: 0,
     },
+    previewData: {
+      type: Array as PropType<string[]>,
+    },
   },
   emits: ["close", "clickDownload"],
   setup(props, context) {
     const dialogVisible = ref(props.show);
     const fromPage = ref(props.parentView);
     const materialId = ref(props.logoId);
+
     const close = () => {
       context.emit("close");
     };
     const clickDownload = () => {
+      console.log("跳转到下载页面");
       context.emit("clickDownload");
     };
     watch(
@@ -112,15 +117,7 @@ export default defineComponent({
   align-items: center;
   padding-right: 0.6rem;
 }
-.my-swipe {
-  .van-swipe-item {
-    color: #fff;
-    font-size: 20px;
-    line-height: 200px;
-    text-align: center;
-    background-color: #39a9ed;
-  }
-}
+
 .buttonBox {
   padding: 1.5rem 1.5rem 0;
   .van-button {

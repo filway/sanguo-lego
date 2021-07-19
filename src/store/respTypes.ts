@@ -17,5 +17,10 @@ export interface getSvgData {
   path: string;
   svg: string;
 }
+export interface downloadUrlData {
+  png: string;
+  jpg: string;
+  svg: string;
+}
 export type RespListData<T> = RespData<T>;
 export type RespUploadData = RespData<UploadData>;

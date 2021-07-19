@@ -4,6 +4,8 @@ import { GlobalDataProps } from ".";
 export interface GlobalStatus {
   opNames: { [key: string]: boolean };
   requestNumber: number;
+  jpgDownloadUrl: string;
+  pngDownloadUrl: string;
   error: {
     status: boolean;
     message?: string;
@@ -14,6 +16,8 @@ const global: Module<GlobalStatus, GlobalDataProps> = {
   state: {
     requestNumber: 0,
     opNames: {},
+    jpgDownloadUrl: "",
+    pngDownloadUrl: "",
     error: {
       status: false,
     },
@@ -34,10 +38,18 @@ const global: Module<GlobalStatus, GlobalDataProps> = {
     setError(state, e) {
       state.error = e;
     },
+    setjpgDownloadUrl(state, url) {
+      state.jpgDownloadUrl = url;
+    },
+    setpngDownloadUrl(state, url) {
+      state.pngDownloadUrl = url;
+    },
   },
   getters: {
     isLoading: (state) => state.requestNumber > 0,
     isOpLoading: (state) => (opName: string) => state.opNames[opName],
+    getjpgDownloadUrl: (state) => state.jpgDownloadUrl,
+    getpngDownloadUrl: (state) => state.pngDownloadUrl,
   },
 };
 

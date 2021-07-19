@@ -35,6 +35,8 @@ const useCreateLogo = async (
     let randonI, titleFamily, subTitleFamily;
     let trueMaterialPath = item.materialPath;
     trueMaterialPath = svgToBase64(item.svg);
+    let trueNameColor = rgb;
+    let trueSloganColor = rgb;
     if (isRandom) {
       //需要随机生成
       randonI = Math.floor(Math.random() * Math.floor(3)); //2//
@@ -47,15 +49,18 @@ const useCreateLogo = async (
         randonI = givenProps.randomIndex;
         titleFamily = givenProps.randomTitleFamily;
         subTitleFamily = givenProps.randomSubTitleFamily;
+        trueNameColor = localStorage.getItem("currentNameColor") || rgb;
+        trueSloganColor = localStorage.getItem("currentSloganColor") || rgb;
       }
       store.commit("setRandomProps", {
         materialId: item.materialId,
-        randomIndex: randonI + 3,
+        randomIndex: randonI,
         randomTitleFamily: titleFamily,
         randomSubTitleFamily: subTitleFamily,
       });
     } else {
       //直接取对应属性
+      console.log(item);
       randonI = item.randomIndex || 0;
       titleFamily = item.randomTitleFamily || "";
       subTitleFamily = item.randomSubTitleFamily || "";
@@ -83,12 +88,12 @@ const useCreateLogo = async (
     const title = draw
       .plain(item.name)
       .font({
-        size: 48,
+        size: 90,
         family: titleFamily,
         weight: "bolder",
       })
       .attr({
-        fill: rgb,
+        fill: trueNameColor,
         dx: randomIx[randonI],
         dy: randomIy[randonI],
         "text-anchor": "middle",
@@ -97,21 +102,21 @@ const useCreateLogo = async (
     const subTitle = draw
       .plain(item.name_en)
       .font({
-        size: 24,
+        size: 30,
         family: subTitleFamily,
         weight: "bolder",
       })
       .attr({
-        fill: rgb,
+        fill: trueSloganColor,
         dx: randomIx[randonI],
-        dy: randomIy[randonI] + 40,
+        dy: randomIy[randonI] + 50,
         "text-anchor": "middle",
         class: `svg-slogan${key}`,
       });
     groupImage.add(img);
     group.add(title);
     group.add(subTitle);
-    img.size(220, 220);
+    img.size(110, 110);
   });
 };
 export default useCreateLogo;

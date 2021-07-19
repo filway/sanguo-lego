@@ -34,3 +34,41 @@ export const svgToBase64 = (svg: string): string => {
   )}`;
   return ImgBase64;
 };
+
+//这儿使用base64图片也是可以合成的，但用get_file_content返回的svg demo无法合成，使用在线的svg地址也无法合成
+export const draw = (fn: CallableFunction, data: string[]): void => {
+  const c = document.createElement("canvas"),
+    ctx = c.getContext("2d"),
+    len = data.length;
+  c.width = 800;
+  c.height = 800 / 1.5; //除1.5是由于背景图长和宽的比例是1.5
+  if (ctx) {
+    ctx.rect(0, 0, c.width, c.height);
+    ctx.fillStyle = "#fff";
+    ctx.fill();
+
+    const drawing = (n: number) => {
+      if (n < len) {
+        const img = new Image();
+        img.crossOrigin = "Anonymous"; //解决跨域
+
+        img.src = data[n];
+        console.log(data[n]);
+        img.onload = function () {
+          if (n == 1) {
+            ctx.drawImage(img, 195, 115, 320, 320); //参数表示：第一个参数绘制的img图片  第二个参数和第三个参数分别表示绘制的图片距离背景图片左上角的X轴，Y轴，第四个参数和第五个参数表示绘制的图片的大小
+          } else {
+            ctx.drawImage(img, 0, 0, c.width, c.height);
+          }
+
+          drawing(n + 1); //递归
+        };
+      } else {
+        //保存生成作品图片
+        c.toDataURL();
+        fn(c.toDataURL());
+      }
+    };
+    drawing(0);
+  }
+};

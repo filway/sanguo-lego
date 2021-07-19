@@ -12,21 +12,11 @@
         <van-button type="primary" @click="downloadSVG(index)" round plain>
           SVG下载
         </van-button>
-        <van-button
-          type="primary"
-          round
-          plain
-          @click="downloadImage(index, 'png')"
-        >
-          PNG下载
+        <van-button type="primary" round plain>
+          <a :href="pngurl">PNG下载</a>
         </van-button>
-        <van-button
-          type="primary"
-          round
-          plain
-          @click="downloadImage(index, 'jpg')"
-        >
-          JPG下载
+        <van-button type="primary" round plain>
+          <a :href="pngurl">JPG下载</a>
         </van-button>
       </div>
     </van-dialog>
@@ -58,6 +48,8 @@ export default defineComponent({
     const fromPage = ref(props.parentView);
     const materialId = ref(props.logoId);
     const index = inject("key");
+    const pngurl = inject("pngurl");
+    console.log(pngurl);
     const close = () => {
       context.emit("close");
     };
@@ -81,6 +73,7 @@ export default defineComponent({
       index,
       downloadSVG,
       downloadImage,
+      pngurl,
     };
   },
 });

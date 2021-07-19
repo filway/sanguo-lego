@@ -1,7 +1,7 @@
 import { computed } from "vue";
 import { Module } from "vuex";
 import store, { actionWrapper, GlobalDataProps } from "./index";
-import { getSvgData, RespData, RespListData } from "./respTypes";
+import { RespData, RespListData } from "./respTypes";
 
 type editRandom = Pick<
   Required<TemplateProps>,
