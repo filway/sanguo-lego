@@ -10,6 +10,7 @@
 <script lang="ts">
 import { Notify } from "vant";
 import { computed, defineComponent, watch } from "vue";
+import { useRoute } from "vue-router";
 import { useStore } from "vuex";
 import { GlobalDataProps } from "./store";
 
@@ -18,7 +19,10 @@ export default defineComponent({
   setup() {
     const store = useStore<GlobalDataProps>();
     const isLoading = computed(() => store.getters.isLoading);
-    const showLoading = computed(() => isLoading.value);
+    const route = useRoute();
+    const showLoading = computed(
+      () => isLoading.value && !route.meta.disableLoading
+    );
     const error = computed(() => store.state.global.error);
     watch(
       () => error.value.status,

@@ -35,8 +35,8 @@ const useCreateLogo = async (
     let randonI, titleFamily, subTitleFamily;
     let trueMaterialPath = item.materialPath;
     trueMaterialPath = svgToBase64(item.svg);
-    let trueNameColor = rgb;
-    let trueSloganColor = rgb;
+    const trueNameColor = rgb;
+    const trueSloganColor = rgb;
     if (isRandom) {
       //需要随机生成
       randonI = Math.floor(Math.random() * Math.floor(3)); //2//
@@ -49,8 +49,6 @@ const useCreateLogo = async (
         randonI = givenProps.randomIndex;
         titleFamily = givenProps.randomTitleFamily;
         subTitleFamily = givenProps.randomSubTitleFamily;
-        trueNameColor = localStorage.getItem("currentNameColor") || rgb;
-        trueSloganColor = localStorage.getItem("currentSloganColor") || rgb;
       }
       store.commit("setRandomProps", {
         materialId: item.materialId,
@@ -88,7 +86,7 @@ const useCreateLogo = async (
     const title = draw
       .plain(item.name)
       .font({
-        size: 90,
+        size: 75,
         family: titleFamily,
         weight: "bolder",
       })
@@ -102,21 +100,25 @@ const useCreateLogo = async (
     const subTitle = draw
       .plain(item.name_en)
       .font({
-        size: 30,
+        size: 25,
         family: subTitleFamily,
         weight: "bolder",
       })
       .attr({
         fill: trueSloganColor,
         dx: randomIx[randonI],
-        dy: randomIy[randonI] + 50,
+        dy: randomIy[randonI] + 40,
         "text-anchor": "middle",
         class: `svg-slogan${key}`,
       });
     groupImage.add(img);
     group.add(title);
     group.add(subTitle);
-    img.size(110, 110);
+    if (randonI === 2) {
+      img.size(160, 160);
+    } else {
+      img.size(110, 110);
+    }
   });
 };
 export default useCreateLogo;

@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="homepage-container"
-    :style="{ background: logoList.length ? '#eee' : '#fff' }"
-  >
+  <div class="homepage-container" :style="{ background: '#f8f8f8' }">
     <preview-dialog
       @close="closePreviewDialog"
       :show="showPreview"
@@ -10,30 +7,38 @@
       :previewData="previewData"
       @clickDownload="openDownloadDialog"
     ></preview-dialog>
+    <van-row class="logoTips">
+      <van-col span="24">Logo结果选择</van-col>
+    </van-row>
+    <van-loading
+      class="loadingBox"
+      v-if="isLoading"
+      style="text-align: center"
+      size="24px"
+      vertical
+      color="#fff"
+      >Logo生成中...</van-loading
+    >
     <div
       @click="openPreviewDialog(logo.materialId, key)"
       v-for="(logo, key) in logoList"
       :key="key"
       class="card-box"
+      v-show="!isLoading"
     >
-      <van-skeleton class="skeletonBox" :row="2" :loading="showLoading">
-      </van-skeleton>
-      <div class="logo-box" v-show="!showLoading">
+      <div class="logo-box">
         <svg
           baseProfile="full"
           version="1.1"
           :class="'svg' + key"
-          viewBox="0 0 686 358.38"
+          viewBox="0 0 686 380.78"
           xmlns="http://www.w3.org/2000/svg"
         />
       </div>
-      <div v-show="!showLoading" class="text-box">点击选择此方案</div>
+      <div class="text-box animate__animated animate__bounce">
+        点击选择此方案
+      </div>
     </div>
-    <van-row v-if="!logoList.length">
-      <van-col span="24" style="text-align: center">
-        <van-empty description="暂时未找到搜索结果" />
-      </van-col>
-    </van-row>
   </div>
 </template>
 
@@ -46,6 +51,7 @@ import useCreateLogo from "@/hooks/useCreateLogo";
 import PreviewDialog from "@/components/PreviewDialog.vue";
 import { draw, svgToBase64 } from "@/helper";
 import { SVG } from "@svgdotjs/svg.js";
+import { previewPropsArr } from "../constants/preview.constant";
 
 export default defineComponent({
   name: "Index",
@@ -55,30 +61,31 @@ export default defineComponent({
   setup() {
     const showPreview = ref(false);
     const isLoading = computed(() => store.getters.isLoading);
-    const showLoading = computed(
-      () => isLoading.value && !route.meta.disableLoading
-    );
+    const route = useRoute();
     const currentId = ref(0);
     const currentIndex = ref(0);
-    const route = useRoute();
     const store = useStore<GlobalDataProps>();
 
     const logoList = computed(() => store.state.templates.data);
     provide("key", currentIndex);
+
     const previewData = ref<string[]>([]);
 
     const openPreviewDialog = (id: number, key: number) => {
       currentId.value = id;
       currentIndex.value = key;
-      // svgToBase64(SVG(`.svg${key}`).node.innerHTML);
-      const data = [
-        "https://oss.filway.cn/show1.jpg",
-        svgToBase64(SVG(`.svg${key}`).node.innerHTML),
-      ];
-      draw((b: string) => {
-        previewData.value = [];
-        previewData.value.push(b);
-      }, data);
+      const svgBase64 = svgToBase64(SVG(`.svg${key}`).node.innerHTML);
+      previewData.value = [];
+      previewPropsArr.forEach((item) => {
+        draw(
+          (b: string) => {
+            previewData.value.push(b);
+          },
+          [item.url, svgBase64],
+          item
+        );
+      });
+
       showPreview.value = true;
     };
     const closePreviewDialog = () => {
@@ -95,6 +102,7 @@ export default defineComponent({
       });
       await useCreateLogo(logoList.value);
     });
+
     return {
       logoList,
       showPreview,
@@ -103,7 +111,7 @@ export default defineComponent({
       currentId,
       currentIndex,
       openDownloadDialog,
-      showLoading,
+      isLoading,
       previewData,
     };
   },
@@ -112,6 +120,22 @@ export default defineComponent({
 
 <style scoped lang="scss">
 .homepage-container {
+  .logoTips {
+    margin-bottom: 1.5rem;
+    font-weight: 300;
+    font-size: 14px;
+  }
+  .loadingBox {
+    text-align: center;
+    height: 12rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #000;
+    opacity: 0.7;
+    color: #fff;
+    border-radius: 5px;
+  }
   min-height: 100vh;
   padding: 0.5rem 1rem;
   .card-box {
@@ -120,29 +144,21 @@ export default defineComponent({
     width: calc(100vw - 2rem);
     height: 14rem;
     background: #fff;
-    border-radius: 4px;
+    border-radius: 5px;
+    animation: zoomIn; /* referring directly to the animation's @keyframe declaration */
+    animation-duration: 1s; /* don't forget to set a duration! */
     margin: 1rem 0;
     .logo-box {
-      height: 80%;
+      height: 85%;
       svg {
         width: 100%;
         height: 100%;
       }
     }
     .text-box {
-      padding: 0.8rem;
       text-align: center;
-      color: #ccc;
+      color: #d9d9d9;
       font-size: 14px;
-    }
-    .skeletonBox {
-      padding-top: 1rem;
-      /deep/ .van-skeleton__row:first-child {
-        height: 10.2rem;
-      }
-      /deep/ .van-skeleton__row:nth-child(2) {
-        margin-left: 20%;
-      }
     }
   }
 }

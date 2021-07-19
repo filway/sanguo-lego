@@ -21,6 +21,8 @@ import {
   Swipe,
   SwipeItem,
   Skeleton,
+  Toast,
+  Sticky,
 } from "vant";
 import { App } from "vue";
 
@@ -45,6 +47,8 @@ const components = [
   Swipe,
   SwipeItem,
   Skeleton,
+  Toast,
+  Sticky,
 ];
 const install = (app: App): void => {
   components.forEach((component) => {

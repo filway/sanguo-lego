@@ -9,6 +9,7 @@
     <preview-dialog
       @close="closePreviewDialog"
       :show="showPreview"
+      :previewData="previewData"
       :parentView="'editor'"
     ></preview-dialog>
     <van-row>
@@ -17,7 +18,7 @@
     <van-row class="iconsWrapper">
       <van-col span="6" class="icon-left">
         <van-icon
-          @click="showPreview = true"
+          @click="openPreviewDialog"
           name="browsing-history-o"
           size="1.2rem"
         />
@@ -39,7 +40,6 @@
             color="#1989fa"
           />
           <svg
-            :style="{ backgroundColor: currentBackColor }"
             ref="svgRef"
             baseProfile="full"
             version="1.1"
@@ -117,7 +117,7 @@
                   <van-slider
                     v-model="lsImgValue"
                     :min="10"
-                    :max="420"
+                    :max="initLsValue * 2"
                     :button-size="18"
                     @update:model-value="onSliderChange($event, 3)"
                   />
@@ -333,6 +333,8 @@ import { SVG } from "@svgdotjs/svg.js";
 import { fontFamilyArr } from "../constants/random.constant";
 import ColorPicker from "@/components/ColorPicker.vue";
 import PreviewDialog from "@/components/PreviewDialog.vue";
+import { draw, svgToBase64 } from "@/helper";
+import { previewPropsArr } from "@/constants/preview.constant";
 
 export default defineComponent({
   name: "Editor",
@@ -350,18 +352,23 @@ export default defineComponent({
     );
     const createLogoLoading = ref(false);
     const active = ref(0);
-    const imageActive = ref(0);
+    const imageActive = ref(template.value.randomIndex);
     const tab2ContentTitleActive = ref(0);
     const showImgPopover = ref(false);
     const showFamilyPopover = ref(false);
     const isShowNameInput = ref(false);
+    const initKeyValueArr = [110, 110, 160];
+    const initLsValue = computed(
+      () => initKeyValueArr[template.value.randomIndex || 0]
+    );
     const initValues = () => {
       lrImgValue.value = 0;
       udImgValue.value = 0;
-      lsImgValue.value = 220;
+      lsImgValue.value = initLsValue.value;
     };
     const selectPostionImage = (index: number) => {
       imageActive.value = index;
+      template.value.randomIndex = index;
       const svgChild = svgRef.value?.childNodes[0];
       svgRef.value?.removeChild(svgChild as Node);
       createLogoLoading.value = true;
@@ -378,14 +385,12 @@ export default defineComponent({
     };
     logoList.value.push(template.value);
     onMounted(async () => {
-      localStorage.setItem("currentNameColor", "");
-      localStorage.setItem("currentSloganColor", "");
       await useCreateLogo(logoList.value, false);
     });
     // image slider滑动
     const lrImgValue = ref(0);
     const udImgValue = ref(0);
-    const lsImgValue = ref(220);
+    const lsImgValue = ref(initLsValue.value);
     // logo slogan slider滑动
     const lrLogoValue = ref(0);
     const lrSloganValue = ref(0);
@@ -427,7 +432,7 @@ export default defineComponent({
       initValues();
       onSliderChange(0, 1);
       onSliderChange(0, 2);
-      onSliderChange(220, 3);
+      onSliderChange(initLsValue.value, 3);
     };
     // tab2弹窗输入的name
     const onCloseNameDialog = (action: string) =>
@@ -487,7 +492,6 @@ export default defineComponent({
       }
       currentNameColor.value = color;
       SVG(".svg-name0").attr("fill", color);
-      localStorage.setItem("currentNameColor", color);
     };
 
     const currentSloganColor = ref("");
@@ -497,7 +501,6 @@ export default defineComponent({
       }
       currentSloganColor.value = color;
       SVG(".svg-slogan0").attr("fill", color);
-      localStorage.setItem("currentSloganColor", color);
     };
 
     //背景色
@@ -511,6 +514,23 @@ export default defineComponent({
 
     // 预览
     const showPreview = ref(false);
+    const previewData = ref<string[]>([]);
+
+    const openPreviewDialog = () => {
+      const svgBase64 = svgToBase64(SVG(".svg0").node.innerHTML);
+      previewData.value = [];
+      previewPropsArr.forEach((item) => {
+        draw(
+          (b: string) => {
+            previewData.value.push(b);
+          },
+          [item.url, svgBase64],
+          item
+        );
+      });
+
+      showPreview.value = true;
+    };
     const closePreviewDialog = () => {
       showPreview.value = false;
     };
@@ -561,6 +581,9 @@ export default defineComponent({
       closePreviewDialog,
       showPreview,
       download,
+      openPreviewDialog,
+      previewData,
+      initLsValue,
     };
   },
 });
@@ -602,7 +625,7 @@ export default defineComponent({
   position: relative;
   .editorTips {
     text-align: center;
-    background: lightskyblue;
+    background: #3286fe;
     color: #fff;
     padding: 0.55rem 1rem;
     font-size: 12px;
