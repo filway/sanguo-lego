@@ -41,7 +41,10 @@
           icon="download iconfont"
           type="primary"
           plain
-          @click="clickDownload"
+          :to="{
+            name: 'download',
+            params: { id: materialId, bgColor: bgColor },
+          }"
         >
           直接下载
         </van-button>
@@ -51,8 +54,7 @@
 </template>
 
 <script lang="ts">
-import { Array } from "@svgdotjs/svg.js";
-import { defineComponent, PropType, ref, watch } from "vue";
+import { defineComponent, ref, watch } from "vue";
 
 export default defineComponent({
   props: {
@@ -65,14 +67,19 @@ export default defineComponent({
       default: "index",
     },
     logoId: {
-      type: Number,
+      type: Number || String,
       default: 0,
     },
     previewData: {
-      type: Array as PropType<string[]>,
+      type: Array,
+      default: () => [],
+    },
+    bgColor: {
+      type: String,
+      default: "#ffffff",
     },
   },
-  emits: ["close", "clickDownload"],
+  emits: ["close"],
   setup(props, context) {
     const dialogVisible = ref(props.show);
     const fromPage = ref(props.parentView);
@@ -80,10 +87,6 @@ export default defineComponent({
 
     const close = () => {
       context.emit("close");
-    };
-    const clickDownload = () => {
-      console.log("跳转到下载页面");
-      context.emit("clickDownload");
     };
     watch(
       () => props.show,
@@ -94,6 +97,7 @@ export default defineComponent({
     watch(
       () => props.logoId,
       (newValue) => {
+        console.log(newValue);
         materialId.value = newValue;
       }
     );
@@ -103,7 +107,6 @@ export default defineComponent({
       fromPage,
       materialId,
       close,
-      clickDownload,
     };
   },
 });

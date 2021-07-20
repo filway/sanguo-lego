@@ -58,7 +58,6 @@ const useCreateLogo = async (
       });
     } else {
       //直接取对应属性
-      console.log(item);
       randonI = item.randomIndex || 0;
       titleFamily = item.randomTitleFamily || "";
       subTitleFamily = item.randomSubTitleFamily || "";

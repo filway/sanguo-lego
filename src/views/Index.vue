@@ -96,6 +96,7 @@ export default defineComponent({
     };
     onMounted(async () => {
       let { sn } = route.query;
+      localStorage.setItem("sn", sn as string);
       //获取logo list
       await store.dispatch("fetchTemplates", {
         searchParams: { sn: sn || "" },

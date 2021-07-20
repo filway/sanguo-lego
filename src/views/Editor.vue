@@ -1,16 +1,14 @@
 <template>
   <div class="editor-container">
-    <van-nav-bar title="logo在线编辑" @click-left="$router.back(-1)">
-      <template #left>
-        <van-icon name="arrow-left" size="20" color="#333" />
-      </template>
-    </van-nav-bar>
+    <header-nav :title="'logo在线编辑'" @back="$router.back(-1)" />
 
     <preview-dialog
       @close="closePreviewDialog"
       :show="showPreview"
       :previewData="previewData"
       :parentView="'editor'"
+      :bgColor="currentBackColor"
+      :logoId="marteralId"
     ></preview-dialog>
     <van-row>
       <van-col span="24" class="editorTips"> 编辑好后点击下载即可 </van-col>
@@ -27,7 +25,14 @@
         <van-icon name="replay" @click="resetSvg" size="1.2rem" />
       </van-col>
       <van-col span="6" class="icon-right">
-        <van-icon @click="download" name="down" size="1.2rem" />
+        <router-link
+          :to="{
+            name: 'download',
+            params: { id: marteralId, bgColor: currentBackColor },
+          }"
+        >
+          <van-icon name="down" size="1.2rem" />
+        </router-link>
       </van-col>
     </van-row>
     <van-row class="content" :style="{ backgroundColor: currentBackColor }">
@@ -327,12 +332,13 @@
 import useCreateLogo from "@/hooks/useCreateLogo";
 import store from "@/store";
 import { TemplateProps } from "@/store/templates";
-import { computed, defineComponent, onMounted, provide, ref } from "vue";
+import { computed, defineComponent, onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 import { SVG } from "@svgdotjs/svg.js";
 import { fontFamilyArr } from "../constants/random.constant";
 import ColorPicker from "@/components/ColorPicker.vue";
 import PreviewDialog from "@/components/PreviewDialog.vue";
+import HeaderNav from "@/components/HeaderNav.vue";
 import { draw, svgToBase64 } from "@/helper";
 import { previewPropsArr } from "@/constants/preview.constant";
 
@@ -341,12 +347,14 @@ export default defineComponent({
   components: {
     ColorPicker,
     PreviewDialog,
+    HeaderNav,
   },
   setup() {
     const route = useRoute();
     const svgRef = ref<SVGElement | null>(null);
     let logoList = ref<TemplateProps[]>([]);
     const currentId = route.params.id as string;
+    const marteralId = ref(parseInt(currentId, 0));
     const template = computed<TemplateProps>(() =>
       store.getters.getTemplateById(parseInt(currentId, 0))
     );
@@ -535,13 +543,6 @@ export default defineComponent({
       showPreview.value = false;
     };
 
-    //下载
-    const download = () => {
-      console.log("editor 跳转下载");
-    };
-
-    provide("key", 0);
-
     return {
       logoList,
       active,
@@ -580,10 +581,10 @@ export default defineComponent({
       toggleTab3Title,
       closePreviewDialog,
       showPreview,
-      download,
       openPreviewDialog,
       previewData,
       initLsValue,
+      marteralId,
     };
   },
 });

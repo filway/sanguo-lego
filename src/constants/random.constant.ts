@@ -15,7 +15,6 @@ export const randomFamily = [
 
 export const fontFamilyArr = [
   { text: "无", value: "" },
-  { text: "萝莉小猫咪", value: '"luoli"' },
   { text: "日文毛笔行书", value: '"rwmb"' },
   { text: "楷体", value: '"KaiTi","STKaiti"' },
   { text: "华康宋体", value: '"huakangsong"' },

@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Index from "../views/Index.vue";
 import Editor from "../views/Editor.vue";
+import Download from "../views/Download.vue";
 
 declare module "vue-router" {
   interface RouteMeta {
@@ -23,6 +24,12 @@ const router = createRouter({
       name: "editor",
       component: Editor,
       meta: { title: "编辑我的设计" },
+    },
+    {
+      path: "/download/:id",
+      name: "download",
+      component: Download,
+      meta: { title: "下载", disableLoading: true },
     },
   ],
 });
