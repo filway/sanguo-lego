@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import Index from "../views/Index.vue";
 import Editor from "../views/Editor.vue";
 import Download from "../views/Download.vue";
+import { SVG } from "@svgdotjs/svg.js";
 
 declare module "vue-router" {
   interface RouteMeta {
@@ -38,6 +39,11 @@ router.beforeEach(async (to, from) => {
   const { title } = to.meta;
   if (title) {
     document.title = title;
+  }
+  if (from.name === "editor" && to.name === "download") {
+    localStorage.setItem("downloadsvg", SVG(".svg0").svg());
+  } else {
+    localStorage.setItem("downloadsvg", "");
   }
   return true;
 });

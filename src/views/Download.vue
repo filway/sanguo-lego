@@ -2,9 +2,10 @@
   <div class="download-container">
     <header-nav :title="'logo下载'" @back="$router.back(-1)" />
     <van-row class="content" :style="{ backgroundColor: bgColor }">
-      <van-col span="24">
+      <van-col span="24" v-if="!isSvgCode">
         <div class="logo-box" v-for="(logo, key) in logoList" :key="key">
           <svg
+            :style="{ backgroundColor: bgColor }"
             baseProfile="full"
             version="1.1"
             :class="'svg' + key"
@@ -12,6 +13,9 @@
             xmlns="http://www.w3.org/2000/svg"
           />
         </div>
+      </van-col>
+      <van-col span="24" v-else>
+        <div class="logo-box" ref="logoRef" id="logoBox"></div>
       </van-col>
     </van-row>
     <div class="buttonBox">
@@ -99,18 +103,6 @@ import axios from "axios";
 import { svgToBase64 } from "@/helper";
 import { SVG } from "@svgdotjs/svg.js";
 
-/**
- * FQA常见问题
-问：什么是源文件
-答：矢量图/源文件，用于编辑修改、印刷户外大型广告招聘等用途可无限高清放大
-问：我生成的LOGO能申请商标注册吗？
-答：文字部分可以申请商标注册，按文字商标进行文本核准，图形部分，无论是否标注【可商用】都不能申请商标，因为不符合图形商标的独有性原则，要申请商标需要进行定制化设计
-问：我生成的LOGO怎么调整图片尺寸？
-答：需要下载源文件，源文件可以任意调整图片的尺寸，获得高清的图片
-问：为什么下载的源文件打不开？
-答：源文件需要使用专业的设计软件才可以打开，如PS、AI、CDR等
- */
-
 type infoType = {
   phone: string;
   email: string;
@@ -122,12 +114,14 @@ export default defineComponent({
     HeaderNav,
   },
   setup() {
+    const svgCode = localStorage.getItem("downloadsvg") as string;
+    const isSvgCode = svgCode?.length > 1;
+    const logoRef = ref<HTMLElement>();
     const route = useRoute();
     const store = useStore();
     let logoList = ref<TemplateProps[]>([]);
     const currentId = route.params.id as string;
     const bgColor = route.params.bgColor as string;
-    console.log(bgColor);
     const template = computed<TemplateProps>(() =>
       store.getters.getTemplateById(parseInt(currentId, 0))
     );
@@ -222,7 +216,14 @@ export default defineComponent({
       info.value.email = "";
     };
     onMounted(async () => {
-      await useCreateLogo(logoList.value, false);
+      if (isSvgCode) {
+        const logoBoxDom = document.getElementById("logoBox");
+        if (logoBoxDom) {
+          logoBoxDom.innerHTML = svgCode;
+        }
+      } else {
+        await useCreateLogo(logoList.value, false);
+      }
     });
     return {
       logoList,
@@ -232,6 +233,9 @@ export default defineComponent({
       onCloseInfoDialog,
       info,
       openInfoDialog,
+      isSvgCode,
+      svgCode,
+      logoRef,
     };
   },
 });
