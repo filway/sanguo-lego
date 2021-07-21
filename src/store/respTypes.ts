@@ -1,9 +1,14 @@
 import { ActionPayload } from "./index";
 
+interface AttrProps {
+  wx: string;
+}
+
 export interface RespData<T = []> {
   code: number;
   data: T;
   message?: string;
+  attr?: AttrProps;
   payload?: ActionPayload;
 }
 export interface ListData<T> {

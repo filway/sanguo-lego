@@ -30,14 +30,20 @@ export interface TemplatesProps {
   currentNameEn?: string;
 }
 
+const stateStroage = sessionStorage.getItem("state");
+let sData = [];
+if (stateStroage != null) {
+  sData = JSON.parse(stateStroage).templates.data;
+}
 const templates: Module<TemplatesProps, GlobalDataProps> = {
   state: {
-    data: [],
+    data: sData,
     totalTemplates: 0,
   },
   mutations: {
     fetchTemplates(state, rawData: RespListData<TemplateProps[]>) {
       state.data = rawData.data;
+      sessionStorage.setItem("wx", rawData.attr ? rawData.attr.wx : "");
     },
     translate(state, rawData: RespData<string>) {
       state.currentNameEn = rawData.data;

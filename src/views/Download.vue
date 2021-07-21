@@ -34,7 +34,7 @@
         <h2>想获得专有LOGO来商用？</h2>
         <h2>交给我们为您量身定制LOGO</h2>
       </div>
-      <button>开始定制</button>
+      <button @click="isShowWxDialog = true">开始定制</button>
     </div>
     <div class="qaBox">
       <h5>FQA常见问题</h5>
@@ -89,6 +89,23 @@
         v-model="info.email"
       />
     </van-dialog>
+    <van-dialog
+      v-model:show="isShowWxDialog"
+      class="wxDialog"
+      show-cancel-button
+      cancel-button-text="点击关闭"
+      confirm-button-text="复制微信号"
+      :before-close="copyWx"
+      width="90%"
+    >
+      <div class="image">
+        <img src="../assets/img/cs.png" alt="" />
+      </div>
+      <div class="text">
+        <h4>添加客服微信号，联系您的专属客服可定制、升级logo</h4>
+        <div>微信号: {{ wx }}</div>
+      </div>
+    </van-dialog>
   </div>
 </template>
 <script lang="ts">
@@ -100,7 +117,7 @@ import useCreateLogo from "@/hooks/useCreateLogo";
 import { useStore } from "vuex";
 import { Dialog, Toast } from "vant";
 import axios from "axios";
-import { svgToBase64 } from "@/helper";
+import { copyToClipboard, svgToBase64 } from "@/helper";
 import { SVG } from "@svgdotjs/svg.js";
 
 type infoType = {
@@ -215,6 +232,9 @@ export default defineComponent({
       info.value.phone = "";
       info.value.email = "";
     };
+    // wx弹窗
+    const isShowWxDialog = ref(false);
+    const wx = sessionStorage.getItem("wx") || "";
     onMounted(async () => {
       if (isSvgCode) {
         const logoBoxDom = document.getElementById("logoBox");
@@ -225,6 +245,15 @@ export default defineComponent({
         await useCreateLogo(logoList.value, false);
       }
     });
+    const copyWx = (action: string) => {
+      if (action === "confirm") {
+        copyToClipboard(wx);
+        Toast.success("微信号已复制");
+        return false;
+      } else {
+        return true;
+      }
+    };
     return {
       logoList,
       bgColor,
@@ -236,6 +265,9 @@ export default defineComponent({
       isSvgCode,
       svgCode,
       logoRef,
+      isShowWxDialog,
+      wx,
+      copyWx,
     };
   },
 });
@@ -274,6 +306,32 @@ export default defineComponent({
       padding: 1rem 0.5rem;
     }
   }
+  .wxDialog {
+    .image {
+      width: 100%;
+      height: 13rem;
+      background: pink;
+      img {
+        height: 100%;
+        width: 100%;
+      }
+    }
+    .text {
+      display: flex;
+      flex-direction: column;
+      text-align: center;
+      padding: 1rem;
+      h4 {
+        letter-spacing: 2px;
+        font-size: 16px;
+        margin: 0 0 0.5rem;
+      }
+      div {
+        font-size: 14px;
+        color: rgba(0, 0, 0, 0.719);
+      }
+    }
+  }
   .imageBox {
     position: relative;
     height: 200px;
@@ -294,7 +352,7 @@ export default defineComponent({
       border-radius: 20px;
       padding: 0.4rem 0;
       color: #ffffff;
-      background: lightslategray;
+      background: #6c7d8d;
       border: none;
       font-size: 14px;
     }

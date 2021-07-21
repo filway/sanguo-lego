@@ -81,3 +81,23 @@ export const draw = (
     drawing(0);
   }
 };
+
+export function copyToClipboard(text: string) {
+  // 创建文本元素，赋值
+  const textarea = document.createElement("textarea");
+  textarea.value = text;
+  // 添加样式，隐藏
+  textarea.style.position = "fixed";
+  textarea.style.top = "0";
+  textarea.style.left = "-9999px";
+  // 添加到body 选中文本
+  document.body.appendChild(textarea);
+  textarea.select();
+  try {
+    return document.execCommand("copy");
+  } catch (e) {
+    console.warn("copy failed", e);
+  } finally {
+    document.body.removeChild(textarea);
+  }
+}

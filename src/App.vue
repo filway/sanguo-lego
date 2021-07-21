@@ -9,7 +9,7 @@
 
 <script lang="ts">
 import { Notify } from "vant";
-import { computed, defineComponent, watch } from "vue";
+import { computed, defineComponent, onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
 import { GlobalDataProps } from "./store";
@@ -35,6 +35,13 @@ export default defineComponent({
         }
       }
     );
+    //数据持久化
+    const saveState = () => {
+      sessionStorage.setItem("state", JSON.stringify(store.state));
+    };
+    onMounted(() => {
+      window.addEventListener("unload", saveState);
+    });
     return {
       showLoading,
     };

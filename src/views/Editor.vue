@@ -22,7 +22,11 @@
         />
       </van-col>
       <van-col span="12" class="icon-center">
-        <van-icon name="replay" @click="resetSvg" size="1.2rem" />
+        <van-icon
+          name="replay"
+          @click="selectPostionImage(template.randomIndex)"
+          size="1.2rem"
+        />
       </van-col>
       <van-col span="6" class="icon-right">
         <router-link
@@ -92,8 +96,8 @@
             />
           </van-col>
           <van-col span="3"
-            ><van-icon class="iconfont" class-prefix="icon" name="sucai"
-          /></van-col>
+            ><div @click="resetSvg" class="smallImg"></div
+          ></van-col>
           <van-col span="3">
             <van-popover v-model:show="showImgPopover" placement="top">
               <div class="sliderBox">
@@ -129,7 +133,7 @@
                 </div>
               </div>
               <template #reference>
-                <van-icon name="setting" />
+                <van-icon name="setting" size="20px" />
               </template>
             </van-popover>
           </van-col>
@@ -228,17 +232,15 @@
                     :min="-375"
                     :max="375"
                     :button-size="18"
-                    @update:model-value="onSliderChange($event, 4)"
                   />
                 </div>
                 <div>
                   <h5>上下: {{ udLogoValue }}</h5>
                   <van-slider
                     v-model="udLogoValue"
-                    :min="-200"
-                    :max="200"
+                    :min="-400"
+                    :max="400"
                     :button-size="18"
-                    @update:model-value="onSliderChange($event, 5)"
                   />
                 </div>
               </div>
@@ -250,7 +252,6 @@
                     :min="-375"
                     :max="375"
                     :button-size="18"
-                    @update:model-value="onSliderChange($event, 6)"
                   />
                 </div>
                 <div>
@@ -260,7 +261,6 @@
                     :min="-200"
                     :max="200"
                     :button-size="18"
-                    @update:model-value="onSliderChange($event, 7)"
                   />
                 </div>
               </div>
@@ -332,7 +332,14 @@
 import useCreateLogo from "@/hooks/useCreateLogo";
 import store from "@/store";
 import { TemplateProps } from "@/store/templates";
-import { computed, defineComponent, onMounted, ref } from "vue";
+import {
+  computed,
+  defineComponent,
+  nextTick,
+  onMounted,
+  ref,
+  watch,
+} from "vue";
 import { useRoute } from "vue-router";
 import { SVG } from "@svgdotjs/svg.js";
 import { fontFamilyArr } from "../constants/random.constant";
@@ -358,6 +365,7 @@ export default defineComponent({
     const template = computed<TemplateProps>(() =>
       store.getters.getTemplateById(parseInt(currentId, 0))
     );
+
     const createLogoLoading = ref(false);
     const active = ref(0);
     const imageActive = ref(template.value.randomIndex);
@@ -393,6 +401,11 @@ export default defineComponent({
     };
     logoList.value.push(template.value);
     onMounted(async () => {
+      nextTick(() => {
+        var drawImg = SVG().addTo(".smallImg").size(20, 20);
+        drawImg.image(template.value.materialPath).size(20, 20);
+      });
+
       await useCreateLogo(logoList.value, false);
     });
     // image slider滑动
@@ -406,8 +419,6 @@ export default defineComponent({
     const udSloganValue = ref(0);
     const onSliderChange = (value: number, type: number) => {
       const draw = SVG(".svg-logo0");
-      const drawName = SVG(".svg-name0");
-      const drawSlogan = SVG(".svg-slogan0");
       switch (type) {
         case 1:
           draw.move(value, udImgValue.value);
@@ -418,20 +429,36 @@ export default defineComponent({
         case 3:
           draw.size(value, value);
           break;
-        case 4:
-          drawName.move(value, udLogoValue.value);
-          break;
-        case 5:
-          drawName.move(lrLogoValue.value, value);
-          break;
-        case 6:
-          drawSlogan.move(value, udSloganValue.value);
-          break;
-        case 7:
-          drawSlogan.move(lrSloganValue.value, value);
-          break;
       }
     };
+    watch(
+      () => lrLogoValue.value,
+      (newValue, oldValue) => {
+        const drawName = SVG(".svg-name0");
+        drawName.dmove(newValue - oldValue, 0);
+      }
+    );
+    watch(
+      () => udLogoValue.value,
+      (newValue, oldValue) => {
+        const drawName = SVG(".svg-name0");
+        drawName.dmove(0, newValue - oldValue);
+      }
+    );
+    watch(
+      () => lrSloganValue.value,
+      (newValue, oldValue) => {
+        const drawName = SVG(".svg-slogan0");
+        drawName.dmove(newValue - oldValue, 0);
+      }
+    );
+    watch(
+      () => udSloganValue.value,
+      (newValue, oldValue) => {
+        const drawName = SVG(".svg-slogan0");
+        drawName.dmove(0, newValue - oldValue);
+      }
+    );
     // tab2的逻辑
     const toggleTab2Title = (value: number) => {
       tab2ContentTitleActive.value = value;
