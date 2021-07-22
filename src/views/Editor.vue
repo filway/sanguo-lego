@@ -15,18 +15,22 @@
     </van-row>
     <van-row class="iconsWrapper">
       <van-col span="6" class="icon-left">
-        <van-icon
-          @click="openPreviewDialog"
-          name="browsing-history-o"
-          size="1.2rem"
-        />
+        <div class="circleBox">
+          <van-icon
+            @click="openPreviewDialog"
+            name="browsing-history-o"
+            size="1.2rem"
+          />
+        </div>
       </van-col>
       <van-col span="12" class="icon-center">
-        <van-icon
-          name="replay"
-          @click="selectPostionImage(template.randomIndex)"
-          size="1.2rem"
-        />
+        <div class="circleBox">
+          <van-icon
+            name="replay"
+            @click="selectPostionImage(template.randomIndex)"
+            size="1.2rem"
+          />
+        </div>
       </van-col>
       <van-col span="6" class="icon-right">
         <router-link
@@ -35,7 +39,9 @@
             params: { id: marteralId, bgColor: currentBackColor },
           }"
         >
-          <van-icon name="down" size="1.2rem" />
+          <div class="circleBox">
+            <van-icon style="color: #000" name="down" size="1.2rem" />
+          </div>
         </router-link>
       </van-col>
     </van-row>
@@ -59,8 +65,8 @@
         </div>
       </van-col>
     </van-row>
-    <van-tabs background="#eee" class="tabsWrapper" v-model:active="active">
-      <van-tab>
+    <van-tabs background="#f8f8f8" class="tabsWrapper" v-model:active="active">
+      <van-tab class="tab2">
         <template #title>
           <van-icon
             class="iconfont"
@@ -68,31 +74,56 @@
             name="tubiao"
             size="1.2rem"
         /></template>
+        <div class="titleBox">
+          <span class="tabContentTitle activeTitle">图标</span>
+        </div>
         <van-row class="tab1Box">
           <van-col class="imageBox" span="9">
             <van-image
-              width="2rem"
-              height="2rem"
+              height="1.8rem"
               fit="contain"
-              :class="{ activeImage: imageActive === 0 }"
               @click="selectPostionImage(0)"
-              src="http://sj.songshuqf.com/dist/img/4.64f529e3.svg"
+              class="leftImage"
+              v-show="imageActive === 0"
+              :src="require('../assets/img/left_active.png')"
             />
             <van-image
-              width="2rem"
-              height="2rem"
+              height="1.8rem"
               fit="contain"
-              :class="{ activeImage: imageActive === 1 }"
+              class="leftImage"
+              @click="selectPostionImage(0)"
+              v-show="imageActive !== 0"
+              :src="require('../assets/img/left.png')"
+            />
+            <van-image
+              height="1.8rem"
+              fit="contain"
+              v-show="imageActive === 1"
               @click="selectPostionImage(1)"
-              src="http://sj.songshuqf.com/dist/img/4.64f529e3.svg"
+              :src="require('../assets/img/center_active.png')"
             />
             <van-image
-              width="2rem"
-              height="2rem"
+              height="1.8rem"
               fit="contain"
-              :class="{ activeImage: imageActive === 2 }"
+              class="centerImage"
+              v-show="imageActive !== 1"
+              @click="selectPostionImage(1)"
+              :src="require('../assets/img/center.png')"
+            />
+            <van-image
+              height="1.8rem"
+              fit="contain"
+              class="centerImage"
+              v-show="imageActive === 2"
               @click="selectPostionImage(2)"
-              src="http://sj.songshuqf.com/dist/img/1.c4ac3a80.svg"
+              :src="require('../assets/img/vertical_active.png')"
+            />
+            <van-image
+              height="1.8rem"
+              fit="contain"
+              v-show="imageActive !== 2"
+              @click="selectPostionImage(2)"
+              :src="require('../assets/img/vertical.png')"
             />
           </van-col>
           <van-col span="3"
@@ -133,7 +164,9 @@
                 </div>
               </div>
               <template #reference>
-                <van-icon name="setting" size="20px" />
+                <div class="smallImg">
+                  <van-icon name="setting" size="16px" />
+                </div>
               </template>
             </van-popover>
           </van-col>
@@ -621,8 +654,25 @@ export default defineComponent({
 .lego-color-picker {
   height: 4rem;
 }
-.activeImage {
-  border: 1px solid red !important;
+.smallImg {
+  background: #ffffff;
+  width: 1.6rem;
+  height: 1.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 3px;
+  padding: 0.1rem;
+}
+.circleBox {
+  background: #ffffff;
+  width: 1.6rem;
+  height: 1.6rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  padding: 0.1rem;
 }
 .activeTitle {
   background: #3286fe;
@@ -648,7 +698,7 @@ export default defineComponent({
   width: 8rem;
 }
 .editor-container {
-  background: #eee;
+  background: #f8f8f8;
   min-height: 100vh;
   position: relative;
   .editorTips {
@@ -755,19 +805,31 @@ export default defineComponent({
       align-items: center;
       padding-bottom: 0.8rem;
       justify-content: space-around;
+      border-radius: 3px;
       .imageBox {
         display: flex;
         align-items: center;
+        box-shadow: 0px -1px 0px 0px #eee, -1px 0px 0px 0px #eee,
+          1px 0px 0px 0px #eee, 0px 1px 0px 0px #eee;
         .van-image {
-          margin-left: 0.1rem;
-          border: 1px solid #ccc;
-          box-sizing: border-box;
           background: #fff;
-          display: flex;
-          align-items: center;
+          width: 33.333%;
           /deep/ img {
             width: 100%;
+            height: 100%;
           }
+        }
+        .leftImage {
+          border-right: 1px solid #d9d9d9;
+          border-top-left-radius: 5px;
+          border-bottom-left-radius: 5px;
+        }
+        .centerImage {
+          border-right: 1px solid #d9d9d9;
+        }
+        > .van-image:last-child {
+          border-top-right-radius: 5px;
+          border-bottom-right-radius: 5px;
         }
       }
     }

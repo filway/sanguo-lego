@@ -5,7 +5,7 @@
       <van-col span="24" v-if="!isSvgCode">
         <div class="logo-box" v-for="(logo, key) in logoList" :key="key">
           <svg
-            :style="{ backgroundColor: bgColor }"
+            :style="{ backgroundColor: 'red' }"
             baseProfile="full"
             version="1.1"
             :class="'svg' + key"
@@ -29,7 +29,7 @@
       </van-button>
     </div>
     <div class="imageBox">
-      <img src="../assets/img/bg2.jpg" width="375" height="200" alt="" />
+      <img src="../assets/img/bg2.jpg" alt="" />
       <div class="textBox">
         <h2>想获得专有LOGO来商用？</h2>
         <h2>交给我们为您量身定制LOGO</h2>
@@ -180,7 +180,9 @@ export default defineComponent({
                 /**
                  * 参数：mater_id（必填）  sn（必填） email(必填)  mobile(必填)  base64（必填） svg（必填）
                  */
-                const svg = SVG(".svg0").node.innerHTML;
+                SVG(".svg0").node.removeAttribute("xmlns:svgjs");
+                const svg = SVG(".svg0").svg();
+
                 const base64 = svgToBase64(svg);
                 const img = new Image();
                 img.src = base64;
@@ -192,7 +194,14 @@ export default defineComponent({
                   canvas.width = 1024;
                   canvas.height = 1024;
                   const ctx = canvas.getContext("2d");
-                  ctx?.drawImage(img, 0, 0);
+                  const trueImgHeight = (1024 * img.height) / img.width;
+                  ctx?.drawImage(
+                    img,
+                    0,
+                    (1024 - trueImgHeight) / 2,
+                    1024,
+                    trueImgHeight
+                  );
                   fstrImage = canvas.toDataURL();
                   axios
                     .post("/downsvg", {
@@ -240,6 +249,8 @@ export default defineComponent({
         const logoBoxDom = document.getElementById("logoBox");
         if (logoBoxDom) {
           logoBoxDom.innerHTML = svgCode;
+          //给svg元素添加背景颜色
+          SVG(".svg0").css("background", bgColor);
         }
       } else {
         await useCreateLogo(logoList.value, false);
@@ -335,6 +346,10 @@ export default defineComponent({
   .imageBox {
     position: relative;
     height: 200px;
+    img {
+      height: 200px;
+      width: 100vw;
+    }
     .textBox {
       position: absolute;
       top: 2rem;
