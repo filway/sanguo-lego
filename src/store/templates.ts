@@ -77,8 +77,10 @@ const templates: Module<TemplatesProps, GlobalDataProps> = {
     },
   },
   actions: {
-    fetchTemplates: actionWrapper("/match", "fetchTemplates"),
-    translate: actionWrapper("/translate", "translate"),
+    fetchTemplates: actionWrapper("/match", "fetchTemplates", {
+      method: "post",
+    }),
+    translate: actionWrapper("/translate", "translate", { method: "post" }),
   },
   getters: {
     getTemplateById: (state) => (id: number) =>

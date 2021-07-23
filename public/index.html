@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+    <script type="text/javascript" src="http://cdn.repository.webfont.com/wwwroot/js/wf/youziku.client.min.js"></script>
     <title><%= htmlWebpackPlugin.options.title %></title>
   </head>
   <body>
@@ -14,4 +15,21 @@
     <div id="app"></div>
     <!-- built files will be auto injected -->
   </body>
+  <script>
+    $youzikuPromiseClient.fullLoadFont({ AccessKey: "0d350439d2ce427080ef8133b0958f87", Tag: ".svg" }).then(result=> {
+  console.log(result);
+}).catch(ex=> {
+  console.error(ex);
+});
+$youzikuPromiseClient.fullLoadFont({ AccessKey: "8d86823451a94addaae5f6b1494e78b6", Tag: ".svg" }).then(result=> {
+  console.log(result);
+}).catch(ex=> {
+  console.error(ex);
+});
+$youzikuPromiseClient.fullLoadFont({ AccessKey: "7d222b74447b40b6ac776d2eb7993f9e", Tag: ".svg" }).then(result=> {
+  console.log(result);
+}).catch(ex=> {
+  console.error(ex);
+});
+  </script>
 </html>

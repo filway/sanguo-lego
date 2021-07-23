@@ -48,12 +48,13 @@
     <van-row class="content" :style="{ backgroundColor: currentBackColor }">
       <van-col span="24">
         <div class="logo-box" v-for="(logo, key) in logoList" :key="key">
-          <van-loading
+          <!-- <van-loading
             class="logoLoading"
             v-show="createLogoLoading"
             type="spinner"
             color="#1989fa"
-          />
+          /> -->
+          <div v-show="createLogoLoading" class="logoLoading"></div>
           <svg
             ref="svgRef"
             baseProfile="full"
@@ -65,8 +66,13 @@
         </div>
       </van-col>
     </van-row>
-    <van-tabs background="#f8f8f8" class="tabsWrapper" v-model:active="active">
-      <van-tab class="tab2">
+    <van-tabs
+      @click="onClickTab"
+      background="#f8f8f8"
+      class="tabsWrapper"
+      v-model:active="active"
+    >
+      <van-tab title="title1" class="tab2">
         <template #title>
           <van-icon
             class="iconfont"
@@ -100,7 +106,7 @@
               fit="contain"
               v-show="imageActive === 1"
               @click="selectPostionImage(1)"
-              :src="require('../assets/img/center_active.png')"
+              :src="require('../assets/img/vertical_active.png')"
             />
             <van-image
               height="1.8rem"
@@ -108,7 +114,7 @@
               class="centerImage"
               v-show="imageActive !== 1"
               @click="selectPostionImage(1)"
-              :src="require('../assets/img/center.png')"
+              :src="require('../assets/img/vertical.png')"
             />
             <van-image
               height="1.8rem"
@@ -116,14 +122,14 @@
               class="centerImage"
               v-show="imageActive === 2"
               @click="selectPostionImage(2)"
-              :src="require('../assets/img/vertical_active.png')"
+              :src="require('../assets/img/center_active.png')"
             />
             <van-image
               height="1.8rem"
               fit="contain"
               v-show="imageActive !== 2"
               @click="selectPostionImage(2)"
-              :src="require('../assets/img/vertical.png')"
+              :src="require('../assets/img/center.png')"
             />
           </van-col>
           <van-col span="3"
@@ -172,7 +178,7 @@
           </van-col>
         </van-row>
       </van-tab>
-      <van-tab class="tab2">
+      <van-tab title="title2" class="tab2">
         <template #title>
           <van-icon
             class="iconfont"
@@ -195,20 +201,21 @@
             show-cancel-button
             title="请输入"
             width="300"
+            @open="onOpenNameDialog"
             :before-close="onCloseNameDialog"
           >
             <van-field
               clearable
               label=""
               placeholder="请输入姓名"
-              v-model="template.name"
+              v-model="inputName"
               v-show="tab2ContentTitleActive === 0"
             />
             <van-field
               clearable
               label=""
-              placeholder="请输入姓名"
-              v-model="template.name_en"
+              placeholder="请输入口号"
+              v-model="inputNameEn"
               v-show="tab2ContentTitleActive === 1"
             />
           </van-dialog>
@@ -227,14 +234,19 @@
             tab2ContentTitleActive ? template.name_en : template.name
           }}</span>
           <span>
-            <van-popover v-model:show="showFamilyPopover" placement="top-end">
+            <van-popover
+              :close-on-click-overlay="false"
+              :close-on-click-action="false"
+              v-model:show="showFamilyPopover"
+              placement="top-end"
+            >
               <div
                 v-for="(item, index) in familyOptions"
                 :key="index"
                 role="menuitem"
                 class="van-popover__action"
                 style="height: 1.6rem; width: 10rem"
-                @click="selectFontFamily(item.text, item.value)"
+                @click.stop="selectFontFamily(item.text, item.value)"
               >
                 <div
                   :style="{ fontFamily: item.value }"
@@ -291,8 +303,8 @@
                   <h5>上下: {{ udSloganValue }}</h5>
                   <van-slider
                     v-model="udSloganValue"
-                    :min="-200"
-                    :max="200"
+                    :min="-400"
+                    :max="400"
                     :button-size="18"
                   />
                 </div>
@@ -304,7 +316,7 @@
           </span>
         </div>
       </van-tab>
-      <van-tab class="tab2" style="margin-bottom: 1rem">
+      <van-tab title="title3" class="tab2" style="margin-bottom: 1rem">
         <template #title>
           <van-icon
             class="iconfont"
@@ -381,6 +393,7 @@ import PreviewDialog from "@/components/PreviewDialog.vue";
 import HeaderNav from "@/components/HeaderNav.vue";
 import { draw, svgToBase64 } from "@/helper";
 import { previewPropsArr } from "@/constants/preview.constant";
+import { Toast } from "vant";
 
 export default defineComponent({
   name: "Editor",
@@ -398,6 +411,7 @@ export default defineComponent({
     const template = computed<TemplateProps>(() =>
       store.getters.getTemplateById(parseInt(currentId, 0))
     );
+    const isMove = ref(true); //是否需要移动logo和slogan
 
     const createLogoLoading = ref(false);
     const active = ref(0);
@@ -410,10 +424,21 @@ export default defineComponent({
     const initLsValue = computed(
       () => initKeyValueArr[template.value.randomIndex || 0]
     );
+    const onClickTab = (index: number) => {
+      if (index === 1) {
+        isMove.value = true;
+      } else if (index === 0) {
+        isMove.value = false;
+      }
+    };
     const initValues = () => {
       lrImgValue.value = 0;
       udImgValue.value = 0;
       lsImgValue.value = initLsValue.value;
+      lrLogoValue.value = 0;
+      udLogoValue.value = 0;
+      lrSloganValue.value = 0;
+      udSloganValue.value = 0;
     };
     const selectPostionImage = (index: number) => {
       imageActive.value = index;
@@ -467,29 +492,37 @@ export default defineComponent({
     watch(
       () => lrLogoValue.value,
       (newValue, oldValue) => {
-        const drawName = SVG(".svg-name0");
-        drawName.dmove(newValue - oldValue, 0);
+        if (isMove.value) {
+          const drawName = SVG(".svg-name0");
+          drawName.dmove(newValue - oldValue, 0);
+        }
       }
     );
     watch(
       () => udLogoValue.value,
       (newValue, oldValue) => {
-        const drawName = SVG(".svg-name0");
-        drawName.dmove(0, newValue - oldValue);
+        if (isMove.value) {
+          const drawName = SVG(".svg-name0");
+          drawName.dmove(0, newValue - oldValue);
+        }
       }
     );
     watch(
       () => lrSloganValue.value,
       (newValue, oldValue) => {
-        const drawName = SVG(".svg-slogan0");
-        drawName.dmove(newValue - oldValue, 0);
+        if (isMove.value) {
+          const drawName = SVG(".svg-slogan0");
+          drawName.dmove(newValue - oldValue, 0);
+        }
       }
     );
     watch(
       () => udSloganValue.value,
       (newValue, oldValue) => {
-        const drawName = SVG(".svg-slogan0");
-        drawName.dmove(0, newValue - oldValue);
+        if (isMove.value) {
+          const drawName = SVG(".svg-slogan0");
+          drawName.dmove(0, newValue - oldValue);
+        }
       }
     );
     // tab2的逻辑
@@ -503,21 +536,34 @@ export default defineComponent({
       onSliderChange(initLsValue.value, 3);
     };
     // tab2弹窗输入的name
+    const inputName = ref(template.value.name);
+    const inputNameEn = ref(template.value.name_en);
+    const onOpenNameDialog = () => {
+      inputName.value = template.value.name;
+      inputNameEn.value = template.value.name_en;
+    };
     const onCloseNameDialog = (action: string) =>
       new Promise((resolve) => {
         if (action === "cancel") {
           resolve(true);
+          return true;
+        }
+        if (inputName.value.length === 0 || inputNameEn.value.length === 0) {
+          Toast.fail("不能为空");
+          resolve(false);
+          return false;
         }
         setTimeout(() => {
           //判断是名称还是口号的修改
           let drawText;
           if (tab2ContentTitleActive.value === 0) {
             drawText = SVG(".svg-name0");
-            drawText.node.textContent = template.value.name;
+            drawText.node.textContent = inputName.value;
+            template.value.name = inputName.value;
             // 翻译
             store
               .dispatch("translate", {
-                searchParams: { keyword: template.value.name },
+                data: { keyword: inputName.value },
               })
               .then(() => {
                 drawText = SVG(".svg-slogan0");
@@ -527,7 +573,8 @@ export default defineComponent({
               });
           } else {
             drawText = SVG(".svg-slogan0");
-            drawText.node.textContent = template.value.name_en;
+            drawText.node.textContent = inputNameEn.value;
+            template.value.name_en = inputNameEn.value;
           }
           resolve(true);
         }, 1000);
@@ -625,6 +672,7 @@ export default defineComponent({
       udLogoValue,
       udSloganValue,
       isShowNameInput,
+      onOpenNameDialog,
       onCloseNameDialog,
       familyOptions,
       selectedFamily,
@@ -645,6 +693,9 @@ export default defineComponent({
       previewData,
       initLsValue,
       marteralId,
+      onClickTab,
+      inputName,
+      inputNameEn,
     };
   },
 });
@@ -697,6 +748,27 @@ export default defineComponent({
   height: 5rem;
   width: 8rem;
 }
+@keyframes fade {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  25% {
+    opacity: 0.25;
+    transform: scale(0.25);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(0.5);
+  }
+  75% {
+    opacity: 0.25;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+  }
+}
 .editor-container {
   background: #f8f8f8;
   min-height: 100vh;
@@ -727,8 +799,15 @@ export default defineComponent({
     // background: url("~@/assets/img/background-transparent.png");
     border-radius: 5px;
     .logoLoading {
-      left: calc(50vw - 1rem - 20px);
-      top: 50%;
+      // left: calc(50vw - 1rem - 20px);
+      // top: 50%;
+      margin: 0 auto;
+      margin-top: 30%;
+      width: 25px;
+      height: 25px;
+      background: radial-gradient(#afe8ff, #3286fe);
+      border-radius: 100%;
+      animation: fade ease-in 0.75s infinite;
     }
     .logo-box {
       height: 100%;
@@ -809,8 +888,7 @@ export default defineComponent({
       .imageBox {
         display: flex;
         align-items: center;
-        box-shadow: 0px -1px 0px 0px #eee, -1px 0px 0px 0px #eee,
-          1px 0px 0px 0px #eee, 0px 1px 0px 0px #eee;
+        box-shadow: 0 2px 12px #3232331f;
         .van-image {
           background: #fff;
           width: 33.333%;

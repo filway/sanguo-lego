@@ -39,6 +39,10 @@
         点击选择此方案
       </div>
     </div>
+    <div class="tipsBox" v-show="!isLoading">
+      <h4>TIPS:</h4>
+      <p>如果您对智能生成的LOGO不是100%满意可以选择付费升级，设计师人工修改</p>
+    </div>
   </div>
 </template>
 
@@ -99,7 +103,7 @@ export default defineComponent({
       localStorage.setItem("sn", sn as string);
       //获取logo list
       await store.dispatch("fetchTemplates", {
-        searchParams: { sn: sn || "" },
+        data: { sn: sn || "" },
       });
       await useCreateLogo(logoList.value);
     });
@@ -137,6 +141,29 @@ export default defineComponent({
     color: #fff;
     border-radius: 5px;
   }
+  .tipsBox {
+    text-align: center;
+    height: 11rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #000;
+    opacity: 0.7;
+    color: #fff;
+    border-radius: 8px;
+    flex-direction: column;
+    padding: 0 1.8rem;
+    h4 {
+      margin: 0;
+    }
+    p {
+      font-size: 15px;
+      line-height: 1.8;
+      font-weight: 300;
+    }
+    // background: url("../assets/img/img_banner.jpg");
+  }
+
   min-height: 100vh;
   padding: 0.5rem 1rem;
   .card-box {
@@ -145,7 +172,7 @@ export default defineComponent({
     width: calc(100vw - 2rem);
     height: 14rem;
     background: #fff;
-    border-radius: 5px;
+    border-radius: 8px;
     animation: zoomIn; /* referring directly to the animation's @keyframe declaration */
     animation-duration: 1s; /* don't forget to set a duration! */
     margin: 1rem 0;

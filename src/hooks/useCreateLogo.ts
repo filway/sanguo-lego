@@ -39,12 +39,12 @@ const useCreateLogo = async (
     const trueSloganColor = rgb;
     if (isRandom) {
       //需要随机生成
-      randonI = Math.floor(Math.random() * Math.floor(3)); //2//
+      randonI = Math.floor(Math.random() * Math.floor(2)); //2//
       if (item.name.length > 5) {
         randonI = 2;
       }
-      titleFamily = randomFamily[Math.floor(Math.random() * Math.floor(7))];
-      subTitleFamily = randomFamily[Math.floor(Math.random() * Math.floor(7))];
+      titleFamily = randomFamily[Math.floor(Math.random() * Math.floor(2))];
+      subTitleFamily = randomFamily[Math.floor(Math.random() * Math.floor(2))];
       if (givenProps.randomSubTitleFamily.length > 0) {
         randonI = givenProps.randomIndex;
         titleFamily = givenProps.randomTitleFamily;

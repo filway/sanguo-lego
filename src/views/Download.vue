@@ -5,7 +5,7 @@
       <van-col span="24" v-if="!isSvgCode">
         <div class="logo-box" v-for="(logo, key) in logoList" :key="key">
           <svg
-            :style="{ backgroundColor: 'red' }"
+            :style="{ backgroundColor: '#ffffff' }"
             baseProfile="full"
             version="1.1"
             :class="'svg' + key"
