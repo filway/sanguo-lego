@@ -13,10 +13,44 @@ import { computed, defineComponent, onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
 import { GlobalDataProps } from "./store";
+declare let $youzikuPromiseClient: any;
 
 export default defineComponent({
   name: "App",
   setup() {
+    $youzikuPromiseClient
+      .fullLoadFont({
+        AccessKey: "0d350439d2ce427080ef8133b0958f87",
+        Tag: ".svg",
+      })
+      .then((result: any) => {
+        console.log(result);
+      })
+      .catch((ex: any) => {
+        console.error(ex);
+      });
+    $youzikuPromiseClient
+      .fullLoadFont({
+        AccessKey: "8d86823451a94addaae5f6b1494e78b6",
+        Tag: ".svg",
+      })
+      .then((result: any) => {
+        console.log(result);
+      })
+      .catch((ex: any) => {
+        console.error(ex);
+      });
+    $youzikuPromiseClient
+      .fullLoadFont({
+        AccessKey: "7d222b74447b40b6ac776d2eb7993f9e",
+        Tag: ".svg",
+      })
+      .then((result: any) => {
+        console.log(result);
+      })
+      .catch((ex: any) => {
+        console.error(ex);
+      });
     const store = useStore<GlobalDataProps>();
     const isLoading = computed(() => store.getters.isLoading);
     const route = useRoute();
@@ -38,6 +72,9 @@ export default defineComponent({
     //数据持久化
     const saveState = () => {
       sessionStorage.setItem("state", JSON.stringify(store.state));
+    };
+    window.onload = () => {
+      console.log("加载完毕");
     };
     onMounted(() => {
       window.addEventListener("unload", saveState);

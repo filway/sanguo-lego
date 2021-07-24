@@ -25,6 +25,7 @@ import "vant/es/sticky/style";
 import Vant from "./configVant";
 import "default-passive-events";
 import "animate.css";
+import "./assets/fonts/font.scss";
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 import { RespData } from "./store/respTypes";
 

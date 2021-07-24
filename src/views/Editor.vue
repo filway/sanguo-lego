@@ -241,22 +241,45 @@
               :close-on-click-action="false"
               v-model:show="showFamilyPopover"
               placement="top-end"
+              class="familyPopover"
             >
-              <div
-                v-for="(item, index) in familyOptions"
-                :key="index"
-                role="menuitem"
-                class="van-popover__action"
-                style="height: 1.6rem; width: 10rem"
-                @click.stop="selectFontFamily(item.text, item.value)"
-              >
-                <div
-                  :style="{ fontFamily: item.value }"
-                  class="van-popover__action-text van-hairline--bottom"
+              <van-tabs v-model:active="activeFont" color="#3286fe">
+                <van-tab title="中文" title-class="familyTitle"
+                  ><div
+                    v-for="(item, index) in familyOptions"
+                    :key="index"
+                    role="menuitem"
+                    class="van-popover__action"
+                    style="height: 1.6rem; width: 10rem"
+                    @click.stop="selectFontFamily(item.text, item.value)"
+                  >
+                    <div
+                      :style="{ fontFamily: item.value }"
+                      class="van-popover__action-text van-hairline--bottom"
+                    >
+                      {{ item.text }}
+                    </div>
+                  </div></van-tab
                 >
-                  {{ item.text }}
-                </div>
-              </div>
+                <van-tab title="英文" title-class="familyTitle"
+                  ><div
+                    v-for="(item, index) in englishFamilyOptions"
+                    :key="index"
+                    role="menuitem"
+                    class="van-popover__action"
+                    style="height: 1.6rem; width: 10rem"
+                    @click.stop="selectFontFamily(item.text, item.value)"
+                  >
+                    <div
+                      :style="{ fontFamily: item.value }"
+                      class="van-popover__action-text van-hairline--bottom"
+                    >
+                      {{ item.text }}
+                    </div>
+                  </div></van-tab
+                >
+              </van-tabs>
+
               <template #reference>
                 <span v-show="tab2ContentTitleActive === 0">{{
                   currentNameFamily
@@ -389,13 +412,18 @@ import {
 } from "vue";
 import { useRoute } from "vue-router";
 import { SVG } from "@svgdotjs/svg.js";
-import { fontFamilyArr } from "../constants/random.constant";
+import {
+  englishFontFamilyArr,
+  fontFamilyArr,
+  randomFamilyText,
+} from "../constants/random.constant";
 import ColorPicker from "@/components/ColorPicker.vue";
 import PreviewDialog from "@/components/PreviewDialog.vue";
 import HeaderNav from "@/components/HeaderNav.vue";
 import { draw, svgToBase64 } from "@/helper";
 import { previewPropsArr } from "@/constants/preview.constant";
 import { Toast } from "vant";
+import { findIndex } from "lodash";
 
 export default defineComponent({
   name: "Editor",
@@ -417,6 +445,7 @@ export default defineComponent({
 
     const createLogoLoading = ref(false);
     const active = ref(0);
+    const activeFont = ref(0);
     const imageActive = ref(template.value.randomIndex);
     const tab2ContentTitleActive = ref(0);
     const showImgPopover = ref(false);
@@ -582,6 +611,7 @@ export default defineComponent({
         }, 1000);
       });
     const familyOptions = ref(fontFamilyArr);
+    const englishFamilyOptions = ref(englishFontFamilyArr);
     const selectedFamily = ref("");
     const selectFontFamily = (text: string, family: string) => {
       showFamilyPopover.value = false;
@@ -594,8 +624,10 @@ export default defineComponent({
         currentSloganFamily.value = text;
       }
     };
-    const currentNameFamily = ref("无");
-    const currentSloganFamily = ref("无");
+    const currentNameFamily = ref(randomFamilyText[template.value.randomIndex]);
+    const currentSloganFamily = ref(
+      randomFamilyText[template.value.randomIndex]
+    );
 
     //tab3 颜色
     const toggleTab3Title = (value: number) => {
@@ -655,6 +687,7 @@ export default defineComponent({
     return {
       logoList,
       active,
+      activeFont,
       selectPostionImage,
       imageActive,
       createLogoLoading,
@@ -677,6 +710,7 @@ export default defineComponent({
       onOpenNameDialog,
       onCloseNameDialog,
       familyOptions,
+      englishFamilyOptions,
       selectedFamily,
       selectFontFamily,
       currentNameFamily,
@@ -749,6 +783,17 @@ export default defineComponent({
   }
   height: 5rem;
   width: 8rem;
+}
+.familyPopover {
+  .van-tabs {
+    /deep/ .van-tabs__content {
+      height: 100px !important;
+      overflow: auto;
+    }
+    /deep/ .van-tabs__wrap {
+      margin-bottom: 0.5rem;
+    }
+  }
 }
 @keyframes fade {
   0% {

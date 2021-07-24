@@ -1,6 +1,9 @@
+import { SVGTypeMapping } from "@svgdotjs/svg.js";
+import { allFamily } from "./constants/random.constant";
 import {
   enableDownloadType,
   enableImageDownloadType,
+  familyExts,
   previewPropsType,
 } from "./defaultProps";
 
@@ -82,7 +85,7 @@ export const draw = (
   }
 };
 
-export function copyToClipboard(text: string) {
+export const copyToClipboard = (text: string) => {
   // 创建文本元素，赋值
   const textarea = document.createElement("textarea");
   textarea.value = text;
@@ -100,4 +103,24 @@ export function copyToClipboard(text: string) {
   } finally {
     document.body.removeChild(textarea);
   }
-}
+};
+
+/**
+ * const style = draw.style();
+    style.font('"hyfx"', 'url("https://oss.filway.cn/hyfx.TTF")');
+    style.remove();
+    draw.style().font('"hyfx2"', 'url("https://oss.filway.cn/hyfx.TTF")');
+ */
+export const findFontExt = (family: string): string => {
+  return allFamily[family as keyof familyExts];
+};
+type SvgType = SVGTypeMapping<SVGSVGElement>;
+export const addSvgFont = (family: string, draw: SvgType): SvgType => {
+  console.log(draw.svg());
+
+  const style = draw.style();
+  const ext = findFontExt(family);
+  style.font(family, `url("https://oss.filway.cn/fonts/${family}${ext}")`);
+  console.log(draw.svg());
+  return draw;
+};

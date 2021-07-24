@@ -1,0 +1,36 @@
+$fontUrl: "https://oss.filway.cn/fonts/";
+$allFonts: (
+  (family: 'hyfx', ext: '.TTF'),
+  (family: 'hyhz', ext: '.TTF'),
+  (family: 'mnjz', ext: '.OTF'),
+  (family: 'rzgf', ext: '.OTF'),
+  (family: 'zzgf', ext: '.TTF'),
+  (family: 'zktzbqxs', ext: '.TTF'),
+  (family: 'jhwz', ext: '.TTC'),
+  (family: 'df', ext: '.TTF'),
+  (family: 'career', ext: '.ttf'),
+  (family: 'clubtype', ext: '.ttf'),
+  (family: 'crimson', ext: '.ttf'),
+  (family: 'frizon', ext: '.ttf'),
+  (family: 'intreb', ext: '.ttf'),
+  (family: 'magiera', ext: '.ttf'),
+  (family: 'playlist', ext: '.otf'),
+);
+@mixin nm() {
+  font-weight: normal;
+  font-style: normal;
+}
+
+@for $i from 1 through length($allFonts) {
+  $item: nth($allFonts, $i);
+  $ext: map-get($item, ext );
+  $family: map-get($item, family);
+
+  @font-face {
+    font-family: $family;
+    src: url('#{$fontUrl}#{$family}#{$ext}');
+    @include nm;
+    font-display: swap;
+  }
+}
+

@@ -117,8 +117,13 @@ import useCreateLogo from "@/hooks/useCreateLogo";
 import { useStore } from "vuex";
 import { Dialog, Toast } from "vant";
 import axios from "axios";
-import { copyToClipboard, svgToBase64 } from "@/helper";
-import { SVG } from "@svgdotjs/svg.js";
+import {
+  addSvgFont,
+  copyToClipboard,
+  svgToBase64,
+  findFontExt,
+} from "@/helper";
+import { Style, SVG } from "@svgdotjs/svg.js";
 
 type infoType = {
   phone: string;
@@ -177,12 +182,36 @@ export default defineComponent({
               resolve(false);
             } else {
               setTimeout(() => {
-                /**
+                /**var p2 = /svgjs:data\s*?=\s*?([‘"])[\s\S]*?\1/g
                  * 参数：mater_id（必填）  sn（必填） email(必填)  mobile(必填)  base64（必填） svg（必填）
                  */
-                SVG(".svg0").node.removeAttribute("xmlns:svgjs");
-                const svg = SVG(".svg0").svg();
+                let svgObj = SVG(".svg0");
+                svgObj.node.removeAttribute("xmlns:svgjs");
+                svgObj.node.removeAttribute("svgjs:data");
+                const nameFamily = SVG(".svg-name0").attr("font-family");
+                const sloganFamily = SVG(".svg-slogan0").attr("font-family");
+                const ext = findFontExt(nameFamily);
+                const ext2 = findFontExt(sloganFamily);
+                /*
+                const style = new Style(svgObj.node);
+                style.font(
+                  nameFamily,
+                  `url("https://oss.filway.cn/fonts/${nameFamily}${ext}")`
+                );
+                style.font(
+                  sloganFamily,
+                  `url("https://oss.filway.cn/fonts/${sloganFamily}${ext2}")`
+                );
+                console.log(style);
+                */
+                //svgObj = addSvgFont(nameFamily.replaceAll('"', ""), svgObj);
+                //svgObj = addSvgFont(sloganFamily.replaceAll('""', ""), svgObj);
+                const svg1 = svgObj.svg();
+                //替换掉svgjs:data，否则图片加载不出
+                const p2 = /svgjs:data\s*?=\s*?([‘"])[\s\S]*?\1/g;
+                const svg = svg1.replace(p2, "");
                 console.log(svg);
+                console.log(typeof svg);
 
                 const base64 = svgToBase64(svg);
                 const img = new Image();
@@ -190,6 +219,9 @@ export default defineComponent({
                 img.crossOrigin = "anonymous";
 
                 let fstrImage;
+                img.onerror = (e) => {
+                  console.error(e);
+                };
                 img.onload = function () {
                   const canvas = document.createElement("canvas");
                   canvas.width = 1024;

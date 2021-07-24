@@ -61,6 +61,7 @@ const useCreateLogo = async (
 
     const draw = SVG();
     draw.addTo(`.svg${key}`);
+
     const groupImage = draw
       .group()
       .fill("dodgerblue")
