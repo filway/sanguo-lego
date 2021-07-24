@@ -29,7 +29,6 @@ import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 import { RespData } from "./store/respTypes";
 
 /**
- * 1、列表显示10张，2张用左右/上下，字体用两种
  * 3、字体
  * 7、预览场景图 （待研究）
  */

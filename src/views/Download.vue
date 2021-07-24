@@ -182,6 +182,7 @@ export default defineComponent({
                  */
                 SVG(".svg0").node.removeAttribute("xmlns:svgjs");
                 const svg = SVG(".svg0").svg();
+                console.log(svg);
 
                 const base64 = svgToBase64(svg);
                 const img = new Image();

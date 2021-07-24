@@ -128,4 +128,8 @@ export default defineComponent({
     border-radius: 5px;
   }
 }
+.my-swipe {
+  width: 100%;
+  height: 14rem;
+}
 </style>

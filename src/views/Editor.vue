@@ -104,9 +104,10 @@
             <van-image
               height="1.8rem"
               fit="contain"
+              class="centerImage"
               v-show="imageActive === 1"
               @click="selectPostionImage(1)"
-              :src="require('../assets/img/vertical_active.png')"
+              :src="require('../assets/img/vertical_active.jpg')"
             />
             <van-image
               height="1.8rem"
@@ -119,7 +120,7 @@
             <van-image
               height="1.8rem"
               fit="contain"
-              class="centerImage"
+              class="rightImage"
               v-show="imageActive === 2"
               @click="selectPostionImage(2)"
               :src="require('../assets/img/center_active.png')"
@@ -127,6 +128,7 @@
             <van-image
               height="1.8rem"
               fit="contain"
+              class="rightImage"
               v-show="imageActive !== 2"
               @click="selectPostionImage(2)"
               :src="require('../assets/img/center.png')"
@@ -738,7 +740,7 @@ export default defineComponent({
     margin-bottom: 0.2rem;
   }
   height: 8rem;
-  width: 8rem;
+  width: 7rem;
 }
 .sliderBox2 {
   padding: 0.5rem 1rem;
