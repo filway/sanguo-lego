@@ -3,7 +3,11 @@
  * @author: filway
  */
 
-import { svgToBase64 } from "@/helper";
+import {
+  svgToBase64,
+  getLayoutPropsByNameLength,
+  getRandomName,
+} from "@/helper";
 import store from "@/store";
 import { TemplateProps } from "@/store/templates";
 import { SVG } from "@svgdotjs/svg.js";
@@ -37,6 +41,20 @@ const useCreateLogo = async (
     trueMaterialPath = svgToBase64(item.svg);
     const trueNameColor = rgb;
     const trueSloganColor = rgb;
+    const layoutProps = getLayoutPropsByNameLength(
+      item.name.length,
+      item.randomIndex
+    );
+    const {
+      imageX,
+      imageY,
+      nameDX,
+      nameDY,
+      nameEnDX,
+      nameEnDY,
+      nameFontSize,
+      nameEnFontSize,
+    } = layoutProps;
     if (isRandom) {
       randonI = item.randomIndex;
       titleFamily = randomFamily[randonI];
@@ -54,6 +72,7 @@ const useCreateLogo = async (
       });
     } else {
       //直接取对应属性
+      console.log(item);
       randonI = item.randomIndex || 0;
       titleFamily = item.randomTitleFamily || "";
       subTitleFamily = item.randomSubTitleFamily || "";
@@ -66,12 +85,7 @@ const useCreateLogo = async (
       .group()
       .fill("dodgerblue")
       .attr({
-        transform:
-          "matrix(1,0,0,1," +
-          randomI1[randonI] +
-          "," +
-          randomI2[randonI] +
-          ") ",
+        transform: "matrix(1,0,0,1," + imageX + "," + imageY + ") ",
         class: `svg-logo${key}`,
       });
     const group = draw.group().fill("dodgerblue").attr({
@@ -82,28 +96,28 @@ const useCreateLogo = async (
     const title = draw
       .plain(item.name)
       .font({
-        size: 75,
+        size: nameFontSize,
         family: titleFamily,
         weight: "bolder",
       })
       .attr({
         fill: trueNameColor,
-        dx: randomIx[randonI],
-        dy: randomIy[randonI],
+        dx: nameDX,
+        dy: nameDY,
         "text-anchor": "middle",
         class: `svg-name${key}`,
       });
     const subTitle = draw
       .plain(item.name_en)
       .font({
-        size: 25,
+        size: nameEnFontSize,
         family: subTitleFamily,
         weight: "bolder",
       })
       .attr({
         fill: trueSloganColor,
-        dx: randomIx[randonI],
-        dy: randomIy[randonI] + 40,
+        dx: nameEnDX,
+        dy: nameEnDY,
         "text-anchor": "middle",
         class: `svg-slogan${key}`,
       });

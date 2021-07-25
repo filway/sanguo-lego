@@ -1,11 +1,19 @@
 import { SVGTypeMapping } from "@svgdotjs/svg.js";
-import { allFamily } from "./constants/random.constant";
+import layoutProps, {
+  allFamily,
+  randomI1,
+  randomI2,
+  randomIx,
+  randomIy,
+} from "./constants/random.constant";
 import {
   enableDownloadType,
   enableImageDownloadType,
   familyExts,
+  logoLayoutPropsType,
   previewPropsType,
 } from "./defaultProps";
+import mock from "mockjs";
 
 export const materialDownLoad = (
   src: string,
@@ -123,4 +131,44 @@ export const addSvgFont = (family: string, draw: SvgType): SvgType => {
   style.font(family, `url("https://oss.filway.cn/fonts/${family}${ext}")`);
   console.log(draw.svg());
   return draw;
+};
+
+//根据logo名称的长度，获取合理的布局属性
+export const getLayoutPropsByNameLength = (
+  length: number,
+  index: number
+): logoLayoutPropsType => {
+  const returnProps: logoLayoutPropsType = {
+    imageX: randomI1[index],
+    imageY: randomI2[index],
+    nameDX: randomIx[index],
+    nameDY: randomIy[index],
+    nameEnDX: randomIx[index],
+    nameEnDY: randomIy[index] + 40,
+    nameEnFontSize: 25,
+    nameFontSize: 75,
+  };
+  if (length !== 4) {
+    if (length > 14) {
+      length = 14;
+    }
+    returnProps.imageX = layoutProps[length].randomI1[index];
+    returnProps.imageY = layoutProps[length].randomI2[index];
+    returnProps.nameDX = layoutProps[length].randomIx[index];
+    returnProps.nameDY = layoutProps[length].randomIy[index];
+    returnProps.nameEnDX = layoutProps[length].randomIx[index];
+    returnProps.nameEnDY = layoutProps[length].randomIy[index] + 40;
+    returnProps.nameFontSize = layoutProps[length].randomNameFontSize;
+    returnProps.nameEnFontSize = layoutProps[length].randomNameEnFontSize;
+  }
+
+  return returnProps;
+};
+
+export const getRandomName = (length: number): string => {
+  const random = mock.Random;
+  return random.ctitle(length, length);
+};
+export const getRandomTitle = (): string => {
+  return mock.Random.title(1, 2);
 };

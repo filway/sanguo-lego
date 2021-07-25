@@ -20,7 +20,7 @@
       >Logo生成中...</van-loading
     >
     <div
-      @click="openPreviewDialog(logo.materialId, key)"
+      @click="openPreviewDialog(logo.materialId, logo.randomIndex, key)"
       v-for="(logo, key) in logoList"
       :key="key"
       class="card-box"
@@ -43,6 +43,7 @@
       <h4>TIPS:</h4>
       <p>如果您对智能生成的LOGO不是100%满意可以选择付费升级，设计师人工修改</p>
     </div>
+    <!-- <img :src="imgBase64" alt="" width="340" /> -->
   </div>
 </template>
 
@@ -75,15 +76,25 @@ export default defineComponent({
 
     const previewData = ref<string[]>([]);
 
-    const openPreviewDialog = (id: number, key: number) => {
+    const imgBase64 = ref("");
+    const openPreviewDialog = (id: number, index: number, key: number) => {
       currentId.value = id;
       currentIndex.value = key;
-      const svgBase64 = svgToBase64(SVG(`.svg${key}`).node.innerHTML);
+
+      let svgObj = SVG(`.svg${key}`);
+      svgObj.node.removeAttribute("xmlns:svgjs");
+      svgObj.node.removeAttribute("svgjs:data");
+      const svg1 = svgObj.svg();
+      //替换掉svgjs:data，否则图片加载不出
+      const p2 = /svgjs:data\s*?=\s*?([‘"])[\s\S]*?\1/g;
+      const svg = svg1.replace(p2, "");
+      const svgBase64 = svgToBase64(svg);
       previewData.value = [];
       previewPropsArr.forEach((item) => {
         draw(
           (b: string) => {
             previewData.value.push(b);
+            imgBase64.value = b;
           },
           [item.url, svgBase64],
           item
@@ -118,6 +129,7 @@ export default defineComponent({
       openDownloadDialog,
       isLoading,
       previewData,
+      imgBase64,
     };
   },
 });

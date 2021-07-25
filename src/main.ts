@@ -32,6 +32,10 @@ import { RespData } from "./store/respTypes";
 /**
  * 3、字体
  * 7、预览场景图 （待研究）
+ * 8、列表进编辑字体要一样
+ * 9、口号中间的格式
+ * 10、图标要可以变色
+ * 12、文字多少排版
  */
 
 export type ICustomAxiosConfig = AxiosRequestConfig & {

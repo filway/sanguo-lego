@@ -29,7 +29,7 @@
       </van-button>
     </div>
     <div class="imageBox">
-      <img src="../assets/img/bg2.jpg" alt="" />
+      <img src="../assets/img/bg2.jpeg" alt="" />
       <div class="textBox">
         <h2>想获得专有LOGO来商用？</h2>
         <h2>交给我们为您量身定制LOGO</h2>
@@ -214,6 +214,7 @@ export default defineComponent({
                 console.log(typeof svg);
 
                 const base64 = svgToBase64(svg);
+                console.log(base64);
                 const img = new Image();
                 img.src = base64;
                 img.crossOrigin = "anonymous";

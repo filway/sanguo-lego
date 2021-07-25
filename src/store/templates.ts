@@ -1,3 +1,4 @@
+import { getRandomName, getRandomTitle } from "@/helper";
 import { computed } from "vue";
 import { Module } from "vuex";
 import store, { actionWrapper, GlobalDataProps } from "./index";
@@ -41,6 +42,16 @@ const templates: Module<TemplatesProps, GlobalDataProps> = {
   },
   mutations: {
     fetchTemplates(state, rawData: RespListData<TemplateProps[]>) {
+      //处理返回数据，确保materialId唯一, 0结尾代表左右布局，1结尾代表上下布局，需要区分开
+      rawData.data.forEach((item, index) => {
+        rawData.data[index].materialId = parseInt(
+          item.materialId.toString() + item.randomIndex.toString()
+        );
+        rawData.data[index].name = getRandomName(
+          Math.floor(Math.random() * Math.floor(13)) + 1
+        );
+        rawData.data[index].name_en = getRandomTitle();
+      });
       state.data = rawData.data;
       sessionStorage.setItem("wx", rawData.attr ? rawData.attr.wx : "");
     },

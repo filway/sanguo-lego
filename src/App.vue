@@ -24,7 +24,7 @@ export default defineComponent({
         Tag: ".svg",
       })
       .then((result: any) => {
-        console.log(result);
+        //console.log(result);
       })
       .catch((ex: any) => {
         console.error(ex);
@@ -35,7 +35,7 @@ export default defineComponent({
         Tag: ".svg",
       })
       .then((result: any) => {
-        console.log(result);
+        //console.log(result);
       })
       .catch((ex: any) => {
         console.error(ex);
@@ -46,7 +46,7 @@ export default defineComponent({
         Tag: ".svg",
       })
       .then((result: any) => {
-        console.log(result);
+        //console.log(result);
       })
       .catch((ex: any) => {
         console.error(ex);
@@ -72,9 +72,6 @@ export default defineComponent({
     //数据持久化
     const saveState = () => {
       sessionStorage.setItem("state", JSON.stringify(store.state));
-    };
-    window.onload = () => {
-      console.log("加载完毕");
     };
     onMounted(() => {
       window.addEventListener("unload", saveState);
