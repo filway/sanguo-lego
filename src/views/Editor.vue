@@ -370,6 +370,15 @@
           >
           <span
             :class="[
+              tab3ContentTitleActive == 3
+                ? 'tabContentTitle activeTitle'
+                : 'tabContentTitle noActiveTitle',
+            ]"
+            @click="toggleTab3Title(3)"
+            >图标</span
+          >
+          <span
+            :class="[
               tab3ContentTitleActive == 2
                 ? 'tabContentTitle activeTitle'
                 : 'tabContentTitle noActiveTitle',
@@ -377,6 +386,16 @@
             @click="toggleTab3Title(2)"
             >背景</span
           >
+        </div>
+        <div class="colorBox" v-show="tab3ContentTitleActive === 3">
+          <div
+            :class="[colorItemActive == key ? 'colorActive' : '']"
+            @click="toggleColorItem(key)"
+            v-for="(color, key) in colors"
+            :key="key"
+            :data-color="color"
+            :style="{ background: color }"
+          ></div>
         </div>
         <color-picker
           v-show="tab3ContentTitleActive === 0"
@@ -392,6 +411,11 @@
           v-show="tab3ContentTitleActive === 2"
           :value="currentBackColor"
           @change="changeBackColor"
+        />
+        <color-picker
+          v-show="tab3ContentTitleActive === 3"
+          :value="currentImageColor"
+          @change="changeImageColor"
         />
       </van-tab>
     </van-tabs>
@@ -420,10 +444,15 @@ import {
 import ColorPicker from "@/components/ColorPicker.vue";
 import PreviewDialog from "@/components/PreviewDialog.vue";
 import HeaderNav from "@/components/HeaderNav.vue";
-import { draw, svgToBase64 } from "@/helper";
+import {
+  draw,
+  getColor,
+  getLayoutPropsByNameLength,
+  svgToBase64,
+} from "@/helper";
 import { previewPropsArr } from "@/constants/preview.constant";
 import { Toast } from "vant";
-import { findIndex } from "lodash";
+import cheerio from "cheerio";
 
 export default defineComponent({
   name: "Editor",
@@ -441,7 +470,44 @@ export default defineComponent({
     const template = computed<TemplateProps>(() =>
       store.getters.getTemplateById(parseInt(currentId, 0))
     );
+    //吸取图标的颜色
+    const colors = ref(getColor(template.value.svg));
+    console.log(colors);
     const isMove = ref(true); //是否需要移动logo和slogan
+    const colorItemActive = ref(-1);
+    const getActiveItemColor = () => {
+      const activeColorItemEls = document.getElementsByClassName("colorActive");
+      if (activeColorItemEls.length > 0) {
+        return activeColorItemEls[0].getAttribute("data-color");
+      }
+    };
+    const toggleColorItem = (key: number) => {
+      colorItemActive.value = key;
+      nextTick(() => {
+        currentImageColor.value = getActiveItemColor() || "#ffffff";
+      });
+    };
+    const currentImageColor = ref("");
+    const changeImageColor = (color: string) => {
+      if (color === "") {
+        color = "#ffffff";
+      }
+      currentImageColor.value = color;
+      const activeColorItemEls = document.getElementsByClassName("colorActive");
+      if (activeColorItemEls.length > 0) {
+        const activeItemColor = getActiveItemColor() || "#ffffff";
+        const activeColorItemEl = activeColorItemEls[0] as HTMLElement;
+        activeColorItemEl.setAttribute("data-color", color);
+        nextTick(() => {
+          colors.value[colorItemActive.value] = color;
+          var regex = new RegExp(activeItemColor, "g");
+          const logoElement = document.getElementsByClassName("svg-logo0");
+          const html = logoElement[0].outerHTML;
+          const newHtml = html.replace(regex, color);
+          logoElement[0].outerHTML = newHtml;
+        });
+      }
+    };
 
     const createLogoLoading = ref(false);
     const active = ref(0);
@@ -496,6 +562,31 @@ export default defineComponent({
       });
 
       await useCreateLogo(logoList.value, false);
+      const $ = cheerio.load(template.value.svg, {
+        xml: true,
+      });
+      const logoElement = document.getElementsByClassName("svg-logo0");
+      console.log(logoElement[0].getAttribute("transform"));
+      const transformAttr = logoElement[0].getAttribute("transform");
+      const { imageX, imageY } = getLayoutPropsByNameLength(
+        template.value.name.length,
+        template.value.randomIndex
+      );
+      // 169
+      // 这里宽高可以写死, 因为首页进来的时候 肯定为110
+      $("svg")
+        .attr("width", initLsValue.value.toString())
+        .attr("height", initLsValue.value.toString())
+        .addClass("svg-logo0")
+        .attr("transform", transformAttr)
+        .attr("x", imageX.toString())
+        .attr("y", imageY.toString());
+
+      lrImgValue.value = imageX;
+      udImgValue.value = imageY - 169;
+
+      logoElement[0].outerHTML = $.html();
+      console.log(logoElement[0].innerHTML);
     });
     // image slider滑动
     const lrImgValue = ref(0);
@@ -732,12 +823,31 @@ export default defineComponent({
       onClickTab,
       inputName,
       inputNameEn,
+      colors,
+      toggleColorItem,
+      colorItemActive,
+      changeImageColor,
+      currentImageColor,
     };
   },
 });
 </script>
 
 <style scoped lang="scss">
+.colorBox {
+  display: flex;
+  margin-bottom: 0.8rem;
+  align-items: center;
+  div {
+    width: 20px;
+    height: 20px;
+    border-radius: 5px;
+    margin: 0 2px;
+  }
+  .colorActive {
+    border: 1px solid red;
+  }
+}
 .lego-color-picker {
   height: 4rem;
 }

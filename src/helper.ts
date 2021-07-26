@@ -14,6 +14,7 @@ import {
   previewPropsType,
 } from "./defaultProps";
 import mock from "mockjs";
+import cheerio from "cheerio";
 
 export const materialDownLoad = (
   src: string,
@@ -171,4 +172,40 @@ export const getRandomName = (length: number): string => {
 };
 export const getRandomTitle = (): string => {
   return mock.Random.title(1, 2);
+};
+
+const svgCode =
+  '<svg id="图层_1" data-name="图层 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36.5 36.5"><defs><style>.cls-1{fill:#00a63c;}.cls-2{fill:#008134;}</style></defs><title>11-7</title><path class="cls-1" d="M212.39,240.37c10-5.46,6.84-16.49,3.33-17.36a18.72,18.72,0,0,0-2.82-.21,18.14,18.14,0,0,0-8.31,2v7.93h-7.93a18.28,18.28,0,0,0,0,16.63h5.49C203.05,246.83,205.64,244.07,212.39,240.37Z" transform="translate(-194.66 -222.8)"/><path class="cls-2" d="M229.15,232.73H223c-1.48,2.63-4.43,5.69-10.08,8.32-11.65,5.41-5.51,17.36-3.64,17.88a18.39,18.39,0,0,0,12-1.64v-7.93h7.93a18.28,18.28,0,0,0,0-16.63Z" transform="translate(-194.66 -222.8)"/></svg>';
+export const parseImageSVG = (): void => {
+  const $ = cheerio.load(svgCode);
+  const colors: string[] = [];
+  const styleContent = $("style").html();
+  const fillPattern = /#?([a-fA-F0-9]{6}|[a-fA-F0-9]{3})/g;
+  //const fillPattern2 = /^([.#]?\w+)[^{]+\{[^}]*\}/g;
+  console.log(styleContent?.match(fillPattern));
+  $("path").each((index, path) => {
+    const fill = $(path).attr("fill");
+    if (fill) {
+      colors.push(fill);
+    } else {
+      // 看看是否有className
+      const className = $(path).attr("class");
+      console.log(className);
+    }
+  });
+  console.log($.html());
+};
+
+//吸取图标的颜色
+export const getColor = (xml: string): string[] => {
+  const colorPattern = /#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})/g;
+  const colors: string[] = [];
+  const colorArr = xml.match(colorPattern) as string[];
+  for (const i in colorArr) {
+    const v = colorArr[i];
+    if (colors.indexOf(v) === -1) {
+      colors.push(v);
+    }
+  }
+  return colors;
 };

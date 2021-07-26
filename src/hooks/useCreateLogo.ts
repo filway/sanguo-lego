@@ -3,11 +3,7 @@
  * @author: filway
  */
 
-import {
-  svgToBase64,
-  getLayoutPropsByNameLength,
-  getRandomName,
-} from "@/helper";
+import { svgToBase64, getLayoutPropsByNameLength } from "@/helper";
 import store from "@/store";
 import { TemplateProps } from "@/store/templates";
 import { SVG } from "@svgdotjs/svg.js";
