@@ -231,6 +231,26 @@
             >口号</span
           >
         </div>
+        <div class="sloganEffectBox" v-show="tab2ContentTitleActive === 1">
+          <div
+            :class="[sloganEffectItemActive == 1 ? 'sloganEffectActive' : '']"
+            @click="toggleSloganEffectItemActive(1)"
+          >
+            1
+          </div>
+          <div
+            :class="[sloganEffectItemActive == 2 ? 'sloganEffectActive' : '']"
+            @click="toggleSloganEffectItemActive(2)"
+          >
+            2
+          </div>
+          <div
+            :class="[sloganEffectItemActive == 3 ? 'sloganEffectActive' : '']"
+            @click="toggleSloganEffectItemActive(3)"
+          >
+            3
+          </div>
+        </div>
         <div class="settingBox">
           <span @click="isShowNameInput = true">{{
             tab2ContentTitleActive ? template.name_en : template.name
@@ -436,6 +456,7 @@ import {
 } from "vue";
 import { useRoute } from "vue-router";
 import { SVG } from "@svgdotjs/svg.js";
+import "@svgdotjs/svg.filter.js";
 import {
   englishFontFamilyArr,
   fontFamilyArr,
@@ -447,8 +468,10 @@ import HeaderNav from "@/components/HeaderNav.vue";
 import {
   draw,
   getColor,
+  getFontUrl,
   getLayoutPropsByNameLength,
   svgToBase64,
+  useOpenType,
 } from "@/helper";
 import { previewPropsArr } from "@/constants/preview.constant";
 import { Toast } from "vant";
@@ -474,12 +497,10 @@ export default defineComponent({
     //替换svg元素
     const replaceSvgArea = (newXml: string) => {
       const div = document.createElement("div");
-      console.log(newXml);
       newXml = newXml.replace(/<!--\s*(.*)\s*-->/, "");
       newXml = newXml.replace(/<\?xml.*\?>/, "");
       newXml = newXml.trim();
       div.innerHTML = newXml;
-      console.log(newXml);
       const svgNode = svgRef.value?.childNodes[0];
       svgNode?.lastChild?.remove();
       svgNode?.appendChild(div.childNodes[0]);
@@ -607,6 +628,7 @@ export default defineComponent({
 
       await useCreateLogo(logoList.value, false);
       replaceWhenLayoutChange();
+      //useOpenType();
     });
     // image slider滑动
     const lrImgValue = ref(0);
@@ -736,6 +758,12 @@ export default defineComponent({
       if (tab2ContentTitleActive.value === 0) {
         SVG(".svg-name0").attr("font-family", family);
         currentNameFamily.value = text;
+        // const fontUrl = getFontUrl(family);
+        // const fontSize = SVG(".svg-name0").attr("font-size");
+        // const fill = SVG(".svg-name0").attr("fill");
+        //console.log(SVG(".svg-name0").position());
+        //useOpenType(template.value.name, fontUrl, fontSize, fill);
+        //console.log(fontUrl);
       } else {
         SVG(".svg-slogan0").attr("font-family", family);
         currentSloganFamily.value = text;
@@ -768,7 +796,6 @@ export default defineComponent({
       currentSloganColor.value = color;
       SVG(".svg-slogan0").attr("fill", color);
     };
-
     //背景色
     const currentBackColor = ref("#ffffff");
     const changeBackColor = (color: string) => {
@@ -799,6 +826,27 @@ export default defineComponent({
     };
     const closePreviewDialog = () => {
       showPreview.value = false;
+    };
+
+    //slogan 滤镜效果
+    const sloganEffectItemActive = ref(0);
+
+    const toggleSloganEffectItemActive = (key: number) => {
+      sloganEffectItemActive.value = key;
+      if (key === 3) {
+        SVG(".svg-slogan0").unfilter();
+        SVG(".svg-slogan0").filterWith((add) => {
+          add.flood(SVG(".svg-slogan0").attr("fill"), 1);
+          add.composite("SourceGraphic", "", "over");
+          add.attr("width", 1).attr("height", 1).attr("x", 0).attr("y", 0);
+        });
+        changeSloganColor("#ffffff");
+      } else if (key === 1) {
+        SVG(".svg-slogan0").unfilter();
+        changeSloganColor("#000000");
+      } else if (key === 2) {
+        Toast.fail("加入VIP，解锁该特效!");
+      }
     };
 
     return {
@@ -854,6 +902,8 @@ export default defineComponent({
       colorItemActive,
       changeImageColor,
       currentImageColor,
+      sloganEffectItemActive,
+      toggleSloganEffectItemActive,
     };
   },
 });
@@ -872,6 +922,25 @@ export default defineComponent({
   }
   .colorActive {
     border: 1px solid red;
+  }
+}
+.sloganEffectBox {
+  display: flex;
+  margin-bottom: 0.8rem;
+  align-items: center;
+  div {
+    width: 30px;
+    height: 30px;
+    border-radius: 5px;
+    margin: 0 5px;
+    background-color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .sloganEffectActive {
+    background-color: #3286fe;
+    color: #ffffff;
   }
 }
 .lego-color-picker {

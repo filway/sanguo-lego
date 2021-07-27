@@ -13,8 +13,8 @@ import {
   logoLayoutPropsType,
   previewPropsType,
 } from "./defaultProps";
-import mock from "mockjs";
 import cheerio from "cheerio";
+import opentype from "opentype.js";
 
 export const materialDownLoad = (
   src: string,
@@ -144,6 +144,11 @@ export const addSvgFont = (family: string, draw: SvgType): SvgType => {
   return draw;
 };
 
+export const getFontUrl = (family: string): string => {
+  const ext = findFontExt(family);
+  return `https://oss.filway.cn/fonts/${family}${ext}`;
+};
+
 //根据logo名称的长度，获取合理的布局属性
 export const getLayoutPropsByNameLength = (
   length: number,
@@ -174,14 +179,6 @@ export const getLayoutPropsByNameLength = (
   }
 
   return returnProps;
-};
-
-export const getRandomName = (length: number): string => {
-  const random = mock.Random;
-  return random.ctitle(length, length);
-};
-export const getRandomTitle = (): string => {
-  return mock.Random.title(1, 2);
 };
 
 const svgCode =
@@ -218,4 +215,19 @@ export const getColor = (xml: string): string[] => {
     }
   }
   return colors;
+};
+
+export const useOpenType = (
+  text: string,
+  url: string,
+  size: number,
+  fill: string
+): void => {
+  opentype.load(url, function (err, fontObj) {
+    console.log(err);
+    const path = fontObj?.getPath(text, 0, 0, size);
+    const pathTag = path?.toSVG(2);
+    const gTag = `<g transform="matrix(1,0,0,1,0,0)" fill="${fill}">${pathTag}</g>`;
+    console.log(gTag);
+  });
 };
