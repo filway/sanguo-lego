@@ -77,6 +77,9 @@ const useCreateLogo = async (
     const draw = SVG();
     draw.addTo(`.svg${key}`);
 
+    const group = draw.group().fill("dodgerblue").attr({
+      transform: "matrix(1,0,0,1,160,40) ",
+    });
     const groupImage = draw
       .group()
       .fill("dodgerblue")
@@ -84,9 +87,6 @@ const useCreateLogo = async (
         transform: "matrix(1,0,0,1," + imageX + "," + imageY + ") ",
         class: `svg-logo${key}`,
       });
-    const group = draw.group().fill("dodgerblue").attr({
-      transform: "matrix(1,0,0,1,160,40) ",
-    });
     const img = draw.image(trueMaterialPath);
     //debugger
     const title = draw

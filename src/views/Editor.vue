@@ -144,8 +144,8 @@
                   <h5 style="margin-top: 0">左右: {{ lrImgValue }}</h5>
                   <van-slider
                     v-model="lrImgValue"
-                    :min="-375"
-                    :max="375"
+                    :min="-800"
+                    :max="800"
                     :button-size="18"
                     @update:model-value="onSliderChange($event, 1)"
                   />
@@ -154,8 +154,8 @@
                   <h5>上下: {{ udImgValue }}</h5>
                   <van-slider
                     v-model="udImgValue"
-                    :min="-200"
-                    :max="200"
+                    :min="-800"
+                    :max="800"
                     :button-size="18"
                     @update:model-value="onSliderChange($event, 2)"
                   />
@@ -470,6 +470,21 @@ export default defineComponent({
     const template = computed<TemplateProps>(() =>
       store.getters.getTemplateById(parseInt(currentId, 0))
     );
+
+    //替换svg元素
+    const replaceSvgArea = (newXml: string) => {
+      const div = document.createElement("div");
+      console.log(newXml);
+      newXml = newXml.replace(/<!--\s*(.*)\s*-->/, "");
+      newXml = newXml.replace(/<\?xml.*\?>/, "");
+      newXml = newXml.trim();
+      div.innerHTML = newXml;
+      console.log(newXml);
+      const svgNode = svgRef.value?.childNodes[0];
+      svgNode?.lastChild?.remove();
+      svgNode?.appendChild(div.childNodes[0]);
+    };
+
     //吸取图标的颜色
     const colors = ref(getColor(template.value.svg));
     console.log(colors);
@@ -504,7 +519,8 @@ export default defineComponent({
           const logoElement = document.getElementsByClassName("svg-logo0");
           const html = logoElement[0].outerHTML;
           const newHtml = html.replace(regex, color);
-          logoElement[0].outerHTML = newHtml;
+          replaceSvgArea(newHtml);
+          //logoElement[0].outerHTML = newHtml;
         });
       }
     };
@@ -552,28 +568,23 @@ export default defineComponent({
           randomSubTitleFamily: template.value.randomSubTitleFamily || "",
         });
         createLogoLoading.value = false;
+        replaceWhenLayoutChange();
+        colorItemActive.value = -1;
+        colors.value = getColor(template.value.svg);
       }, 500);
     };
     logoList.value.push(template.value);
-    onMounted(async () => {
-      nextTick(() => {
-        var drawImg = SVG().addTo(".smallImg").size(20, 20);
-        drawImg.image(template.value.materialPath).size(20, 20);
-      });
-
-      await useCreateLogo(logoList.value, false);
+    const replaceWhenLayoutChange = () => {
       const $ = cheerio.load(template.value.svg, {
         xml: true,
       });
       const logoElement = document.getElementsByClassName("svg-logo0");
-      console.log(logoElement[0].getAttribute("transform"));
       const transformAttr = logoElement[0].getAttribute("transform");
       const { imageX, imageY } = getLayoutPropsByNameLength(
         template.value.name.length,
         template.value.randomIndex
       );
       // 169
-      // 这里宽高可以写死, 因为首页进来的时候 肯定为110
       $("svg")
         .attr("width", initLsValue.value.toString())
         .attr("height", initLsValue.value.toString())
@@ -583,10 +594,19 @@ export default defineComponent({
         .attr("y", imageY.toString());
 
       lrImgValue.value = imageX;
-      udImgValue.value = imageY - 169;
+      udImgValue.value = imageY;
 
-      logoElement[0].outerHTML = $.html();
-      console.log(logoElement[0].innerHTML);
+      replaceSvgArea($.html());
+      //logoElement[0].outerHTML = $.html();
+    };
+    onMounted(async () => {
+      nextTick(() => {
+        var drawImg = SVG().addTo(".smallImg").size(20, 20);
+        drawImg.image(template.value.materialPath).size(20, 20);
+      });
+
+      await useCreateLogo(logoList.value, false);
+      replaceWhenLayoutChange();
     });
     // image slider滑动
     const lrImgValue = ref(0);
@@ -653,8 +673,14 @@ export default defineComponent({
     };
     const resetSvg = () => {
       initValues();
-      onSliderChange(0, 1);
-      onSliderChange(0, 2);
+      const { imageX, imageY } = getLayoutPropsByNameLength(
+        template.value.name.length,
+        template.value.randomIndex
+      );
+      lrImgValue.value = imageX;
+      udImgValue.value = imageY;
+      onSliderChange(imageX, 1);
+      onSliderChange(imageY, 2);
       onSliderChange(initLsValue.value, 3);
     };
     // tab2弹窗输入的name

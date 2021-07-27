@@ -60,8 +60,8 @@ export const draw = (
   const c = document.createElement("canvas"),
     ctx = c.getContext("2d"),
     len = data.length;
-  c.width = 800;
-  c.height = 800 / 1.5; //除1.5是由于背景图长和宽的比例是1.5
+  c.width = 340;
+  c.height = 224; //除1.5是由于背景图长和宽的比例是1.5
   if (ctx) {
     ctx.rect(0, 0, c.width, c.height);
     ctx.fillStyle = "#fff";
@@ -75,8 +75,18 @@ export const draw = (
         img.src = data[n];
         img.onload = function () {
           if (n == 1) {
-            const { x, y, w, h } = props;
-            ctx.drawImage(img, x, y, w, h); //参数表示：第一个参数绘制的img图片  第二个参数和第三个参数分别表示绘制的图片距离背景图片左上角的X轴，Y轴，第四个参数和第五个参数表示绘制的图片的大小
+            let img_w = 150;
+            let img_h = (img.height / img.width) * img_w;
+            if (img.height > img.width) {
+              img_h = 120;
+              img_w = (img.width / img.height) * img_h;
+            }
+            const { x, y } = props;
+            const left = x - img_w / 2;
+            const top = y - img_h / 2;
+            console.log(img_w, img_h, x, y, "left：" + left, "top:" + top);
+
+            ctx.drawImage(img, left, top, img_w, img_h); //参数表示：第一个参数绘制的img图片  第二个参数和第三个参数分别表示绘制的图片距离背景图片左上角的X轴，Y轴，第四个参数和第五个参数表示绘制的图片的大小
           } else {
             ctx.drawImage(img, 0, 0, c.width, c.height);
           }

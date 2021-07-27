@@ -1,4 +1,3 @@
-import { getRandomName, getRandomTitle } from "@/helper";
 import { computed } from "vue";
 import { Module } from "vuex";
 import store, { actionWrapper, GlobalDataProps } from "./index";
@@ -47,10 +46,6 @@ const templates: Module<TemplatesProps, GlobalDataProps> = {
         rawData.data[index].materialId = parseInt(
           item.materialId.toString() + item.randomIndex.toString()
         );
-        rawData.data[index].name = getRandomName(
-          Math.floor(Math.random() * Math.floor(13)) + 1
-        );
-        rawData.data[index].name_en = getRandomTitle();
       });
       state.data = rawData.data;
       sessionStorage.setItem("wx", rawData.attr ? rawData.attr.wx : "");
