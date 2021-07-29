@@ -470,6 +470,7 @@ import {
   getColor,
   getFontUrl,
   getLayoutPropsByNameLength,
+  replaceText,
   svgToBase64,
   useOpenType,
 } from "@/helper";
@@ -628,7 +629,7 @@ export default defineComponent({
 
       await useCreateLogo(logoList.value, false);
       replaceWhenLayoutChange();
-      //useOpenType();
+      //replaceText(".svg-name0", "hyfx");
     });
     // image slider滑动
     const lrImgValue = ref(0);
@@ -758,15 +759,11 @@ export default defineComponent({
       if (tab2ContentTitleActive.value === 0) {
         SVG(".svg-name0").attr("font-family", family);
         currentNameFamily.value = text;
-        // const fontUrl = getFontUrl(family);
-        // const fontSize = SVG(".svg-name0").attr("font-size");
-        // const fill = SVG(".svg-name0").attr("fill");
-        //console.log(SVG(".svg-name0").position());
-        //useOpenType(template.value.name, fontUrl, fontSize, fill);
-        //console.log(fontUrl);
+        //replaceText(".svg-name0", family);
       } else {
         SVG(".svg-slogan0").attr("font-family", family);
         currentSloganFamily.value = text;
+        //replaceText(".svg-slogan0", family);
       }
     };
     const currentNameFamily = ref(randomFamilyText[template.value.randomIndex]);

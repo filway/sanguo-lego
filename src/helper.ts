@@ -15,6 +15,8 @@ import {
 } from "./defaultProps";
 import cheerio from "cheerio";
 import opentype from "opentype.js";
+import { SVG } from "@svgdotjs/svg.js";
+import { nextTick } from "vue";
 
 export const materialDownLoad = (
   src: string,
@@ -84,7 +86,16 @@ export const draw = (
             const { x, y } = props;
             const left = x - img_w / 2;
             const top = y - img_h / 2;
-            console.log(img_w, img_h, x, y, "left：" + left, "top:" + top);
+            console.log(
+              img.height,
+              img.width,
+              img_w,
+              img_h,
+              x,
+              y,
+              "left：" + left,
+              "top:" + top
+            );
 
             ctx.drawImage(img, left, top, img_w, img_h); //参数表示：第一个参数绘制的img图片  第二个参数和第三个参数分别表示绘制的图片距离背景图片左上角的X轴，Y轴，第四个参数和第五个参数表示绘制的图片的大小
           } else {
@@ -124,12 +135,6 @@ export const copyToClipboard = (text: string) => {
   }
 };
 
-/**
- * const style = draw.style();
-    style.font('"hyfx"', 'url("https://oss.filway.cn/hyfx.TTF")');
-    style.remove();
-    draw.style().font('"hyfx2"', 'url("https://oss.filway.cn/hyfx.TTF")');
- */
 export const findFontExt = (family: string): string => {
   return allFamily[family as keyof familyExts];
 };
@@ -139,14 +144,17 @@ export const addSvgFont = (family: string, draw: SvgType): SvgType => {
 
   const style = draw.style();
   const ext = findFontExt(family);
-  style.font(family, `url("https://oss.filway.cn/fonts/${family}${ext}")`);
+  style.font(
+    family,
+    `url("https://logosvg.oss-cn-chengdu.aliyuncs.com/fonts/${family}${ext}")`
+  );
   console.log(draw.svg());
   return draw;
 };
 
 export const getFontUrl = (family: string): string => {
   const ext = findFontExt(family);
-  return `https://oss.filway.cn/fonts/${family}${ext}`;
+  return `https://logosvg.oss-cn-chengdu.aliyuncs.com/fonts/${family}${ext}`;
 };
 
 //根据logo名称的长度，获取合理的布局属性
@@ -221,13 +229,42 @@ export const useOpenType = (
   text: string,
   url: string,
   size: number,
-  fill: string
+  fill: string,
+  family: string
 ): void => {
   opentype.load(url, function (err, fontObj) {
     console.log(err);
     const path = fontObj?.getPath(text, 0, 0, size);
     const pathTag = path?.toSVG(2);
-    const gTag = `<g transform="matrix(1,0,0,1,0,0)" fill="${fill}">${pathTag}</g>`;
+    const gTag = `<g font-size="${size}" dx="245" dy="185" font-family="${family}" x="0" y="0" class="svg-name0" transform="matrix(1,0,0,1,0,185)" fill="${fill}">${pathTag}</g>`;
     console.log(gTag);
   });
+};
+
+//替换字体元素为代码
+export const replaceText = (cls: string, family: string) => {
+  // 替换logo
+  const textNode = document.querySelector(cls);
+  const textContent = textNode?.outerHTML;
+  if (textContent) {
+    let tmp = textContent.replace(/<text/, "<g");
+    tmp = tmp.replace(/\/text>$/, "/g>");
+    const $ = cheerio.load(tmp, { xml: true });
+    const text = $("g").text();
+    const size = $("g").attr("font-size") as string;
+    const url = getFontUrl(family);
+    const dy = $("g").attr("dy");
+    $("g").attr("transform", `matrix(1,0,0,1,0,${dy})`);
+    $("g").attr("font-family", family);
+    opentype.load(url, (err, fontObj) => {
+      const path = fontObj?.getPath(text, 0, 0, parseInt(size));
+      const pathTag = path?.toSVG(2) as string;
+      $("g").html(pathTag);
+      const div = document.createElement("div");
+      div.innerHTML = "<svg><svg>" + $.html() + "</svg></svg>";
+      const textParentNode = textNode?.parentNode;
+      textNode?.remove();
+      textParentNode?.appendChild(div.childNodes[0]);
+    });
+  }
 };
