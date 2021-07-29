@@ -19,6 +19,8 @@ export const allFamily: Required<familyExts> = {
   intreb: ".ttf",
   magiera: ".ttf",
   playlist: ".otf",
+  "SourceHanSerif-B": "otf",
+  HiraginoGBW3: "ttf",
 };
 
 export const randomFamily = ["HiraginoGBW3", "SourceHanSerif-B"];
@@ -32,10 +34,6 @@ export const fontFamilyArr = [
   {
     text: "台北黑体",
     value: "HiraginoGBW3",
-  },
-  {
-    text: "站酷小薇LOGO体",
-    value: "xiaowei",
   },
   {
     text: "汉仪范笑歌隶书",

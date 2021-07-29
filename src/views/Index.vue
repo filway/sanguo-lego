@@ -54,9 +54,9 @@ import { useRoute } from "vue-router";
 import { useStore } from "vuex";
 import useCreateLogo from "@/hooks/useCreateLogo";
 import PreviewDialog from "@/components/PreviewDialog.vue";
-import { draw, svgToBase64 } from "@/helper";
 import { SVG } from "@svgdotjs/svg.js";
 import { previewPropsArr } from "../constants/preview.constant";
+import cheerio from "cheerio";
 
 export default defineComponent({
   name: "Index",
@@ -74,13 +74,12 @@ export default defineComponent({
     const logoList = computed(() => store.state.templates.data);
     provide("key", currentIndex);
 
-    const previewData = ref<string[]>([]);
+    const previewData = ref<any[]>([]);
 
     const imgBase64 = ref("");
     const openPreviewDialog = (id: number, index: number, key: number) => {
       currentId.value = id;
       currentIndex.value = key;
-
       let svgObj = SVG(`.svg${key}`);
       svgObj.node.removeAttribute("xmlns:svgjs");
       svgObj.node.removeAttribute("svgjs:data");
@@ -88,17 +87,18 @@ export default defineComponent({
       //替换掉svgjs:data，否则图片加载不出
       const p2 = /svgjs:data\s*?=\s*?([‘"])[\s\S]*?\1/g;
       const svg = svg1.replace(p2, "");
-      const svgBase64 = svgToBase64(svg);
       previewData.value = [];
-      previewPropsArr.forEach((item) => {
-        draw(
-          (b: string) => {
-            previewData.value.push(b);
-            imgBase64.value = b;
-          },
-          [item.url, svgBase64],
-          item
-        );
+      previewPropsArr.forEach((item, index) => {
+        const $ = cheerio.load(svg, { xml: true });
+        $("svg").css("position", "absolute");
+        $("svg").css("width", item.width);
+        $("svg").css("height", item.height);
+        $("svg").css("left", item.left);
+        $("svg").css("top", item.top);
+        previewData.value.push({
+          url: item.url,
+          svg: $.html(),
+        });
       });
 
       showPreview.value = true;

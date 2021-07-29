@@ -22,6 +22,10 @@ export interface getSvgData {
   path: string;
   svg: string;
 }
+export interface base64Data {
+  logo: string;
+  slogan: string;
+}
 export interface downloadUrlData {
   png: string;
   jpg: string;

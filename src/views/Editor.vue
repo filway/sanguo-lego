@@ -466,7 +466,6 @@ import ColorPicker from "@/components/ColorPicker.vue";
 import PreviewDialog from "@/components/PreviewDialog.vue";
 import HeaderNav from "@/components/HeaderNav.vue";
 import {
-  draw,
   getColor,
   getFontUrl,
   getLayoutPropsByNameLength,
@@ -804,21 +803,29 @@ export default defineComponent({
 
     // 预览
     const showPreview = ref(false);
-    const previewData = ref<string[]>([]);
+    const previewData = ref<any[]>([]);
 
     const openPreviewDialog = () => {
-      const svgBase64 = svgToBase64(SVG(".svg0").node.innerHTML);
+      let svgObj = SVG(".svg0");
+      const svg = svgObj.node.outerHTML;
+      //替换掉svgjs:data，否则图片加载不出
       previewData.value = [];
-      previewPropsArr.forEach((item) => {
-        draw(
-          (b: string) => {
-            previewData.value.push(b);
-          },
-          [item.url, svgBase64],
-          item
-        );
+      previewPropsArr.forEach((item, index) => {
+        const $ = cheerio.load(svg, { xml: true });
+        $("svg").removeClass("svg0");
+        $("svg svg svg").removeClass("svg-logo0");
+        $("svg svg g .svg-name0").removeClass("svg-name0");
+        $("svg svg g .svg-slogan0").removeClass("svg-slogan0");
+        $("svg").css("position", "absolute");
+        $("svg").css("width", item.width);
+        $("svg").css("height", item.height);
+        $("svg").css("left", item.left);
+        $("svg").css("top", item.top);
+        previewData.value.push({
+          url: item.url,
+          svg: $.html(),
+        });
       });
-
       showPreview.value = true;
     };
     const closePreviewDialog = () => {

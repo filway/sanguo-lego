@@ -2,10 +2,10 @@ export type enableDownloadType = "svg" | "png" | "jpg";
 export type enableImageDownloadType = "png" | "jpg";
 export type previewPropsType = {
   url: string;
-  x: number;
-  y: number;
-  w: number;
-  h: number;
+  width: string;
+  height: string;
+  left: string;
+  top: string;
 };
 export interface familyExts {
   hyfx: string;
@@ -22,6 +22,8 @@ export interface familyExts {
   intreb: string;
   magiera: string;
   playlist: string;
+  HiraginoGBW3: string;
+  "SourceHanSerif-B": string;
 }
 export type familyKeys = keyof familyExts;
 //布局属性

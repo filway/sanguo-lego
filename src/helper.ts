@@ -54,6 +54,7 @@ export const svgToBase64 = (svg: string): string => {
 };
 
 //这儿使用base64图片也是可以合成的，但用get_file_content返回的svg demo无法合成，使用在线的svg地址也无法合成
+/*
 export const draw = (
   fn: CallableFunction,
   data: string[],
@@ -114,6 +115,7 @@ export const draw = (
     drawing(0);
   }
 };
+*/
 
 export const copyToClipboard = (text: string) => {
   // 创建文本元素，赋值

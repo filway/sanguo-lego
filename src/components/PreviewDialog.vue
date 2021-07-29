@@ -11,7 +11,11 @@
       </div>
       <van-swipe class="my-swipe" :autoplay="3000" indicator-color="white">
         <van-swipe-item v-for="(item, index) in previewData" :key="index">
-          <img :src="item" alt="" width="340" />
+          <div
+            :style="{ backgroundImage: 'url(' + item.url + ')' }"
+            :class="`bgimg bgimg_${index}`"
+            v-html="item.svg"
+          ></div>
         </van-swipe-item>
       </van-swipe>
       <div class="buttonBox">
@@ -131,5 +135,11 @@ export default defineComponent({
 .my-swipe {
   width: 100%;
   height: 14rem;
+}
+.bgimg {
+  width: 340px;
+  height: 224px;
+  position: relative;
+  background-size: 100%;
 }
 </style>
