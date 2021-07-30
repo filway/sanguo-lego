@@ -5,45 +5,30 @@
 
 import { previewPropsType } from "@/defaultProps";
 
-export const previewUrls = [
-  "https://logosvg.oss-cn-chengdu.aliyuncs.com/bgimg/show1.jpg",
-  "https://logosvg.oss-cn-chengdu.aliyuncs.com/bgimg/show2.png",
-];
-
 export const previewPropsArr: previewPropsType[] = [
   {
-    url: "https://logosvg.oss-cn-chengdu.aliyuncs.com/bgimg/show1.jpg",
-    width: "220px",
-    height: "90.8685px",
-    left: "25px",
-    top: "61.5657px",
+    url: require("../assets/img/cj/show1.jpg"),
+    x: 135,
+    y: 107,
   },
   {
-    url: "https://logosvg.oss-cn-chengdu.aliyuncs.com/bgimg/show2.png",
-    width: "220px",
-    height: "92.3101px",
-    left: "40px",
-    top: "53.845px",
+    url: require("../assets/img/cj/show2.png"),
+    x: 150,
+    y: 100,
   },
   {
-    url: "https://logosvg.oss-cn-chengdu.aliyuncs.com/bgimg/show3.png",
-    width: "220px",
-    height: "90.8685px",
-    left: "60px",
-    top: "129.566px",
+    url: require("../assets/img/cj/show3.png"),
+    x: 170,
+    y: 175,
   },
   {
-    url: "https://logosvg.oss-cn-chengdu.aliyuncs.com/bgimg/show6.png",
-    width: "220px",
-    height: "90.8685px",
-    left: "50px",
-    top: "34.5657px",
+    url: require("../assets/img/cj/show6.png"),
+    x: 160,
+    y: 80,
   },
   {
-    url: "https://logosvg.oss-cn-chengdu.aliyuncs.com/bgimg/show5.png",
-    width: "220px",
-    height: "92.3101px",
-    left: "35px",
-    top: "63.845px",
+    url: require("../assets/img/cj/show5.png"),
+    x: 145,
+    y: 110,
   },
 ];

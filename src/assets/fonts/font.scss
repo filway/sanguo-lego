@@ -2,12 +2,9 @@ $fontUrl: "https://logosvg.oss-cn-chengdu.aliyuncs.com/fonts/";
 $allFonts: (
   (family: 'hyfx', ext: '.TTF'),
   (family: 'hyhz', ext: '.TTF'),
-  (family: 'mnjz', ext: '.OTF'),
   (family: 'rzgf', ext: '.OTF'),
   (family: 'zzgf', ext: '.TTF'),
   (family: 'zktzbqxs', ext: '.TTF'),
-  (family: 'jhwz', ext: '.TTC'),
-  (family: 'df', ext: '.TTF'),
   (family: 'career', ext: '.ttf'),
   (family: 'clubtype', ext: '.ttf'),
   (family: 'crimson', ext: '.ttf'),
@@ -15,6 +12,8 @@ $allFonts: (
   (family: 'intreb', ext: '.ttf'),
   (family: 'magiera', ext: '.ttf'),
   (family: 'playlist', ext: '.otf'),
+  (family: 'hkst', ext: '.ttf'),
+  (family: 'HiraginoGBW3', ext: ".ttf"),
 );
 @mixin nm() {
   font-weight: normal;

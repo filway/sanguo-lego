@@ -7,13 +7,7 @@ import { svgToBase64, getLayoutPropsByNameLength } from "@/helper";
 import store from "@/store";
 import { TemplateProps } from "@/store/templates";
 import { SVG } from "@svgdotjs/svg.js";
-import {
-  randomFamily,
-  randomI1,
-  randomI2,
-  randomIx,
-  randomIy,
-} from "../constants/random.constant";
+import { randomFamily } from "../constants/random.constant";
 
 // 直接给定属性生成
 type givenSvgProps = Pick<
@@ -68,7 +62,6 @@ const useCreateLogo = async (
       });
     } else {
       //直接取对应属性
-      console.log(item);
       randonI = item.randomIndex || 0;
       titleFamily = item.randomTitleFamily || "";
       subTitleFamily = item.randomSubTitleFamily || "";

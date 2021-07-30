@@ -233,23 +233,17 @@
         </div>
         <div class="sloganEffectBox" v-show="tab2ContentTitleActive === 1">
           <div
-            :class="[sloganEffectItemActive == 1 ? 'sloganEffectActive' : '']"
+            :class="[sloganEffectItemActive == 1 ? 'sloganEffectActive1' : '']"
             @click="toggleSloganEffectItemActive(1)"
-          >
-            1
-          </div>
+          ></div>
           <div
-            :class="[sloganEffectItemActive == 2 ? 'sloganEffectActive' : '']"
+            :class="[sloganEffectItemActive == 2 ? 'sloganEffectActive2' : '']"
             @click="toggleSloganEffectItemActive(2)"
-          >
-            2
-          </div>
+          ></div>
           <div
-            :class="[sloganEffectItemActive == 3 ? 'sloganEffectActive' : '']"
+            :class="[sloganEffectItemActive == 3 ? 'sloganEffectActive3' : '']"
             @click="toggleSloganEffectItemActive(3)"
-          >
-            3
-          </div>
+          ></div>
         </div>
         <div class="settingBox">
           <span @click="isShowNameInput = true">{{
@@ -465,17 +459,11 @@ import {
 import ColorPicker from "@/components/ColorPicker.vue";
 import PreviewDialog from "@/components/PreviewDialog.vue";
 import HeaderNav from "@/components/HeaderNav.vue";
-import {
-  getColor,
-  getFontUrl,
-  getLayoutPropsByNameLength,
-  replaceText,
-  svgToBase64,
-  useOpenType,
-} from "@/helper";
+import { getColor, getLayoutPropsByNameLength } from "@/helper";
 import { previewPropsArr } from "@/constants/preview.constant";
 import { Toast } from "vant";
 import cheerio from "cheerio";
+import useDriver from "@/hooks/useDriver";
 
 export default defineComponent({
   name: "Editor",
@@ -629,6 +617,12 @@ export default defineComponent({
       await useCreateLogo(logoList.value, false);
       replaceWhenLayoutChange();
       //replaceText(".svg-name0", "hyfx");
+      const visted = sessionStorage.getItem("visted");
+      if (!visted) {
+        sessionStorage.setItem("visted", "1");
+        //首次进入编辑页面，引导教学
+        useDriver();
+      }
     });
     // image slider滑动
     const lrImgValue = ref(0);
@@ -810,17 +804,21 @@ export default defineComponent({
       const svg = svgObj.node.outerHTML;
       //替换掉svgjs:data，否则图片加载不出
       previewData.value = [];
-      previewPropsArr.forEach((item, index) => {
+      let img_w = 300;
+      let img_h = 90;
+      previewPropsArr.forEach((item) => {
         const $ = cheerio.load(svg, { xml: true });
         $("svg").removeClass("svg0");
         $("svg svg svg").removeClass("svg-logo0");
         $("svg svg g .svg-name0").removeClass("svg-name0");
         $("svg svg g .svg-slogan0").removeClass("svg-slogan0");
+        const left = item.x - img_w / 2;
+        const top = item.y - img_h / 2;
         $("svg").css("position", "absolute");
-        $("svg").css("width", item.width);
-        $("svg").css("height", item.height);
-        $("svg").css("left", item.left);
-        $("svg").css("top", item.top);
+        $("svg").css("width", img_w.toString() + "px");
+        $("svg").css("height", img_h.toString() + "px");
+        $("svg").css("left", left.toString() + "px");
+        $("svg").css("top", top.toString() + "px");
         previewData.value.push({
           url: item.url,
           svg: $.html(),
@@ -840,7 +838,11 @@ export default defineComponent({
       if (key === 3) {
         SVG(".svg-slogan0").unfilter();
         SVG(".svg-slogan0").filterWith((add) => {
-          add.flood(SVG(".svg-slogan0").attr("fill"), 1);
+          if (currentSloganColor.value === "#ffffff") {
+            add.flood("#000000", 1);
+          } else {
+            add.flood(SVG(".svg-slogan0").attr("fill"), 1);
+          }
           add.composite("SourceGraphic", "", "over");
           add.attr("width", 1).attr("height", 1).attr("x", 0).attr("y", 0);
         });
@@ -849,7 +851,7 @@ export default defineComponent({
         SVG(".svg-slogan0").unfilter();
         changeSloganColor("#000000");
       } else if (key === 2) {
-        Toast.fail("加入VIP，解锁该特效!");
+        console.warn("效果待加入~~");
       }
     };
 
@@ -932,8 +934,20 @@ export default defineComponent({
   display: flex;
   margin-bottom: 0.8rem;
   align-items: center;
+  > div:first-child {
+    background-image: url("../assets/img/slogan1.png");
+    background-size: 100% 100%;
+  }
+  > div:nth-child(2) {
+    background-image: url("../assets/img/slogan2.png");
+    background-size: 100% 100%;
+  }
+  > div:nth-child(3) {
+    background-image: url("../assets/img/slogan3.png");
+    background-size: 100% 100%;
+  }
   div {
-    width: 30px;
+    width: 40px;
     height: 30px;
     border-radius: 5px;
     margin: 0 5px;
@@ -942,9 +956,17 @@ export default defineComponent({
     align-items: center;
     justify-content: center;
   }
-  .sloganEffectActive {
-    background-color: #3286fe;
-    color: #ffffff;
+  .sloganEffectActive1 {
+    background-image: url("../assets/img/slogan1_active.jpg") !important;
+    background-size: 100% 100%;
+  }
+  .sloganEffectActive2 {
+    background-image: url("../assets/img/slogan2_active.jpg") !important;
+    background-size: 100% 100%;
+  }
+  .sloganEffectActive3 {
+    background-image: url("../assets/img/slogan3_active.png") !important;
+    background-size: 100% 100%;
   }
 }
 .lego-color-picker {

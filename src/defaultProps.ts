@@ -2,19 +2,17 @@ export type enableDownloadType = "svg" | "png" | "jpg";
 export type enableImageDownloadType = "png" | "jpg";
 export type previewPropsType = {
   url: string;
-  width: string;
-  height: string;
-  left: string;
-  top: string;
+  x: number;
+  y: number;
 };
 export interface familyExts {
   hyfx: string;
   hyhz: string;
-  mnjz: string;
+  mnjz?: string;
   zzgf: string;
-  df: string;
+  df?: string;
   zktzbqxs: string;
-  jhwz: string;
+  jhwz?: string;
   career: string;
   clubtype: string;
   crimson: string;
@@ -23,7 +21,9 @@ export interface familyExts {
   magiera: string;
   playlist: string;
   HiraginoGBW3: string;
-  "SourceHanSerif-B": string;
+  "SourceHanSerif-B"?: string;
+  hkst: string;
+  rzgf: string;
 }
 export type familyKeys = keyof familyExts;
 //布局属性

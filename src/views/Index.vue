@@ -81,6 +81,8 @@ export default defineComponent({
       currentId.value = id;
       currentIndex.value = key;
       let svgObj = SVG(`.svg${key}`);
+      let img_w = 300;
+      let img_h = 90;
       svgObj.node.removeAttribute("xmlns:svgjs");
       svgObj.node.removeAttribute("svgjs:data");
       const svg1 = svgObj.svg();
@@ -88,13 +90,15 @@ export default defineComponent({
       const p2 = /svgjs:data\s*?=\s*?([‘"])[\s\S]*?\1/g;
       const svg = svg1.replace(p2, "");
       previewData.value = [];
-      previewPropsArr.forEach((item, index) => {
+      previewPropsArr.forEach((item) => {
         const $ = cheerio.load(svg, { xml: true });
+        const left = item.x - img_w / 2;
+        const top = item.y - img_h / 2;
         $("svg").css("position", "absolute");
-        $("svg").css("width", item.width);
-        $("svg").css("height", item.height);
-        $("svg").css("left", item.left);
-        $("svg").css("top", item.top);
+        $("svg").css("width", img_w.toString() + "px");
+        $("svg").css("height", img_h.toString() + "px");
+        $("svg").css("left", left.toString() + "px");
+        $("svg").css("top", top.toString() + "px");
         previewData.value.push({
           url: item.url,
           svg: $.html(),

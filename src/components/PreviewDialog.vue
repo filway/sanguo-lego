@@ -140,6 +140,6 @@ export default defineComponent({
   width: 340px;
   height: 224px;
   position: relative;
-  background-size: 100%;
+  background-size: 100% 100%;
 }
 </style>

@@ -21,15 +21,17 @@ export const allFamily: Required<familyExts> = {
   playlist: ".otf",
   "SourceHanSerif-B": "otf",
   HiraginoGBW3: "ttf",
+  rzgf: "OTF",
+  hkst: "ttf",
 };
 
-export const randomFamily = ["HiraginoGBW3", "SourceHanSerif-B"];
-export const randomFamilyText = ["台北黑体", "思源宋体"];
+export const randomFamily = ["HiraginoGBW3", "hkst"];
+export const randomFamilyText = ["台北黑体", "华康宋体"];
 
 export const fontFamilyArr = [
   {
-    text: "思源宋体",
-    value: "SourceHanSerif-B",
+    text: "华康宋体",
+    value: "hkst",
   },
   {
     text: "台北黑体",
@@ -44,14 +46,6 @@ export const fontFamilyArr = [
     value: "hyhz",
   },
   {
-    text: "ＤＦ宗楷書W7",
-    value: "df",
-  },
-  {
-    text: "蒙纳简粗俏皮",
-    value: "mnjz",
-  },
-  {
     text: "造字工房悦圆常规",
     value: "zzgf",
   },
@@ -60,8 +54,8 @@ export const fontFamilyArr = [
     value: "zktzbqxs",
   },
   {
-    text: "JTC江户文字",
-    value: "jhwz",
+    text: "锐字工房卡布奇诺",
+    value: "rzgf",
   },
 ];
 

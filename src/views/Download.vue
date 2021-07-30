@@ -117,13 +117,8 @@ import useCreateLogo from "@/hooks/useCreateLogo";
 import { useStore } from "vuex";
 import { Dialog, Toast } from "vant";
 import axios, { AxiosResponse } from "axios";
-import {
-  addSvgFont,
-  copyToClipboard,
-  svgToBase64,
-  findFontExt,
-} from "@/helper";
-import { Style, SVG } from "@svgdotjs/svg.js";
+import { copyToClipboard, svgToBase64, findFontExt } from "@/helper";
+import { SVG } from "@svgdotjs/svg.js";
 import { base64Data, RespData } from "@/store/respTypes";
 
 type infoType = {
@@ -259,7 +254,7 @@ export default defineComponent({
                             svg: svg,
                           })
                           .then((resp) => {
-                            console.log(resp);
+                            //console.log(resp);
                             resolve(true);
                             Dialog.confirm({
                               title: "小Ku提示",
