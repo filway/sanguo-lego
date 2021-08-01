@@ -101,7 +101,6 @@ export default defineComponent({
     watch(
       () => props.logoId,
       (newValue) => {
-        console.log(newValue);
         materialId.value = newValue;
       }
     );

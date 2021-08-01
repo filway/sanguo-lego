@@ -221,11 +221,11 @@ layoutProps[14] = {
   randomNameEnFontSize: 25,
 };
 layoutProps[15] = {
-  randomI1: [15, 288, 263],
+  randomI1: [10, 288, 263],
   randomI2: [175.39, 120, 144],
   randomIx: [245, 190, 190],
   randomIy: [185, 255, 200],
-  randomNameFontSize: 36,
-  randomNameEnFontSize: 25,
+  randomNameFontSize: 33,
+  randomNameEnFontSize: 20,
 };
 export default layoutProps;

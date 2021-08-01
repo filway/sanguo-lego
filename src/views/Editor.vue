@@ -496,7 +496,6 @@ export default defineComponent({
 
     //吸取图标的颜色
     const colors = ref(getColor(template.value.svg));
-    console.log(colors);
     const isMove = ref(true); //是否需要移动logo和slogan
     const colorItemActive = ref(-1);
     const getActiveItemColor = () => {
@@ -749,7 +748,6 @@ export default defineComponent({
     const selectedFamily = ref("");
     const selectFontFamily = (text: string, family: string) => {
       showFamilyPopover.value = false;
-      console.log(family);
       if (tab2ContentTitleActive.value === 0) {
         SVG(".svg-name0").attr("font-family", family);
         currentNameFamily.value = text;
