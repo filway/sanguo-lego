@@ -31,10 +31,7 @@ const useCreateLogo = async (
     trueMaterialPath = svgToBase64(item.svg);
     const trueNameColor = rgb;
     const trueSloganColor = rgb;
-    const layoutProps = getLayoutPropsByNameLength(
-      item.name.length,
-      item.randomIndex
-    );
+    const layoutProps = getLayoutPropsByNameLength(item.len, item.randomIndex);
     const {
       imageX,
       imageY,

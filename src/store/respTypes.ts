@@ -10,6 +10,7 @@ export interface RespData<T = []> {
   message?: string;
   attr?: AttrProps;
   payload?: ActionPayload;
+  len: number;
 }
 export interface ListData<T> {
   list: T[];

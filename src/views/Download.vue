@@ -174,7 +174,10 @@ export default defineComponent({
           } else {
             const emailPattern =
               /^([a-zA-Z0-9]+[_|\\_|\\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\\_|\\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
-            if (!emailPattern.test(info.value.email)) {
+            if (
+              info.value.email.length > 0 &&
+              !emailPattern.test(info.value.email)
+            ) {
               Toast.fail("请输入正确的邮箱");
               resolve(false);
             } else {

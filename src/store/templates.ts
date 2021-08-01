@@ -21,6 +21,7 @@ export interface TemplateProps {
   randomIndex: number;
   randomTitleFamily?: string;
   randomSubTitleFamily?: string;
+  len: number;
 }
 
 export interface TemplatesProps {

@@ -175,8 +175,9 @@ export const getLayoutPropsByNameLength = (
     nameFontSize: 75,
   };
   if (length !== 4) {
-    if (length > 14) {
-      length = 14;
+    console.log(length);
+    if (length > 15) {
+      length = 15;
     }
     returnProps.imageX = layoutProps[length].randomI1[index];
     returnProps.imageY = layoutProps[length].randomI2[index];
@@ -219,6 +220,7 @@ export const getColor = (xml: string): string[] => {
   const colors: string[] = [];
   const colorArr = xml.match(colorPattern) as string[];
   for (const i in colorArr) {
+    if (parseInt(i) >= 15) break;
     const v = colorArr[i];
     if (colors.indexOf(v) === -1) {
       colors.push(v);

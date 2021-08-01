@@ -20,22 +20,23 @@ export const allFamily: Required<familyExts> = {
   magiera: ".ttf",
   playlist: ".otf",
   "SourceHanSerif-B": "otf",
-  HiraginoGBW3: "ttf",
-  rzgf: "OTF",
-  hkst: "ttf",
+  rzgf: ".OTF",
+  hkht: ".ttf",
+  kls: ".ttf",
+  douyuf: ".otf",
 };
 
-export const randomFamily = ["HiraginoGBW3", "hkst"];
-export const randomFamilyText = ["台北黑体", "华康宋体"];
+export const randomFamily = ["hkht", "kls"];
+export const randomFamilyText = ["华康黑体", "昆仑宋体"];
 
 export const fontFamilyArr = [
   {
-    text: "华康宋体",
-    value: "hkst",
+    text: "华康黑体",
+    value: "hkht",
   },
   {
-    text: "台北黑体",
-    value: "HiraginoGBW3",
+    text: "昆仑宋体",
+    value: "kls",
   },
   {
     text: "汉仪范笑歌隶书",
@@ -56,6 +57,10 @@ export const fontFamilyArr = [
   {
     text: "锐字工房卡布奇诺",
     value: "rzgf",
+  },
+  {
+    text: "快手康体",
+    value: "douyuf",
   },
 ];
 
@@ -99,7 +104,8 @@ export const randomNameEnFontSize = 25;
 
 /**
  * 布局方案，根据左右/上下以及字体的个数，给出合理的图标文字坐标以及合理的文字大小
- * 最大兼容到14个字
+ * 最大兼容到15个字
+ * 注：以中文字体长度为判断标准
  */
 interface layoutPropsType {
   randomI1: number[];
@@ -212,6 +218,14 @@ layoutProps[14] = {
   randomIx: [245, 190, 190],
   randomIy: [185, 255, 200],
   randomNameFontSize: 38,
+  randomNameEnFontSize: 25,
+};
+layoutProps[15] = {
+  randomI1: [15, 288, 263],
+  randomI2: [175.39, 120, 144],
+  randomIx: [245, 190, 190],
+  randomIy: [185, 255, 200],
+  randomNameFontSize: 36,
   randomNameEnFontSize: 25,
 };
 export default layoutProps;

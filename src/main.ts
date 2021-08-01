@@ -29,12 +29,6 @@ import "./assets/fonts/font.scss";
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 import { RespData } from "./store/respTypes";
 
-/**
- * 7、预览场景图 （待研究）
- * 9、口号中间的格式
- * 10、图标要可以变色
- */
-
 export type ICustomAxiosConfig = AxiosRequestConfig & {
   opName?: string;
 };

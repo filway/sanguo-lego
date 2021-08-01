@@ -4,6 +4,9 @@ export type previewPropsType = {
   url: string;
   x: number;
   y: number;
+  w: number;
+  h: number;
+  r: number;
 };
 export interface familyExts {
   hyfx: string;
@@ -20,10 +23,11 @@ export interface familyExts {
   intreb: string;
   magiera: string;
   playlist: string;
-  HiraginoGBW3: string;
   "SourceHanSerif-B"?: string;
-  hkst: string;
   rzgf: string;
+  hkht: string;
+  kls: string;
+  douyuf: string;
 }
 export type familyKeys = keyof familyExts;
 //布局属性

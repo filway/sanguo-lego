@@ -590,7 +590,7 @@ export default defineComponent({
       const logoElement = document.getElementsByClassName("svg-logo0");
       const transformAttr = logoElement[0].getAttribute("transform");
       const { imageX, imageY } = getLayoutPropsByNameLength(
-        template.value.name.length,
+        template.value.len,
         template.value.randomIndex
       );
       // 169
@@ -608,6 +608,7 @@ export default defineComponent({
       replaceSvgArea($.html());
       //logoElement[0].outerHTML = $.html();
     };
+
     onMounted(async () => {
       nextTick(() => {
         var drawImg = SVG().addTo(".smallImg").size(20, 20);
@@ -690,7 +691,7 @@ export default defineComponent({
     const resetSvg = () => {
       initValues();
       const { imageX, imageY } = getLayoutPropsByNameLength(
-        template.value.name.length,
+        template.value.len,
         template.value.randomIndex
       );
       lrImgValue.value = imageX;
@@ -708,7 +709,7 @@ export default defineComponent({
     };
     const onCloseNameDialog = (action: string) =>
       new Promise((resolve) => {
-        if (action === "cancel") {
+        if (action === "cancel" || !action) {
           resolve(true);
           return true;
         }
@@ -804,21 +805,25 @@ export default defineComponent({
       const svg = svgObj.node.outerHTML;
       //替换掉svgjs:data，否则图片加载不出
       previewData.value = [];
-      let img_w = 300;
-      let img_h = 90;
       previewPropsArr.forEach((item) => {
         const $ = cheerio.load(svg, { xml: true });
+        const img_w = item.w;
+        const img_h = item.h;
         $("svg").removeClass("svg0");
         $("svg svg svg").removeClass("svg-logo0");
         $("svg svg g .svg-name0").removeClass("svg-name0");
         $("svg svg g .svg-slogan0").removeClass("svg-slogan0");
-        const left = item.x - img_w / 2;
-        const top = item.y - img_h / 2;
+        const left = item.x;
+        const top = item.y;
+        const rotate = `rotate(${item.r}deg)`;
+
         $("svg").css("position", "absolute");
         $("svg").css("width", img_w.toString() + "px");
         $("svg").css("height", img_h.toString() + "px");
         $("svg").css("left", left.toString() + "px");
         $("svg").css("top", top.toString() + "px");
+        $("svg").css("transform", rotate);
+
         previewData.value.push({
           url: item.url,
           svg: $.html(),
@@ -851,6 +856,11 @@ export default defineComponent({
         SVG(".svg-slogan0").unfilter();
         changeSloganColor("#000000");
       } else if (key === 2) {
+        // SVG(".svg-slogan0").unfilter();
+        // SVG(".svg-slogan0").filterWith((add) => {
+        //   add.turbulence(0.2, 2, 1, "noStitch", "turbulence");
+        //   add.displacementMap("turbulence", "SourceGraphic", 25, "R", "G");
+        // });
         console.warn("效果待加入~~");
       }
     };
@@ -1008,11 +1018,11 @@ export default defineComponent({
   width: 7rem;
 }
 .sliderBox2 {
-  padding: 0.5rem 1rem;
+  padding: 1rem 1rem;
   h5 {
     margin-bottom: 0.2rem;
   }
-  height: 5rem;
+  // height: 5rem;
   width: 8rem;
 }
 .familyPopover {
