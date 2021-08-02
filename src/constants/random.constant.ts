@@ -26,8 +26,8 @@ export const allFamily: Required<familyExts> = {
   douyuf: ".otf",
 };
 
-export const randomFamily = ["hkht", "kls"];
-export const randomFamilyText = ["华康黑体", "昆仑宋体"];
+export const randomFamily = ["hkht", "douyuf"];
+export const randomFamilyText = ["华康黑体", "快手康体"];
 
 export const fontFamilyArr = [
   {
@@ -225,7 +225,7 @@ layoutProps[15] = {
   randomI2: [175.39, 120, 144],
   randomIx: [245, 190, 190],
   randomIy: [185, 255, 200],
-  randomNameFontSize: 33,
+  randomNameFontSize: 31,
   randomNameEnFontSize: 20,
 };
 export default layoutProps;

@@ -38,12 +38,12 @@ export const previewPropsArr: previewPropsType[] = [
     y: 105,
     r: 25,
   },
-  {
-    url: require("../assets/img/cj/show5.png"),
-    w: 110,
-    h: 110,
-    x: 182,
-    y: 40,
-    r: 1,
-  },
+  // {
+  //   url: require("../assets/img/cj/show5.png"),
+  //   w: 110,
+  //   h: 110,
+  //   x: 182,
+  //   y: 40,
+  //   r: 1,
+  // },
 ];
