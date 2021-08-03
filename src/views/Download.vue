@@ -72,9 +72,9 @@
       :before-close="onCloseInfoDialog"
       @open="openInfoDialog"
     >
-      <p>
+      <!-- <p>
         因源文件较大，我们将通过邮箱的方式发送给您，如邮箱接收不便，留下联系方式后可联系您的专属客服获取源文件
-      </p>
+      </p> -->
       <van-field
         clearable
         label=""
@@ -82,12 +82,12 @@
         v-model="info.phone"
         type="tel"
       />
-      <van-field
+      <!-- <van-field
         clearable
         label=""
         placeholder="请输入您的邮箱"
         v-model="info.email"
-      />
+      /> -->
     </van-dialog>
     <van-dialog
       v-model:show="isShowWxDialog"
@@ -123,7 +123,7 @@ import { base64Data, RespData } from "@/store/respTypes";
 
 type infoType = {
   phone: string;
-  email: string;
+  email?: string;
 };
 
 export default defineComponent({
@@ -145,7 +145,7 @@ export default defineComponent({
     );
     logoList.value.push(template.value);
     const isShowInfoInput = ref(false);
-    const info = ref<infoType>({ phone: "", email: "" });
+    const info = ref<infoType>({ phone: "" });
     const alertTips = () => {
       Dialog.confirm({
         title: "小Ku提示",
@@ -172,122 +172,112 @@ export default defineComponent({
             Toast.fail("请输入正确的手机号码");
             resolve(false);
           } else {
-            const emailPattern =
-              /^([a-zA-Z0-9]+[_|\\_|\\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\\_|\\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
-            if (
-              info.value.email.length > 0 &&
-              !emailPattern.test(info.value.email)
-            ) {
-              Toast.fail("请输入正确的邮箱");
-              resolve(false);
-            } else {
-              setTimeout(() => {
-                /**var p2 = /svgjs:data\s*?=\s*?([‘"])[\s\S]*?\1/g
-                 * 参数：mater_id（必填）  sn（必填） email(必填)  mobile(必填)  base64（必填） svg（必填）
-                 */
-                let svgObj = SVG(".svg0");
-                svgObj.node.removeAttribute("xmlns:svgjs");
-                svgObj.node.removeAttribute("svgjs:data");
-                const nameFamily = SVG(".svg-name0").attr("font-family");
-                const sloganFamily = SVG(".svg-slogan0").attr("font-family");
-                const ext = findFontExt(nameFamily);
-                const ext2 = findFontExt(sloganFamily);
-                if (ext && ext2) {
-                  axios
-                    .post("/getFontBase64", {
-                      logoFont: `${nameFamily}${ext}`,
-                      sloganFont: `${sloganFamily}${ext2}`,
-                      logo: template.value.name,
-                      slogan: template.value.name_en,
-                    })
-                    .then((resp: AxiosResponse<RespData<base64Data>>) => {
-                      const respData = resp.data.data;
+            setTimeout(() => {
+              /**var p2 = /svgjs:data\s*?=\s*?([‘"])[\s\S]*?\1/g
+               * 参数：mater_id（必填）  sn（必填） email(必填)  mobile(必填)  base64（必填） svg（必填）
+               */
+              let svgObj = SVG(".svg0");
+              svgObj.node.removeAttribute("xmlns:svgjs");
+              svgObj.node.removeAttribute("svgjs:data");
+              const nameFamily = SVG(".svg-name0").attr("font-family");
+              const sloganFamily = SVG(".svg-slogan0").attr("font-family");
+              const ext = findFontExt(nameFamily);
+              const ext2 = findFontExt(sloganFamily);
+              if (ext && ext2) {
+                axios
+                  .post("/getFontBase64", {
+                    logoFont: `${nameFamily}${ext}`,
+                    sloganFont: `${sloganFamily}${ext2}`,
+                    logo: template.value.name,
+                    slogan: template.value.name_en,
+                  })
+                  .then((resp: AxiosResponse<RespData<base64Data>>) => {
+                    const respData = resp.data.data;
 
-                      const logoBase64 = respData.logo;
-                      const sloganBase64 = respData.slogan;
-                      //data:application/octet-stream
-                      svgObj
-                        .defs()
-                        .style()
-                        .font(
-                          nameFamily,
-                          `url(data:application/octet-stream;charset=utf-8;base64,${logoBase64})`
-                        )
-                        .font(
-                          sloganFamily,
-                          `url(data:application/octet-stream;charset=utf-8;base64,${sloganBase64})`
-                        );
+                    const logoBase64 = respData.logo;
+                    const sloganBase64 = respData.slogan;
+                    //data:application/octet-stream
+                    svgObj
+                      .defs()
+                      .style()
+                      .font(
+                        nameFamily,
+                        `url(data:application/octet-stream;charset=utf-8;base64,${logoBase64})`
+                      )
+                      .font(
+                        sloganFamily,
+                        `url(data:application/octet-stream;charset=utf-8;base64,${sloganBase64})`
+                      );
 
-                      const svg1 = svgObj.svg();
-                      //替换掉svgjs:data，否则图片加载不出
-                      const p2 = /svgjs:data\s*?=\s*?([‘"])[\s\S]*?\1/g;
-                      const svg = svg1.replace(p2, "");
-                      const base64 = svgToBase64(svg);
-                      const img = new Image();
-                      img.src = base64;
-                      img.crossOrigin = "anonymous";
+                    const svg1 = svgObj.svg();
+                    //替换掉svgjs:data，否则图片加载不出
+                    const p2 = /svgjs:data\s*?=\s*?([‘"])[\s\S]*?\1/g;
+                    const svg = svg1.replace(p2, "");
+                    const base64 = svgToBase64(svg);
+                    const img = new Image();
+                    img.src = base64;
+                    img.crossOrigin = "anonymous";
 
-                      let fstrImage;
-                      img.onerror = (e) => {
-                        console.error(e);
-                      };
-                      img.onload = function () {
-                        const canvas = document.createElement("canvas");
-                        canvas.width = 1024;
-                        canvas.height = 1024;
-                        const ctx = canvas.getContext("2d");
-                        const trueImgHeight = (1024 * img.height) / img.width;
-                        ctx?.drawImage(
-                          img,
-                          0,
-                          (1024 - trueImgHeight) / 2,
-                          1024,
-                          trueImgHeight
-                        );
-                        fstrImage = canvas.toDataURL();
-                        //console.log(fstrImage);
+                    let fstrImage;
+                    img.onerror = (e) => {
+                      console.error(e);
+                    };
+                    img.onload = function () {
+                      const canvas = document.createElement("canvas");
+                      canvas.width = 1024;
+                      canvas.height = 1024;
+                      const ctx = canvas.getContext("2d");
+                      const trueImgHeight = (1024 * img.height) / img.width;
+                      ctx?.drawImage(
+                        img,
+                        0,
+                        (1024 - trueImgHeight) / 2,
+                        1024,
+                        trueImgHeight
+                      );
+                      fstrImage = canvas.toDataURL();
+                      //console.log(fstrImage);
 
-                        axios
-                          .post("/downsvg", {
-                            mater_id: currentId,
-                            sn: localStorage.getItem("sn"),
-                            email: info.value.email,
-                            mobile: info.value.phone,
-                            base64: fstrImage,
-                            svg: svg,
+                      axios
+                        .post("/downsvg", {
+                          mater_id: currentId,
+                          sn: localStorage.getItem("sn"),
+                          mobile: info.value.phone,
+                          base64: fstrImage,
+                          svg: svg,
+                        })
+                        .then((resp) => {
+                          //console.log(resp);
+                          resolve(true);
+                          Dialog.confirm({
+                            title: "小Ku提示",
+                            message:
+                              "您的源文件已成功生成，请联系您的专属客服领取，客服微信号：" +
+                              wx,
                           })
-                          .then((resp) => {
-                            //console.log(resp);
-                            resolve(true);
-                            Dialog.confirm({
-                              title: "小Ku提示",
-                              message:
-                                "订单已提交，小Ku在快马加鞭的给您发送，请留意您的邮箱哦～，如有疑问点击右上角联系客服",
+                            .then(() => {
+                              console.log("confirm2");
                             })
-                              .then(() => {
-                                console.log("confirm2");
-                              })
-                              .catch(() => {
-                                console.log("cancel2");
-                              });
-                          })
-                          .catch((e) => {
-                            console.log(e);
-                            resolve(false);
-                          });
-                      };
-                    })
-                    .catch((e) => {
-                      console.log(e);
-                      Toast.fail("未知错误");
-                      resolve(false);
-                    });
-                } else {
-                  Toast.fail("字体文件找不到");
-                  resolve(false);
-                }
-              }, 1000);
-            }
+                            .catch(() => {
+                              console.log("cancel2");
+                            });
+                        })
+                        .catch((e) => {
+                          console.log(e);
+                          resolve(false);
+                        });
+                    };
+                  })
+                  .catch((e) => {
+                    console.log(e);
+                    Toast.fail("未知错误");
+                    resolve(false);
+                  });
+              } else {
+                Toast.fail("字体文件找不到");
+                resolve(false);
+              }
+            }, 1000);
           }
         }
       });

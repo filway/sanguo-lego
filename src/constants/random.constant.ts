@@ -154,7 +154,7 @@ layoutProps[6] = {
   randomIx: [250, 190, 190],
   randomIy: [205, 270, 200],
   randomNameFontSize: 65,
-  randomNameEnFontSize: 25,
+  randomNameEnFontSize: 24,
 };
 layoutProps[7] = {
   randomI1: [70, 288, 263],
@@ -162,38 +162,38 @@ layoutProps[7] = {
   randomIx: [245, 190, 190],
   randomIy: [195, 255, 200],
   randomNameFontSize: 58,
-  randomNameEnFontSize: 23,
+  randomNameEnFontSize: 22,
 };
 layoutProps[8] = {
-  randomI1: [35, 288, 263],
+  randomI1: [32, 288, 263],
   randomI2: [175.39, 120, 144],
   randomIx: [245, 190, 190],
   randomIy: [195, 265, 200],
-  randomNameFontSize: 62,
-  randomNameEnFontSize: 23,
+  randomNameFontSize: 58,
+  randomNameEnFontSize: 21,
 };
 layoutProps[9] = {
-  randomI1: [35, 288, 263],
+  randomI1: [30, 288, 263],
   randomI2: [175.39, 120, 144],
   randomIx: [245, 190, 190],
   randomIy: [190, 265, 200],
   randomNameFontSize: 54,
-  randomNameEnFontSize: 22,
+  randomNameEnFontSize: 20,
 };
 layoutProps[10] = {
   randomI1: [30, 288, 263],
   randomI2: [175.39, 120, 144],
   randomIx: [245, 190, 190],
   randomIy: [195, 255, 200],
-  randomNameFontSize: 50,
-  randomNameEnFontSize: 22,
+  randomNameFontSize: 45,
+  randomNameEnFontSize: 20,
 };
 layoutProps[11] = {
-  randomI1: [30, 288, 263],
+  randomI1: [25, 288, 263],
   randomI2: [175.39, 120, 144],
   randomIx: [245, 190, 190],
   randomIy: [185, 255, 200],
-  randomNameFontSize: 46,
+  randomNameFontSize: 42,
   randomNameEnFontSize: 22,
 };
 layoutProps[12] = {
@@ -201,31 +201,31 @@ layoutProps[12] = {
   randomI2: [175.39, 120, 144],
   randomIx: [245, 190, 190],
   randomIy: [185, 255, 200],
-  randomNameFontSize: 42,
-  randomNameEnFontSize: 25,
+  randomNameFontSize: 37,
+  randomNameEnFontSize: 20,
 };
 layoutProps[13] = {
+  randomI1: [35, 288, 263],
+  randomI2: [175.39, 120, 144],
+  randomIx: [245, 190, 190],
+  randomIy: [185, 255, 200],
+  randomNameFontSize: 35,
+  randomNameEnFontSize: 20,
+};
+layoutProps[14] = {
   randomI1: [30, 288, 263],
   randomI2: [175.39, 120, 144],
   randomIx: [245, 190, 190],
   randomIy: [185, 255, 200],
-  randomNameFontSize: 38,
-  randomNameEnFontSize: 25,
-};
-layoutProps[14] = {
-  randomI1: [15, 288, 263],
-  randomI2: [175.39, 120, 144],
-  randomIx: [245, 190, 190],
-  randomIy: [185, 255, 200],
-  randomNameFontSize: 38,
-  randomNameEnFontSize: 25,
+  randomNameFontSize: 34,
+  randomNameEnFontSize: 20,
 };
 layoutProps[15] = {
-  randomI1: [10, 288, 263],
+  randomI1: [30, 288, 263],
   randomI2: [175.39, 120, 144],
   randomIx: [245, 190, 190],
   randomIy: [185, 255, 200],
-  randomNameFontSize: 31,
+  randomNameFontSize: 32,
   randomNameEnFontSize: 20,
 };
 export default layoutProps;
