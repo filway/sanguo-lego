@@ -43,6 +43,7 @@
       <h4>TIPS:</h4>
       <p>如果您对智能生成的LOGO不是100%满意可以选择付费升级，设计师人工修改</p>
     </div>
+    <span v-html="cp"></span>
     <!-- <img :src="imgBase64" alt="" width="340" /> -->
   </div>
 </template>
@@ -77,6 +78,7 @@ export default defineComponent({
     const previewData = ref<any[]>([]);
 
     const imgBase64 = ref("");
+    const cp = sessionStorage.getItem("cp");
     const openPreviewDialog = (id: number, index: number, key: number) => {
       currentId.value = id;
       currentIndex.value = key;
@@ -136,6 +138,7 @@ export default defineComponent({
       isLoading,
       previewData,
       imgBase64,
+      cp,
     };
   },
 });
