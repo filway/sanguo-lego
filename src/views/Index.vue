@@ -73,12 +73,12 @@ export default defineComponent({
     const store = useStore<GlobalDataProps>();
 
     const logoList = computed(() => store.state.templates.data);
+    const cp = computed(() => store.state.templates.cp);
     provide("key", currentIndex);
 
     const previewData = ref<any[]>([]);
 
     const imgBase64 = ref("");
-    const cp = sessionStorage.getItem("cp");
     const openPreviewDialog = (id: number, index: number, key: number) => {
       currentId.value = id;
       currentIndex.value = key;
