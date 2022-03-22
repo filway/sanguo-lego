@@ -3,7 +3,7 @@
  * @author filway
  */
 
-import { previewPropsType } from "@/defaultProps";
+import { previewPropsType, imagePropsType } from "@/defaultProps";
 
 export const previewPropsArr: previewPropsType[] = [
   {
@@ -46,4 +46,29 @@ export const previewPropsArr: previewPropsType[] = [
   //   y: 40,
   //   r: 1,
   // },
+];
+
+export const imgNameArr: imagePropsType[] = [
+  { src: require("../assets/img/cj2/1.jpg") },
+  { src: require("../assets/img/cj2/1.jpg") },
+  { src: require("../assets/img/cj2/2.jpg") },
+  { src: require("../assets/img/cj2/2.jpg") },
+  { src: require("../assets/img/cj2/3.jpg") },
+  { src: require("../assets/img/cj2/3.jpg") },
+  { src: require("../assets/img/cj2/4.jpg") },
+  { src: require("../assets/img/cj2/4.jpg") },
+  { src: require("../assets/img/cj2/5.jpg") },
+  { src: require("../assets/img/cj2/5.jpg") },
+];
+export const planNameArr: string[] = [
+  "一",
+  "一",
+  "二",
+  "二",
+  "三",
+  "三",
+  "四",
+  "四",
+  "五",
+  "五",
 ];

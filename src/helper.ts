@@ -272,3 +272,13 @@ export const replaceText = (cls: string, family: string) => {
     });
   }
 };
+export const toTop = () => {
+  let top = document.documentElement.scrollTop || document.body.scrollTop;
+  // 实现滚动效果
+  const timeTop = setInterval(() => {
+    document.body.scrollTop = document.documentElement.scrollTop = top -= 50;
+    if (top <= 0) {
+      clearInterval(timeTop);
+    }
+  }, 10);
+};

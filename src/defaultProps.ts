@@ -8,6 +8,9 @@ export type previewPropsType = {
   h: number;
   r: number;
 };
+export type imagePropsType = {
+  src: string;
+};
 export interface familyExts {
   hyfx: string;
   hyhz: string;
