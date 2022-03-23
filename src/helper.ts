@@ -17,6 +17,7 @@ import cheerio from "cheerio";
 import opentype from "opentype.js";
 import { SVG } from "@svgdotjs/svg.js";
 import { nextTick } from "vue";
+import { imgNameArr } from "./constants/preview.constant";
 
 export const materialDownLoad = (
   src: string,
@@ -282,3 +283,28 @@ export const toTop = () => {
     }
   }, 10);
 };
+
+export const getSvgHtml = (length: number): any[] => {
+  const htmlArr: any[] = [];
+  for (let i = 0 ; i < length; i ++) {
+      const svgObj = SVG(`.svg${i}`)
+      svgObj.node.removeAttribute('xmlns:svgjs')
+      svgObj.node.removeAttribute('svgjs:data')
+      const svg1 = svgObj.svg()
+      //替换掉svgjs:data，否则图片加载不出
+      const p2 = /svgjs:data\s*?=\s*?([‘"])[\s\S]*?\1/g
+      const svg = svg1.replace(p2, '')
+      const item = imgNameArr[i].position[0]
+      const img_w = item.w
+      const img_h = item.h
+      const $ = cheerio.load(svg, { xml: true })
+      const rotate = `rotate(${item.r}deg)`
+      $('svg').css('width', img_w.toString() + 'vw')
+      $('svg').css('height', img_h.toString() + 'vw')
+      $('svg').css('transform', rotate)
+      const parser = new DOMParser()
+      const doc = parser.parseFromString($.html(), 'text/xml')
+      htmlArr[i] = doc.getElementsByClassName(`svg${i}`)[0];
+  }
+  return htmlArr;
+}

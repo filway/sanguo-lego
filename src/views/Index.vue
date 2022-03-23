@@ -46,15 +46,96 @@
 
       <p class="page-title">使用场景图</p>
 
-      <div class="page-screen">
-        <img :src="imgSrc" />
+      <div
+        class="page-screen"
+        v-for="(logo, key) in logoList"
+        :key="key"
+        v-show="currentPage === key"
+      >
+        <div
+          :class="`page-bg page-bg-01 page-bg-img page-insert-${key}`"
+          :style="
+            `background-image: url(` +
+            require(`../assets/img/cj2/${bgImgIndexArr[key]}/1.jpg`) +
+            `)`
+          "
+        ></div>
+        <div class="page-bg page-bg-02">
+          <div
+            :class="`page-bg-img page-bg-02-left page-insert-${key}`"
+            :style="
+              `background-image: url(` +
+              require(`../assets/img/cj2/${bgImgIndexArr[key]}/2.jpg`) +
+              `)`
+            "
+          ></div>
+          <div class="page-bg-02-right">
+            <div
+              :class="`page-bg-img page-insert-${key}`"
+              :style="
+                `background-image: url(` +
+                require(`../assets/img/cj2/${bgImgIndexArr[key]}/3.jpg`) +
+                `)`
+              "
+            ></div>
+            <div
+              :class="`page-bg-img page-insert-${key}`"
+              :style="
+                `background-image: url(` +
+                require(`../assets/img/cj2/${bgImgIndexArr[key]}/4.jpg`) +
+                `)`
+              "
+            ></div>
+          </div>
+        </div>
+        <div
+          :class="`page-bg page-bg-02 page-bg-img page-insert-${key}`"
+          :style="
+            `background-image: url(` +
+            require(`../assets/img/cj2/${bgImgIndexArr[key]}/5.jpg`) +
+            `)`
+          "
+        ></div>
+        <div
+          :class="`page-bg page-bg-02 page-bg-img page-insert-${key}`"
+          :style="
+            `background-image: url(` +
+            require(`../assets/img/cj2/${bgImgIndexArr[key]}/6.jpg`) +
+            `)`
+          "
+        ></div>
+        <div
+          :class="`page-bg page-bg-02 page-bg-img page-insert-${key}`"
+          :style="
+            `background-image: url(` +
+            require(`../assets/img/cj2/${bgImgIndexArr[key]}/7.jpg`) +
+            `)`
+          "
+        ></div>
       </div>
     </div>
 
     <div class="tipsBox" v-show="!isLoading">
       <h4>设计理念</h4>
       <p>如果您对智能生成的LOGO不是100%满意可以选择付费升级，设计师人工修改</p>
-      <div class="pagenation-big" @click="nextPage()">下一款方案</div>
+      <div class="pagenation-big" v-show="currentPage === 0" @click="nextPage()">下一款方案</div>
+      <div class="pagenation-small-box">
+        <div
+          class="pagenation-small"
+          v-show="currentPage > 0 && currentPage < 10"
+          @click="prevPage()"
+        >
+          上一款方案
+        </div>
+        <div
+          class="pagenation-small"
+          v-show="currentPage > 0 && currentPage < 10"
+          @click="nextPage()"
+        >
+          下一款方案
+        </div>
+      </div>
+      <div class="pagenation-big" v-show="currentPage === 10" @click="prevPage()">上一款方案</div>
     </div>
     <span v-html="cp"></span>
     <!-- <img :src="imgBase64" alt="" width="340" /> -->
@@ -70,8 +151,9 @@ import useCreateLogo from '@/hooks/useCreateLogo'
 import PreviewDialog from '@/components/PreviewDialog.vue'
 import { SVG } from '@svgdotjs/svg.js'
 import { previewPropsArr, imgNameArr, planNameArr } from '../constants/preview.constant'
-import { toTop } from '@/helper'
+import { getSvgHtml, toTop } from '@/helper'
 import cheerio from 'cheerio'
+import $ from 'jquery'
 
 export default defineComponent({
   name: 'Index',
@@ -94,6 +176,8 @@ export default defineComponent({
     provide('key', currentIndex)
 
     const previewData = ref<any[]>([])
+
+    const bgImgIndexArr = ref([0, 0, 1, 1, 2, 2, 3, 3, 4, 4])
 
     const imgBase64 = ref('')
     const openPreviewDialog = (id: number, index: number, key: number) => {
@@ -135,7 +219,17 @@ export default defineComponent({
       console.log('跳转下载')
     }
     const nextPage = () => {
+      if (currentPage.value === 9) {
+        return
+      }
       currentPage.value = currentPage.value + 1
+      toTop()
+    }
+    const prevPage = () => {
+      if (currentPage.value === 0) {
+        return
+      }
+      currentPage.value = currentPage.value - 1
       toTop()
     }
 
@@ -147,6 +241,11 @@ export default defineComponent({
         data: { sn: sn || '' },
       })
       await useCreateLogo(logoList.value)
+
+      const svgHtmlArr = getSvgHtml(logoList.value.length)
+      svgHtmlArr.forEach((item, index) => {
+        $('.page-screen').eq(index).find('.page-bg-img').html(item)
+      })
     })
 
     return {
@@ -163,8 +262,10 @@ export default defineComponent({
       cp,
       currentPage,
       nextPage,
+      prevPage,
       imgSrc,
       planName,
+      bgImgIndexArr,
     }
   },
 })
@@ -217,6 +318,23 @@ export default defineComponent({
       line-height: 35px;
       border-radius: 5px;
       margin-bottom: 0.5rem;
+      cursor: pointer;
+    }
+    .pagenation-small-box {
+      width: 300px;
+      display: flex;
+      justify-content: space-evenly;
+      .pagenation-small {
+        background-color: #0201fd;
+        color: #fff;
+        padding: 3px 6px;
+        width: 100px;
+        height: 35px;
+        line-height: 35px;
+        border-radius: 5px;
+        margin-bottom: 0.5rem;
+        cursor: pointer;
+      }
     }
     // background: url("../assets/img/img_banner.jpg");
   }
@@ -240,9 +358,33 @@ export default defineComponent({
     margin: 0.8rem 0;
   }
   .page-screen {
+    animation: zoomIn; /* referring directly to the animation's @keyframe declaration */
+    animation-duration: 1s; /* don't forget to set a duration! */
     img {
       width: 100%;
       height: 100%;
+    }
+    .page-bg {
+      height: 56vw;
+    }
+    .page-bg-img {
+      background-size: 100% 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .page-bg-02 {
+      display: flex;
+      .page-bg-02-left {
+        width: 50%;
+      }
+      .page-bg-02-right {
+        width: 50%;
+        div {
+          width: 100%;
+          height: 50%;
+        }
+      }
     }
   }
   .card-box {
