@@ -301,7 +301,11 @@ export const getSvgHtml = (logoList: any[]): any[] => {
       $('svg').css('width', img_w.toString() + 'vw')
       $('svg').css('height', img_h.toString() + 'vw')
       $('svg').css('transform', rotate)
-      $(`.svg-logo${i}`).html(logoList[i].svg)
+      const currentSvg = logoList[i].svg
+      const colors = getColor(logoList[i].svg)
+      colors.forEach((item) => {
+        $(`.svg-logo${i}`).html(currentSvg.replaceAll(item, '#ff9900 !important'))
+      })
       $(`.svg-logo${i} svg`).attr('width', '110')
       $(`.svg-logo${i} svg`).attr('height', '110')
       const parser = new DOMParser()
