@@ -1,7 +1,7 @@
 export type enableDownloadType = "svg" | "png" | "jpg";
 export type enableImageDownloadType = "png" | "jpg";
 export type previewPropsType = {
-  url: string;
+  url?: string;
   x: number;
   y: number;
   w: number;
@@ -10,6 +10,7 @@ export type previewPropsType = {
 };
 export type imagePropsType = {
   src: string;
+  position: previewPropsType[];
 };
 export interface familyExts {
   hyfx: string;

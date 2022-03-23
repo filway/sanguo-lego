@@ -49,16 +49,46 @@ export const previewPropsArr: previewPropsType[] = [
 ];
 
 export const imgNameArr: imagePropsType[] = [
-  { src: require("../assets/img/cj2/1.jpg") },
-  { src: require("../assets/img/cj2/1.jpg") },
-  { src: require("../assets/img/cj2/2.jpg") },
-  { src: require("../assets/img/cj2/2.jpg") },
-  { src: require("../assets/img/cj2/3.jpg") },
-  { src: require("../assets/img/cj2/3.jpg") },
-  { src: require("../assets/img/cj2/4.jpg") },
-  { src: require("../assets/img/cj2/4.jpg") },
-  { src: require("../assets/img/cj2/5.jpg") },
-  { src: require("../assets/img/cj2/5.jpg") },
+  {
+    src: require("../assets/img/cj2/1.jpg"),
+    position: [{ w: 55, h: 30, x: 195, y: 105, r: 25 }],
+  },
+  {
+    src: require("../assets/img/cj2/1.jpg"),
+    position: [{ w: 55, h: 30, x: 195, y: 105, r: 25 }],
+  },
+  {
+    src: require("../assets/img/cj2/2.jpg"),
+    position: [{ w: 55, h: 30, x: 195, y: 105, r: 25 }],
+  },
+  {
+    src: require("../assets/img/cj2/2.jpg"),
+    position: [{ w: 55, h: 30, x: 195, y: 105, r: 25 }],
+  },
+  {
+    src: require("../assets/img/cj2/3.jpg"),
+    position: [{ w: 55, h: 30, x: 195, y: 105, r: 25 }],
+  },
+  {
+    src: require("../assets/img/cj2/3.jpg"),
+    position: [{ w: 55, h: 30, x: 195, y: 105, r: 25 }],
+  },
+  {
+    src: require("../assets/img/cj2/4.jpg"),
+    position: [{ w: 55, h: 30, x: 195, y: 105, r: 25 }],
+  },
+  {
+    src: require("../assets/img/cj2/4.jpg"),
+    position: [{ w: 55, h: 30, x: 195, y: 105, r: 25 }],
+  },
+  {
+    src: require("../assets/img/cj2/5.jpg"),
+    position: [{ w: 55, h: 30, x: 195, y: 105, r: 25 }],
+  },
+  {
+    src: require("../assets/img/cj2/5.jpg"),
+    position: [{ w: 55, h: 30, x: 195, y: 105, r: 25 }],
+  },
 ];
 export const planNameArr: string[] = [
   "一",
