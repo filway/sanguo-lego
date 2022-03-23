@@ -50,43 +50,33 @@ export const previewPropsArr: previewPropsType[] = [
 
 export const imgNameArr: imagePropsType[] = [
   {
-    src: require("../assets/img/cj2/1.jpg"),
     position: [{ w: 80, h: 37.333, x: 1.333, y: 2.667, r: 0 }],
   },
   {
-    src: require("../assets/img/cj2/1.jpg"),
     position: [{ w: 55, h: 30, x: 195, y: 105, r: 0 }],
   },
   {
-    src: require("../assets/img/cj2/2.jpg"),
     position: [{ w: 55, h: 30, x: 195, y: 105, r: 0 }],
   },
   {
-    src: require("../assets/img/cj2/2.jpg"),
     position: [{ w: 55, h: 30, x: 195, y: 105, r: 0 }],
   },
   {
-    src: require("../assets/img/cj2/3.jpg"),
     position: [{ w: 55, h: 30, x: 195, y: 105, r: 0 }],
   },
   {
-    src: require("../assets/img/cj2/3.jpg"),
     position: [{ w: 55, h: 30, x: 195, y: 105, r: 0 }],
   },
   {
-    src: require("../assets/img/cj2/4.jpg"),
     position: [{ w: 55, h: 30, x: 195, y: 105, r: 0 }],
   },
   {
-    src: require("../assets/img/cj2/4.jpg"),
     position: [{ w: 55, h: 30, x: 195, y: 105, r: 0 }],
   },
   {
-    src: require("../assets/img/cj2/5.jpg"),
     position: [{ w: 55, h: 30, x: 195, y: 105, r: 0 }],
   },
   {
-    src: require("../assets/img/cj2/5.jpg"),
     position: [{ w: 55, h: 30, x: 195, y: 105, r: 0 }],
   },
 ];

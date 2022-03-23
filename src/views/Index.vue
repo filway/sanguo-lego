@@ -150,7 +150,7 @@ import { useStore } from 'vuex'
 import useCreateLogo from '@/hooks/useCreateLogo'
 import PreviewDialog from '@/components/PreviewDialog.vue'
 import { SVG } from '@svgdotjs/svg.js'
-import { previewPropsArr, imgNameArr, planNameArr } from '../constants/preview.constant'
+import { previewPropsArr, planNameArr } from '../constants/preview.constant'
 import { getSvgHtml, toTop } from '@/helper'
 import cheerio from 'cheerio'
 import $ from 'jquery'
@@ -169,7 +169,6 @@ export default defineComponent({
     const store = useStore<GlobalDataProps>()
     const currentPage = ref(0)
     const planName = computed(() => planNameArr[currentPage.value])
-    const imgSrc = computed(() => imgNameArr[currentPage.value].src)
 
     const logoList = computed(() => store.state.templates.data)
     const cp = computed(() => store.state.templates.cp)
@@ -242,7 +241,7 @@ export default defineComponent({
       })
       await useCreateLogo(logoList.value)
 
-      const svgHtmlArr = getSvgHtml(logoList.value.length)
+      const svgHtmlArr = getSvgHtml(logoList.value)
       svgHtmlArr.forEach((item, index) => {
         $('.page-screen').eq(index).find('.page-bg-img').html(item)
       })
@@ -263,7 +262,6 @@ export default defineComponent({
       currentPage,
       nextPage,
       prevPage,
-      imgSrc,
       planName,
       bgImgIndexArr,
     }

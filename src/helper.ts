@@ -11,13 +11,12 @@ import {
   enableImageDownloadType,
   familyExts,
   logoLayoutPropsType,
-  previewPropsType,
 } from "./defaultProps";
 import cheerio from "cheerio";
 import opentype from "opentype.js";
 import { SVG } from "@svgdotjs/svg.js";
-import { nextTick } from "vue";
 import { imgNameArr } from "./constants/preview.constant";
+import { TemplatesProps } from "./store/templates";
 
 export const materialDownLoad = (
   src: string,
@@ -247,7 +246,7 @@ export const useOpenType = (
 };
 
 //替换字体元素为代码
-export const replaceText = (cls: string, family: string) => {
+export const replaceText = (cls: string, family: string): void => {
   // 替换logo
   const textNode = document.querySelector(cls);
   const textContent = textNode?.outerHTML;
@@ -273,7 +272,7 @@ export const replaceText = (cls: string, family: string) => {
     });
   }
 };
-export const toTop = () => {
+export const toTop = (): void => {
   let top = document.documentElement.scrollTop || document.body.scrollTop;
   // 实现滚动效果
   const timeTop = setInterval(() => {
@@ -284,9 +283,9 @@ export const toTop = () => {
   }, 10);
 };
 
-export const getSvgHtml = (length: number): any[] => {
+export const getSvgHtml = (logoList: any[]): any[] => {
   const htmlArr: any[] = [];
-  for (let i = 0 ; i < length; i ++) {
+  for (let i = 0 ; i < logoList.length; i ++) {
       const svgObj = SVG(`.svg${i}`)
       svgObj.node.removeAttribute('xmlns:svgjs')
       svgObj.node.removeAttribute('svgjs:data')
@@ -302,6 +301,9 @@ export const getSvgHtml = (length: number): any[] => {
       $('svg').css('width', img_w.toString() + 'vw')
       $('svg').css('height', img_h.toString() + 'vw')
       $('svg').css('transform', rotate)
+      $(`.svg-logo${i}`).html(logoList[i].svg)
+      $(`.svg-logo${i} svg`).attr('width', '110')
+      $(`.svg-logo${i} svg`).attr('height', '110')
       const parser = new DOMParser()
       const doc = parser.parseFromString($.html(), 'text/xml')
       htmlArr[i] = doc.getElementsByClassName(`svg${i}`)[0];

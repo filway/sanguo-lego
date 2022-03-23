@@ -9,7 +9,6 @@ export type previewPropsType = {
   r: number;
 };
 export type imagePropsType = {
-  src: string;
   position: previewPropsType[];
 };
 export interface familyExts {
