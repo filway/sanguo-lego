@@ -22,7 +22,7 @@
     >
     <div v-show="!isLoading" class="page">
       <div class="logo-desc">
-        AI智能logo设计软件结合 “**” 行业和 “**” 名称生成了5款设计方案，以供您选择
+        {{ title }}
       </div>
       <p class="page-title">设计方案{{ planName }}</p>
       <div
@@ -116,26 +116,28 @@
     </div>
 
     <div class="tipsBox" v-show="!isLoading">
-      <h4>设计理念</h4>
-      <p>如果您对智能生成的LOGO不是100%满意可以选择付费升级，设计师人工修改</p>
+      <h4 v-show="logoList[currentPage].design">设计理念</h4>
+      <p>{{ logoList[currentPage].design }}</p>
       <div class="pagenation-big" v-show="currentPage === 0" @click="nextPage()">下一款方案</div>
       <div class="pagenation-small-box">
         <div
           class="pagenation-small"
-          v-show="currentPage > 0 && currentPage < 9"
+          v-show="currentPage > 0 && currentPage < logoList.length - 1"
           @click="prevPage()"
         >
           上一款方案
         </div>
         <div
           class="pagenation-small"
-          v-show="currentPage > 0 && currentPage < 9"
+          v-show="currentPage > 0 && currentPage < logoList.length - 1"
           @click="nextPage()"
         >
           下一款方案
         </div>
       </div>
-      <div class="pagenation-big" v-show="currentPage === 9" @click="prevPage()">上一款方案</div>
+      <div class="pagenation-big" v-show="currentPage === logoList.length - 1" @click="prevPage()">
+        上一款方案
+      </div>
     </div>
     <span v-html="cp"></span>
     <!-- <img :src="imgBase64" alt="" width="340" /> -->
@@ -169,6 +171,8 @@ export default defineComponent({
     const store = useStore<GlobalDataProps>()
     const currentPage = ref(0)
     const planName = computed(() => planNameArr[currentPage.value])
+
+    const title = sessionStorage.getItem('title') || ''
 
     const logoList = computed(() => store.state.templates.data)
     const cp = computed(() => store.state.templates.cp)
@@ -218,7 +222,7 @@ export default defineComponent({
       console.log('跳转下载')
     }
     const nextPage = () => {
-      if (currentPage.value === 9) {
+      if (currentPage.value === logoList.value.length - 1) {
         return
       }
       currentPage.value = currentPage.value + 1
@@ -266,6 +270,7 @@ export default defineComponent({
       prevPage,
       planName,
       bgImgIndexArr,
+      title,
     }
   },
 })

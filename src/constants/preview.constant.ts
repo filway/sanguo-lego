@@ -50,38 +50,38 @@ export const previewPropsArr: previewPropsType[] = [
 
 export const imgNameArr: imagePropsType[] = [
   {
-    w: '80vw', 
-    h: '37.333vw',
+    w: '90vw', 
+    h: '55.333vw',
     r: 0
   },
   {
-    w: '80vw', 
-    h: '37.333vw',
+    w: '45vw', 
+    h: '55.333vw',
     r: 0
   },
   {
-    w: '80vw', 
-    h: '37.333vw',
+    w: '45vw', 
+    h: '27.333vw',
     r: 0
   },
   {
-    w: '80vw', 
-    h: '37.333vw',
+    w: '45vw', 
+    h: '27.333vw',
     r: 0
   },
   {
-    w: '80vw', 
-    h: '37.333vw',
+    w: '90vw', 
+    h: '55.333vw',
     r: 0
   },
   {
-    w: '80vw', 
-    h: '37.333vw',
+    w: '90vw', 
+    h: '55.333vw',
     r: 0
   },
   {
-    w: '80vw', 
-    h: '37.333vw',
+    w: '90vw', 
+    h: '55.333vw',
     r: 0
   }
 ];

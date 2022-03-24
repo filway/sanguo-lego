@@ -3,6 +3,7 @@ import { ActionPayload } from "./index";
 interface AttrProps {
   wx: string;
   complain: string;
+  title: string;
 }
 
 export interface RespData<T = []> {

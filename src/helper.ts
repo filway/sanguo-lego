@@ -284,8 +284,10 @@ export const toTop = (): void => {
 };
 
 export const getSvgHtml = (logoList: any[]): any[] => {
-  const htmlArr: any[] = [
-    [],[],[],[],[],[],[],[],[],[],[]
+  const htmlArr: any[] = logoList.length === 10 ? [
+    [],[],[],[],[],[],[],[],[],[]
+  ] : [
+    [],[],[],[],[],[],[],[]
   ];
   const whiteIndex = [2,3,4,6];
   for (let i = 0 ; i < logoList.length; i ++) {
@@ -307,6 +309,7 @@ export const getSvgHtml = (logoList: any[]): any[] => {
         $('svg').css('width', img_w.toString())
         $('svg').css('height', img_h.toString())
         $('svg').css('transform', rotate)
+        $('svg').css('margin-top', '-7vw')
         const currentSvg = logoList[i].svg
         const colorPattern = /#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})/g;
         if (whiteIndex.indexOf(imgIndex) !== -1) {

@@ -53,6 +53,7 @@ const templates: Module<TemplatesProps, GlobalDataProps> = {
       state.data = rawData.data;
       state.cp = rawData.attr?.complain;
       sessionStorage.setItem("wx", rawData.attr ? rawData.attr.wx : "");
+      sessionStorage.setItem("title", rawData.attr ? rawData.attr.title : "");
     },
     translate(state, rawData: RespData<string>) {
       state.currentNameEn = rawData.data;
