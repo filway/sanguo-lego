@@ -21,7 +21,7 @@
       >Logo生成中...</van-loading
     >
     <div v-show="!isLoading" class="page">
-      <div class="logo-desc">
+      <div class="logo-desc" v-show="currentPage === 0">
         {{ title }}
       </div>
       <p class="page-title">设计方案{{ planName }}</p>
@@ -172,10 +172,9 @@ export default defineComponent({
     const currentPage = ref(0)
     const planName = computed(() => planNameArr[currentPage.value])
 
-    const title = sessionStorage.getItem('title') || ''
-
     const logoList = computed(() => store.state.templates.data)
     const cp = computed(() => store.state.templates.cp)
+    const title = computed(() => store.state.templates.title)
     provide('key', currentIndex)
 
     const previewData = ref<any[]>([])
@@ -363,8 +362,8 @@ export default defineComponent({
     margin: 0.8rem 0;
   }
   .page-screen {
-    animation: zoomIn; /* referring directly to the animation's @keyframe declaration */
-    animation-duration: 1s; /* don't forget to set a duration! */
+    // animation: zoomIn; /* referring directly to the animation's @keyframe declaration */
+    // animation-duration: 2s; /* don't forget to set a duration! */
     img {
       width: 100%;
       height: 100%;

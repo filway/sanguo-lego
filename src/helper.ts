@@ -175,7 +175,6 @@ export const getLayoutPropsByNameLength = (
     nameFontSize: 75,
   };
   if (length !== 4) {
-    console.log(length);
     if (length > 15) {
       length = 15;
     }
@@ -280,7 +279,7 @@ export const toTop = (): void => {
     if (top <= 0) {
       clearInterval(timeTop);
     }
-  }, 10);
+  }, 40);
 };
 
 export const getSvgHtml = (logoList: any[]): any[] => {
@@ -304,7 +303,7 @@ export const getSvgHtml = (logoList: any[]): any[] => {
         const item = imgName
         const img_w = item.w
         const img_h = item.h
-        const $ = cheerio.load(svg, { xml: true })
+        const $ = cheerio.load(svg, { xml: true})
         const rotate = `rotate(${item.r}deg)`
         $('svg').css('width', img_w.toString())
         $('svg').css('height', img_h.toString())
@@ -312,7 +311,7 @@ export const getSvgHtml = (logoList: any[]): any[] => {
         $('svg').css('margin-top', '-7vw')
         const currentSvg = logoList[i].svg
         const colorPattern = /#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})/g;
-        if (whiteIndex.indexOf(imgIndex) !== -1) {
+        if (whiteIndex.indexOf(imgIndex) !== -1) {   
           $(`.svg-logo${i}`).html(currentSvg.replace(colorPattern, '#fff !important'))
           $(`svg text`).attr('fill', '#fff')
           $(`svg text`).attr('fill', '#fff')

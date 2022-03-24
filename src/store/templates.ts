@@ -27,6 +27,7 @@ export interface TemplateProps {
 export interface TemplatesProps {
   data: TemplateProps[];
   cp: string | undefined;
+  title: string | undefined;
   totalTemplates?: number;
   currentNameEn?: string;
 }
@@ -41,6 +42,7 @@ const templates: Module<TemplatesProps, GlobalDataProps> = {
     data: sData,
     cp: "",
     totalTemplates: 0,
+    title: "",
   },
   mutations: {
     fetchTemplates(state, rawData: RespListData<TemplateProps[]>) {
@@ -52,8 +54,8 @@ const templates: Module<TemplatesProps, GlobalDataProps> = {
       });
       state.data = rawData.data;
       state.cp = rawData.attr?.complain;
+      state.title = rawData.attr?.title;
       sessionStorage.setItem("wx", rawData.attr ? rawData.attr.wx : "");
-      sessionStorage.setItem("title", rawData.attr ? rawData.attr.title : "");
     },
     translate(state, rawData: RespData<string>) {
       state.currentNameEn = rawData.data;
