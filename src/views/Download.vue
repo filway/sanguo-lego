@@ -52,15 +52,11 @@
       </div>
       <div>
         <p class="qustion">问：我生成的LOGO怎么调整图片尺寸？</p>
-        <p class="anwser">
-          答：需要下载源文件，源文件可以任意调整图片的尺寸，获得高清的图片
-        </p>
+        <p class="anwser">答：需要下载源文件，源文件可以任意调整图片的尺寸，获得高清的图片</p>
       </div>
       <div>
         <p class="qustion">问：为什么下载的源文件打不开？</p>
-        <p class="anwser">
-          答：源文件需要使用专业的设计软件才可以打开，如PS、AI、CDR等
-        </p>
+        <p class="anwser">答：源文件需要使用专业的设计软件才可以打开，如PS、AI、CDR等</p>
       </div>
     </div>
     <van-dialog
@@ -75,19 +71,14 @@
       <!-- <p>
         因源文件较大，我们将通过邮箱的方式发送给您，如邮箱接收不便，留下联系方式后可联系您的专属客服获取源文件
       </p> -->
+      <van-field clearable label="" placeholder="请输入您的手机" v-model="info.phone" type="tel" />
       <van-field
-        clearable
-        label=""
-        placeholder="请输入您的手机"
-        v-model="info.phone"
-        type="tel"
-      />
-      <!-- <van-field
         clearable
         label=""
         placeholder="请输入您的邮箱"
         v-model="info.email"
-      /> -->
+        type="email"
+      />
     </van-dialog>
     <van-dialog
       v-model:show="isShowWxDialog"
@@ -109,206 +100,204 @@
   </div>
 </template>
 <script lang="ts">
-import { computed, defineComponent, onMounted, ref } from "vue";
-import HeaderNav from "@/components/HeaderNav.vue";
-import { TemplateProps } from "@/store/templates";
-import { useRoute } from "vue-router";
-import useCreateLogo from "@/hooks/useCreateLogo";
-import { useStore } from "vuex";
-import { Dialog, Toast } from "vant";
-import axios, { AxiosResponse } from "axios";
-import { copyToClipboard, svgToBase64, findFontExt } from "@/helper";
-import { SVG } from "@svgdotjs/svg.js";
-import { base64Data, RespData } from "@/store/respTypes";
+import { computed, defineComponent, onMounted, ref } from 'vue'
+import HeaderNav from '@/components/HeaderNav.vue'
+import { TemplateProps } from '@/store/templates'
+import { useRoute } from 'vue-router'
+import useCreateLogo from '@/hooks/useCreateLogo'
+import { useStore } from 'vuex'
+import { Dialog, Toast } from 'vant'
+import axios, { AxiosResponse } from 'axios'
+import { copyToClipboard, svgToBase64, findFontExt } from '@/helper'
+import { SVG } from '@svgdotjs/svg.js'
+import { base64Data, RespData } from '@/store/respTypes'
 
 type infoType = {
-  phone: string;
-  email?: string;
-};
+  phone: string
+  email: string
+}
 
 export default defineComponent({
-  name: "Download",
+  name: 'Download',
   components: {
     HeaderNav,
   },
   setup() {
-    const svgCode = localStorage.getItem("downloadsvg") as string;
-    const isSvgCode = svgCode?.length > 1;
-    const logoRef = ref<HTMLElement>();
-    const route = useRoute();
-    const store = useStore();
-    let logoList = ref<TemplateProps[]>([]);
-    const currentId = route.params.id as string;
-    const bgColor = route.params.bgColor as string;
+    const svgCode = localStorage.getItem('downloadsvg') as string
+    const isSvgCode = svgCode?.length > 1
+    const logoRef = ref<HTMLElement>()
+    const route = useRoute()
+    const store = useStore()
+    let logoList = ref<TemplateProps[]>([])
+    const currentId = route.params.id as string
+    const bgColor = route.params.bgColor as string
     const template = computed<TemplateProps>(() =>
       store.getters.getTemplateById(parseInt(currentId, 0))
-    );
-    logoList.value.push(template.value);
-    const isShowInfoInput = ref(false);
-    const info = ref<infoType>({ phone: "" });
+    )
+    logoList.value.push(template.value)
+    const isShowInfoInput = ref(false)
+    const info = ref<infoType>({ phone: '', email: '' })
     const alertTips = () => {
       Dialog.confirm({
-        title: "小Ku提示",
-        message:
-          "确定选择此方案后，Logo将不可编辑，不可修改，确定要下载当前Logo吗?",
+        title: '小Ku提示',
+        message: '确定选择此方案后，Logo将不可编辑，不可修改，确定要下载当前Logo吗?',
       })
         .then(() => {
-          isShowInfoInput.value = true;
+          isShowInfoInput.value = true
         })
         .catch(() => {
-          console.log("cancel");
-        });
-    };
+          console.log('cancel')
+        })
+    }
 
     // tab2弹窗输入的name
     const onCloseInfoDialog = (action: string) =>
-      new Promise((resolve) => {
-        if (action === "cancel" || !action) {
-          resolve(true);
+      new Promise(resolve => {
+        if (action === 'cancel' || !action) {
+          resolve(true)
         } else {
           // 校验phone
-          const phonePattern = /^1[3456789]\d{9}$/;
+          const phonePattern = /^1[3456789]\d{9}$/
+          const emailPattern = /^[A-Za-zd0-9]+([-_.][A-Za-zd]+)*@([A-Za-zd]+[-.])+[A-Za-zd]{2,5}$/
           if (!phonePattern.test(info.value.phone)) {
-            Toast.fail("请输入正确的手机号码");
-            resolve(false);
+            Toast.fail('请输入正确的手机号码')
+            resolve(false)
           } else {
-            setTimeout(() => {
-              /**var p2 = /svgjs:data\s*?=\s*?([‘"])[\s\S]*?\1/g
-               * 参数：mater_id（必填）  sn（必填） email(必填)  mobile(必填)  base64（必填） svg（必填）
-               */
-              let svgObj = SVG(".svg0");
-              svgObj.node.removeAttribute("xmlns:svgjs");
-              svgObj.node.removeAttribute("svgjs:data");
-              const nameFamily = SVG(".svg-name0").attr("font-family");
-              const sloganFamily = SVG(".svg-slogan0").attr("font-family");
-              const ext = findFontExt(nameFamily);
-              const ext2 = findFontExt(sloganFamily);
-              if (ext && ext2) {
-                axios
-                  .post("/getFontBase64", {
-                    logoFont: `${nameFamily}${ext}`,
-                    sloganFont: `${sloganFamily}${ext2}`,
-                    logo: template.value.name,
-                    slogan: template.value.name_en,
-                  })
-                  .then((resp: AxiosResponse<RespData<base64Data>>) => {
-                    const respData = resp.data.data;
+            if (!emailPattern.test(info.value.email)) {
+              Toast.fail('请输入正确的邮箱')
+              resolve(false)
+            } else {
+              setTimeout(() => {
+                /**var p2 = /svgjs:data\s*?=\s*?([‘"])[\s\S]*?\1/g
+                 * 参数：mater_id（必填）  sn（必填） email(必填)  mobile(必填)  base64（必填） svg（必填）
+                 */
+                let svgObj = SVG('.svg0')
+                svgObj.node.removeAttribute('xmlns:svgjs')
+                svgObj.node.removeAttribute('svgjs:data')
+                const nameFamily = SVG('.svg-name0').attr('font-family')
+                const sloganFamily = SVG('.svg-slogan0').attr('font-family')
+                const ext = findFontExt(nameFamily)
+                const ext2 = findFontExt(sloganFamily)
+                if (ext && ext2) {
+                  axios
+                    .post('/getFontBase64', {
+                      logoFont: `${nameFamily}${ext}`,
+                      sloganFont: `${sloganFamily}${ext2}`,
+                      logo: template.value.name,
+                      slogan: template.value.name_en,
+                    })
+                    .then((resp: AxiosResponse<RespData<base64Data>>) => {
+                      const respData = resp.data.data
 
-                    const logoBase64 = respData.logo;
-                    const sloganBase64 = respData.slogan;
-                    //data:application/octet-stream
-                    svgObj
-                      .defs()
-                      .style()
-                      .font(
-                        nameFamily,
-                        `url(data:application/octet-stream;charset=utf-8;base64,${logoBase64})`
-                      )
-                      .font(
-                        sloganFamily,
-                        `url(data:application/octet-stream;charset=utf-8;base64,${sloganBase64})`
-                      );
+                      const logoBase64 = respData.logo
+                      const sloganBase64 = respData.slogan
+                      //data:application/octet-stream
+                      svgObj
+                        .defs()
+                        .style()
+                        .font(
+                          nameFamily,
+                          `url(data:application/octet-stream;charset=utf-8;base64,${logoBase64})`
+                        )
+                        .font(
+                          sloganFamily,
+                          `url(data:application/octet-stream;charset=utf-8;base64,${sloganBase64})`
+                        )
 
-                    const svg1 = svgObj.svg();
-                    //替换掉svgjs:data，否则图片加载不出
-                    const p2 = /svgjs:data\s*?=\s*?([‘"])[\s\S]*?\1/g;
-                    const svg = svg1.replace(p2, "");
-                    const base64 = svgToBase64(svg);
-                    const img = new Image();
-                    img.src = base64;
-                    img.crossOrigin = "anonymous";
+                      const svg1 = svgObj.svg()
+                      //替换掉svgjs:data，否则图片加载不出
+                      const p2 = /svgjs:data\s*?=\s*?([‘"])[\s\S]*?\1/g
+                      const svg = svg1.replace(p2, '')
+                      const base64 = svgToBase64(svg)
+                      const img = new Image()
+                      img.src = base64
+                      img.crossOrigin = 'anonymous'
 
-                    let fstrImage;
-                    img.onerror = (e) => {
-                      console.error(e);
-                    };
-                    img.onload = function () {
-                      const canvas = document.createElement("canvas");
-                      canvas.width = 1024;
-                      canvas.height = 1024;
-                      const ctx = canvas.getContext("2d");
-                      const trueImgHeight = (1024 * img.height) / img.width;
-                      ctx?.drawImage(
-                        img,
-                        0,
-                        (1024 - trueImgHeight) / 2,
-                        1024,
-                        trueImgHeight
-                      );
-                      fstrImage = canvas.toDataURL();
-                      //console.log(fstrImage);
+                      let fstrImage
+                      img.onerror = e => {
+                        console.error(e)
+                      }
+                      img.onload = function () {
+                        const canvas = document.createElement('canvas')
+                        canvas.width = 1024
+                        canvas.height = 1024
+                        const ctx = canvas.getContext('2d')
+                        const trueImgHeight = (1024 * img.height) / img.width
+                        ctx?.drawImage(img, 0, (1024 - trueImgHeight) / 2, 1024, trueImgHeight)
+                        fstrImage = canvas.toDataURL()
+                        //console.log(fstrImage);
 
-                      axios
-                        .post("/downsvg", {
-                          mater_id: currentId,
-                          sn: localStorage.getItem("sn"),
-                          mobile: info.value.phone,
-                          base64: fstrImage,
-                          svg: svg,
-                        })
-                        .then((resp) => {
-                          //console.log(resp);
-                          resolve(true);
-                          Dialog.confirm({
-                            title: "小Ku提示",
-                            message:
-                              "您的源文件已成功生成，请联系您的专属客服领取，客服微信号：" +
-                              wx,
+                        axios
+                          .post('/downsvg', {
+                            mater_id: currentId,
+                            sn: localStorage.getItem('sn'),
+                            mobile: info.value.phone,
+                            base64: fstrImage,
+                            svg: svg,
                           })
-                            .then(() => {
-                              console.log("confirm2");
+                          .then(resp => {
+                            //console.log(resp);
+                            resolve(true)
+                            Dialog.confirm({
+                              title: '小Ku提示',
+                              message:
+                                '您的源文件已成功生成，请联系您的专属客服领取，客服微信号：' + wx,
                             })
-                            .catch(() => {
-                              console.log("cancel2");
-                            });
-                        })
-                        .catch((e) => {
-                          console.log(e);
-                          resolve(false);
-                        });
-                    };
-                  })
-                  .catch((e) => {
-                    console.log(e);
-                    Toast.fail("未知错误");
-                    resolve(false);
-                  });
-              } else {
-                Toast.fail("字体文件找不到");
-                resolve(false);
-              }
-            }, 1000);
+                              .then(() => {
+                                console.log('confirm2')
+                              })
+                              .catch(() => {
+                                console.log('cancel2')
+                              })
+                          })
+                          .catch(e => {
+                            console.log(e)
+                            resolve(false)
+                          })
+                      }
+                    })
+                    .catch(e => {
+                      console.log(e)
+                      Toast.fail('未知错误')
+                      resolve(false)
+                    })
+                } else {
+                  Toast.fail('字体文件找不到')
+                  resolve(false)
+                }
+              }, 1000)
+            }
           }
         }
-      });
+      })
     const openInfoDialog = () => {
-      info.value.phone = "";
-      info.value.email = "";
-    };
+      info.value.phone = ''
+      info.value.email = ''
+    }
     // wx弹窗
-    const isShowWxDialog = ref(false);
-    const wx = sessionStorage.getItem("wx") || "";
+    const isShowWxDialog = ref(false)
+    const wx = sessionStorage.getItem('wx') || ''
     onMounted(async () => {
       if (isSvgCode) {
-        const logoBoxDom = document.getElementById("logoBox");
+        const logoBoxDom = document.getElementById('logoBox')
         if (logoBoxDom) {
-          logoBoxDom.innerHTML = svgCode;
+          logoBoxDom.innerHTML = svgCode
           //给svg元素添加背景颜色
-          SVG(".svg0").css("background", bgColor);
+          SVG('.svg0').css('background', bgColor)
         }
       } else {
-        await useCreateLogo(logoList.value, false);
+        await useCreateLogo(logoList.value, false)
       }
-    });
+    })
     const copyWx = (action: string) => {
-      if (action === "confirm") {
-        copyToClipboard(wx);
-        Toast.success("微信号已复制");
-        return false;
+      if (action === 'confirm') {
+        copyToClipboard(wx)
+        Toast.success('微信号已复制')
+        return false
       } else {
-        return true;
+        return true
       }
-    };
+    }
     return {
       logoList,
       bgColor,
@@ -323,9 +312,9 @@ export default defineComponent({
       isShowWxDialog,
       wx,
       copyWx,
-    };
+    }
   },
-});
+})
 </script>
 <style lang="scss" scoped>
 .download-container {

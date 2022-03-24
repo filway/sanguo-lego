@@ -243,7 +243,9 @@ export default defineComponent({
 
       const svgHtmlArr = getSvgHtml(logoList.value)
       svgHtmlArr.forEach((item, index) => {
-        $('.page-screen').eq(index).find('.page-bg-img').html(item)
+        for (let k = 0; k < 7; k++) {
+          $('.page-screen').eq(index).find('.page-bg-img').eq(k).html(item[k])
+        }
       })
     })
 

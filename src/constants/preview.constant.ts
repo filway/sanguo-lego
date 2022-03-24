@@ -50,35 +50,40 @@ export const previewPropsArr: previewPropsType[] = [
 
 export const imgNameArr: imagePropsType[] = [
   {
-    position: [{ w: 80, h: 37.333, x: 1.333, y: 2.667, r: 0 }],
+    w: '80vw', 
+    h: '37.333vw',
+    r: 0
   },
   {
-    position: [{ w: 55, h: 30, x: 195, y: 105, r: 0 }],
+    w: '80vw', 
+    h: '37.333vw',
+    r: 0
   },
   {
-    position: [{ w: 55, h: 30, x: 195, y: 105, r: 0 }],
+    w: '80vw', 
+    h: '37.333vw',
+    r: 0
   },
   {
-    position: [{ w: 55, h: 30, x: 195, y: 105, r: 0 }],
+    w: '80vw', 
+    h: '37.333vw',
+    r: 0
   },
   {
-    position: [{ w: 55, h: 30, x: 195, y: 105, r: 0 }],
+    w: '80vw', 
+    h: '37.333vw',
+    r: 0
   },
   {
-    position: [{ w: 55, h: 30, x: 195, y: 105, r: 0 }],
+    w: '80vw', 
+    h: '37.333vw',
+    r: 0
   },
   {
-    position: [{ w: 55, h: 30, x: 195, y: 105, r: 0 }],
-  },
-  {
-    position: [{ w: 55, h: 30, x: 195, y: 105, r: 0 }],
-  },
-  {
-    position: [{ w: 55, h: 30, x: 195, y: 105, r: 0 }],
-  },
-  {
-    position: [{ w: 55, h: 30, x: 195, y: 105, r: 0 }],
-  },
+    w: '80vw', 
+    h: '37.333vw',
+    r: 0
+  }
 ];
 export const planNameArr: string[] = [
   "一",

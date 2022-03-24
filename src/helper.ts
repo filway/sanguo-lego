@@ -284,7 +284,10 @@ export const toTop = (): void => {
 };
 
 export const getSvgHtml = (logoList: any[]): any[] => {
-  const htmlArr: any[] = [];
+  const htmlArr: any[] = [
+    [],[],[],[],[],[],[],[],[],[],[]
+  ];
+  const whiteIndex = [2,3,4,6];
   for (let i = 0 ; i < logoList.length; i ++) {
       const svgObj = SVG(`.svg${i}`)
       svgObj.node.removeAttribute('xmlns:svgjs')
@@ -293,24 +296,34 @@ export const getSvgHtml = (logoList: any[]): any[] => {
       //替换掉svgjs:data，否则图片加载不出
       const p2 = /svgjs:data\s*?=\s*?([‘"])[\s\S]*?\1/g
       const svg = svg1.replace(p2, '')
-      const item = imgNameArr[i].position[0]
-      const img_w = item.w
-      const img_h = item.h
-      const $ = cheerio.load(svg, { xml: true })
-      const rotate = `rotate(${item.r}deg)`
-      $('svg').css('width', img_w.toString() + 'vw')
-      $('svg').css('height', img_h.toString() + 'vw')
-      $('svg').css('transform', rotate)
-      const currentSvg = logoList[i].svg
-      const colorPattern = /#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})/g;
-      $(`.svg-logo${i}`).html(currentSvg.replace(colorPattern, '#fff !important'))
-      $(`.svg-logo${i} svg`).attr('width', '110')
-      $(`.svg-logo${i} svg`).attr('height', '110')
-      $(`svg text`).attr('fill', '#fff')
-      $(`svg text`).attr('fill', '#fff')
-      const parser = new DOMParser()
-      const doc = parser.parseFromString($.html(), 'text/xml')
-      htmlArr[i] = doc.getElementsByClassName(`svg${i}`)[0];
+
+      //循环imgNamrArr
+      imgNameArr.forEach((imgName, imgIndex) => {
+        const item = imgName
+        const img_w = item.w
+        const img_h = item.h
+        const $ = cheerio.load(svg, { xml: true })
+        const rotate = `rotate(${item.r}deg)`
+        $('svg').css('width', img_w.toString())
+        $('svg').css('height', img_h.toString())
+        $('svg').css('transform', rotate)
+        const currentSvg = logoList[i].svg
+        const colorPattern = /#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})/g;
+        if (whiteIndex.indexOf(imgIndex) !== -1) {
+          $(`.svg-logo${i}`).html(currentSvg.replace(colorPattern, '#fff !important'))
+          $(`svg text`).attr('fill', '#fff')
+          $(`svg text`).attr('fill', '#fff')
+        }
+        $(`.svg-logo${i} svg`).attr('width', '110')
+        $(`.svg-logo${i} svg`).attr('height', '110')
+       
+        const parser = new DOMParser()
+        const doc = parser.parseFromString($.html(), 'text/xml')
+        htmlArr[i][imgIndex] = doc.getElementsByClassName(`svg${i}`)[0];
+
+      })
+
+      
   }
   return htmlArr;
 }
