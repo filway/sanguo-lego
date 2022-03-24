@@ -122,20 +122,20 @@
       <div class="pagenation-small-box">
         <div
           class="pagenation-small"
-          v-show="currentPage > 0 && currentPage < 10"
+          v-show="currentPage > 0 && currentPage < 9"
           @click="prevPage()"
         >
           上一款方案
         </div>
         <div
           class="pagenation-small"
-          v-show="currentPage > 0 && currentPage < 10"
+          v-show="currentPage > 0 && currentPage < 9"
           @click="nextPage()"
         >
           下一款方案
         </div>
       </div>
-      <div class="pagenation-big" v-show="currentPage === 10" @click="prevPage()">上一款方案</div>
+      <div class="pagenation-big" v-show="currentPage === 9" @click="prevPage()">上一款方案</div>
     </div>
     <span v-html="cp"></span>
     <!-- <img :src="imgBase64" alt="" width="340" /> -->
