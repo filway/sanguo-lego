@@ -24,7 +24,7 @@
       <div class="logo-desc" v-show="currentPage === 0">
         {{ title }}
       </div>
-      <p class="page-title">设计方案{{ planName }}</p>
+      <p class="page-title" style="font-weight: bold">设计方案{{ planName }}</p>
       <div
         @click="openPreviewDialog(logo.materialId, logo.randomIndex, key)"
         v-for="(logo, key) in logoList"
@@ -43,8 +43,8 @@
         </div>
         <div class="text-box animate__animated animate__bounce">点击选择此方案</div>
       </div>
+      <p class="page-t">设计理念</p>
       <div v-show="logoList[currentPage].design" class="ll-box">
-        <p class="page-t">设计理念</p>
         <p class="page-p">{{ logoList[currentPage].design }}</p>
       </div>
       <p class="page-title">使用场景图</p>
@@ -92,7 +92,7 @@
           </div>
         </div>
         <div
-          :class="`page-bg page-bg-02 page-bg-img page-insert-${key}`"
+          :class="`page-bg page-bg-03 page-bg-img page-insert-${key}`"
           :style="
             `background-image: url(` +
             require(`../assets/img/cj2/${bgImgIndexArr[key]}/5.jpg`) +
@@ -100,7 +100,7 @@
           "
         ></div>
         <div
-          :class="`page-bg page-bg-02 page-bg-img page-insert-${key}`"
+          :class="`page-bg page-bg-04 page-bg-img page-insert-${key}`"
           :style="
             `background-image: url(` +
             require(`../assets/img/cj2/${bgImgIndexArr[key]}/6.jpg`) +
@@ -108,11 +108,23 @@
           "
         ></div>
         <div
-          :class="`page-bg page-bg-02 page-bg-img page-insert-${key}`"
+          :class="`page-bg page-bg-07 page-bg-img page-insert-${key}`"
+          :style="`background-image: url(` + require(`../assets/img/cj/show3.png`) + `)`"
+        ></div>
+        <div
+          :class="`page-bg page-bg-05 page-bg-img page-insert-${key}`"
           :style="
             `background-image: url(` +
             require(`../assets/img/cj2/${bgImgIndexArr[key]}/7.jpg`) +
-            `)`
+            `);height: 100vw`
+          "
+        ></div>
+        <div
+          :class="`page-bg page-bg-06 page-bg-img page-insert-${key}`"
+          :style="
+            `background-image: url(` +
+            require(`../assets/img/cj2/${bgImgIndexArr[key]}/8.jpg`) +
+            `);height: 80vw`
           "
         ></div>
       </div>
@@ -247,7 +259,7 @@ export default defineComponent({
 
       const svgHtmlArr = getSvgHtml(logoList.value)
       svgHtmlArr.forEach((item, index) => {
-        for (let k = 0; k < 7; k++) {
+        for (let k = 0; k < 9; k++) {
           $('.page-screen').eq(index).find('.page-bg-img').eq(k).html(item[k])
         }
       })
@@ -294,6 +306,12 @@ export default defineComponent({
     color: #fff;
     border-radius: 5px;
   }
+  .page-t {
+    margin: 0.5rem 0 0 0;
+    font-size: 5.333vw;
+    text-align: center;
+    margin-top: 1rem;
+  }
   .ll-box {
     margin-top: 0.8rem;
     text-align: center;
@@ -303,11 +321,8 @@ export default defineComponent({
     border-radius: 8px;
     flex-direction: column;
     align-items: center;
-    padding: 0.5rem 1.8rem 0 1.8rem;
-    .page-t {
-      margin: 0.5rem 0 0 0;
-      font-size: 5.333vw;
-    }
+    padding: 0 1.8rem;
+
     .page-p {
       opacity: 0.7;
       font-size: 15px;

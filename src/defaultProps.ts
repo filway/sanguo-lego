@@ -13,6 +13,7 @@ export type imagePropsType = {
   h: string;
   r: number;
   mt: string;
+  mr: string;
 };
 export interface familyExts {
   hyfx: string;

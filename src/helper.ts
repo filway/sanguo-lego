@@ -295,7 +295,7 @@ export const getSvgHtml = (logoList: any[]): any[] => {
   ] : [
     [],[],[],[],[],[],[],[]
   ];
-  const whiteIndex = [2,3,4,6];
+  const whiteIndex = [2,3,4];
   for (let i = 0 ; i < logoList.length; i ++) {
       const svgObj = SVG(`.svg${i}`)
       svgObj.node.removeAttribute('xmlns:svgjs')
@@ -316,6 +316,10 @@ export const getSvgHtml = (logoList: any[]): any[] => {
         $('svg').css('height', img_h.toString())
         $('svg').css('transform', rotate)
         $('svg').css('margin-top', item.mt)
+        $('svg').css('margin-right', item.mr)
+        if (imgIndex === 8) {
+          $("svg").css("filter", "drop-shadow(rgba(0, 0, 0, 0.2) -10px 10px 0px)")
+        }
         const currentSvg = logoList[i].svg
         const colorPattern = /#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})/g;
         if (whiteIndex.indexOf(imgIndex) !== -1) {   
