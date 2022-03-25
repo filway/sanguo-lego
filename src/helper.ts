@@ -16,7 +16,6 @@ import cheerio from "cheerio";
 import opentype from "opentype.js";
 import { SVG } from "@svgdotjs/svg.js";
 import { imgNameArr } from "./constants/preview.constant";
-import { TemplatesProps } from "./store/templates";
 
 export const materialDownLoad = (
   src: string,
@@ -282,6 +281,14 @@ export const toTop = (): void => {
   }, 40);
 };
 
+// 修复svg代码，有时候会和cheerio有冲突
+const fixSvgCode = (svgCode: string): string => {
+  svgCode = svgCode.replace(/<!--\s*(.*)\s*-->/, "");
+  svgCode = svgCode.replace(/<\?xml.*\?>/, "");
+  svgCode = svgCode.trim();
+  return svgCode;
+}
+
 export const getSvgHtml = (logoList: any[]): any[] => {
   const htmlArr: any[] = logoList.length === 10 ? [
     [],[],[],[],[],[],[],[],[],[]
@@ -308,11 +315,11 @@ export const getSvgHtml = (logoList: any[]): any[] => {
         $('svg').css('width', img_w.toString())
         $('svg').css('height', img_h.toString())
         $('svg').css('transform', rotate)
-        $('svg').css('margin-top', '-7vw')
+        $('svg').css('margin-top', item.mt)
         const currentSvg = logoList[i].svg
         const colorPattern = /#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})/g;
         if (whiteIndex.indexOf(imgIndex) !== -1) {   
-          $(`.svg-logo${i}`).html(currentSvg.replace(colorPattern, '#fff !important'))
+          $(`.svg-logo${i}`).html(fixSvgCode(currentSvg).replace(colorPattern, '#fff !important'))
           $(`svg text`).attr('fill', '#fff')
           $(`svg text`).attr('fill', '#fff')
         }

@@ -43,7 +43,10 @@
         </div>
         <div class="text-box animate__animated animate__bounce">点击选择此方案</div>
       </div>
-
+      <div v-show="logoList[currentPage].design" class="ll-box">
+        <p class="page-t">设计理念</p>
+        <p class="page-p">{{ logoList[currentPage].design }}</p>
+      </div>
       <p class="page-title">使用场景图</p>
 
       <div
@@ -116,8 +119,6 @@
     </div>
 
     <div class="tipsBox" v-show="!isLoading">
-      <h4 v-show="logoList[currentPage].design">设计理念</h4>
-      <p>{{ logoList[currentPage].design }}</p>
       <div class="pagenation-big" v-show="currentPage === 0" @click="nextPage()">下一款方案</div>
       <div class="pagenation-small-box">
         <div
@@ -293,6 +294,30 @@ export default defineComponent({
     color: #fff;
     border-radius: 5px;
   }
+  .ll-box {
+    margin-top: 0.8rem;
+    text-align: center;
+    display: flex;
+    background: #fff;
+    color: #000;
+    border-radius: 8px;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.5rem 1.8rem 0 1.8rem;
+    .page-t {
+      margin: 0.5rem 0 0 0;
+      font-size: 5.333vw;
+    }
+    .page-p {
+      opacity: 0.7;
+      font-size: 15px;
+      line-height: 1.8;
+      font-weight: 300;
+      margin-top: 0.2rem;
+      text-align: left;
+    }
+  }
+
   .tipsBox {
     text-align: center;
     display: flex;
@@ -302,17 +327,7 @@ export default defineComponent({
     border-radius: 8px;
     flex-direction: column;
     align-items: center;
-    padding: 0 1.8rem;
-    h4 {
-      margin: 0.5rem 0 0 0;
-      font-size: 24px;
-    }
-    p {
-      font-size: 15px;
-      line-height: 1.8;
-      font-weight: 300;
-      margin-top: 0.2rem;
-    }
+    padding: 1rem 1.8rem 0 1.8rem;
     .pagenation-big {
       background-color: #0201fd;
       color: #fff;
@@ -347,7 +362,7 @@ export default defineComponent({
   padding: 0.5rem 1rem;
   .logo-desc {
     color: #fff;
-    background-color: #b64563;
+    background-color: #3a3a3a;
     padding: 14px;
     font-size: 14px;
     font-weight: lighter;
@@ -357,7 +372,7 @@ export default defineComponent({
     align-items: center;
   }
   .page-title {
-    font-size: 28px;
+    font-size: 5.333vw;
     text-align: center;
     margin: 0.8rem 0;
   }
