@@ -11,7 +11,7 @@ export type previewPropsType = {
 export type imagePropsType = {
   w: string;
   h: string;
-  r: number;
+  r: string;
   mt: string;
   mr: string;
 };

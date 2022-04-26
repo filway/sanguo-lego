@@ -311,15 +311,15 @@ export const getSvgHtml = (logoList: any[]): any[] => {
         const img_w = item.w
         const img_h = item.h
         const $ = cheerio.load(svg, { xml: true})
-        const rotate = `rotate(${item.r}deg)`
         $('svg').css('width', img_w.toString())
         $('svg').css('height', img_h.toString())
-        $('svg').css('transform', rotate)
+        $('svg').css('transform', item.r)
         $('svg').css('margin-top', item.mt)
         $('svg').css('margin-right', item.mr)
         if (imgIndex === 8) {
           $("svg").css("filter", "drop-shadow(rgba(0, 0, 0, 0.2) -10px 10px 0px)")
         }
+        
         const currentSvg = logoList[i].svg
         const colorPattern = /#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})/g;
         if (whiteIndex.indexOf(imgIndex) !== -1) {   

@@ -24,7 +24,6 @@
       <div class="logo-desc" v-show="currentPage === 0">
         {{ title }}
       </div>
-      <p class="page-title" style="font-weight: bold">设计方案{{ planName }}</p>
       <div
         @click="openPreviewDialog(logo.materialId, logo.randomIndex, key)"
         v-for="(logo, key) in logoList"
@@ -43,12 +42,10 @@
         </div>
         <div class="text-box animate__animated animate__bounce">点击选择此方案</div>
       </div>
-      <p class="page-t">设计理念</p>
+      <p v-show="logoList[currentPage].design" class="page-t">设计理念</p>
       <div v-show="logoList[currentPage].design" class="ll-box">
         <p class="page-p">{{ logoList[currentPage].design }}</p>
       </div>
-      <p class="page-title">使用场景图</p>
-
       <div
         class="page-screen"
         v-for="(logo, key) in logoList"
@@ -130,7 +127,7 @@
       </div>
     </div>
 
-    <div class="tipsBox" v-show="!isLoading">
+    <div class="pageBox" v-show="!isLoading">
       <div class="pagenation-big" v-show="currentPage === 0" @click="nextPage()">下一款方案</div>
       <div class="pagenation-small-box">
         <div
@@ -152,6 +149,12 @@
         上一款方案
       </div>
     </div>
+    <div v-show="!isLoading" class="tipsBox">
+      <p class="tips-title">温馨提示:</p>
+      <p>
+        {{ tips }}
+      </p>
+    </div>
     <span v-html="cp"></span>
     <!-- <img :src="imgBase64" alt="" width="340" /> -->
   </div>
@@ -165,7 +168,7 @@ import { useStore } from 'vuex'
 import useCreateLogo from '@/hooks/useCreateLogo'
 import PreviewDialog from '@/components/PreviewDialog.vue'
 import { SVG } from '@svgdotjs/svg.js'
-import { previewPropsArr, planNameArr } from '../constants/preview.constant'
+import { previewPropsArr } from '../constants/preview.constant'
 import { getSvgHtml, toTop } from '@/helper'
 import cheerio from 'cheerio'
 import $ from 'jquery'
@@ -183,11 +186,11 @@ export default defineComponent({
     const currentIndex = ref(0)
     const store = useStore<GlobalDataProps>()
     const currentPage = ref(0)
-    const planName = computed(() => planNameArr[currentPage.value])
 
     const logoList = computed(() => store.state.templates.data)
     const cp = computed(() => store.state.templates.cp)
     const title = computed(() => store.state.templates.title)
+    const tips = computed(() => store.state.templates.tips)
     provide('key', currentIndex)
 
     const previewData = ref<any[]>([])
@@ -280,9 +283,9 @@ export default defineComponent({
       currentPage,
       nextPage,
       prevPage,
-      planName,
       bgImgIndexArr,
       title,
+      tips,
     }
   },
 })
@@ -313,7 +316,7 @@ export default defineComponent({
     margin-top: 1rem;
   }
   .ll-box {
-    margin-top: 0.8rem;
+    margin-top: 0.5rem;
     text-align: center;
     display: flex;
     background: #fff;
@@ -321,7 +324,7 @@ export default defineComponent({
     border-radius: 8px;
     flex-direction: column;
     align-items: center;
-    padding: 0 1.8rem;
+    padding: 0.5rem 1.8rem 0 1.8rem;
 
     .page-p {
       opacity: 0.7;
@@ -333,16 +336,15 @@ export default defineComponent({
     }
   }
 
-  .tipsBox {
+  .pageBox {
     text-align: center;
     display: flex;
-    background: #fff;
-    opacity: 0.7;
     color: #000;
     border-radius: 8px;
     flex-direction: column;
     align-items: center;
-    padding: 1rem 1.8rem 0 1.8rem;
+    padding: 0 1.8rem;
+    margin-top: 1rem;
     .pagenation-big {
       background-color: #0201fd;
       color: #fff;
@@ -373,18 +375,35 @@ export default defineComponent({
     // background: url("../assets/img/img_banner.jpg");
   }
 
+  .tipsBox {
+    display: flex;
+    border-radius: 8px;
+    flex-direction: column;
+    padding: 0 0.8rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.4rem;
+    .tips-title {
+      margin-bottom: 0;
+    }
+    p {
+      font-size: 15px;
+    }
+    color: #fff;
+    background: #0201fd;
+  }
+
   min-height: 100vh;
   padding: 0.5rem 1rem;
   .logo-desc {
     color: #fff;
-    background-color: #3a3a3a;
+    background-color: #0201fd;
     padding: 14px;
     font-size: 14px;
-    font-weight: lighter;
     height: 54px;
     border-radius: 5px;
     display: flex;
     align-items: center;
+    margin-bottom: 1rem;
   }
   .page-title {
     font-size: 5.333vw;
@@ -427,6 +446,7 @@ export default defineComponent({
     width: calc(100vw - 2rem);
     height: 14rem;
     background: #fff;
+    border: 3px solid #9d9d9d;
     border-radius: 8px;
     animation: zoomIn; /* referring directly to the animation's @keyframe declaration */
     animation-duration: 1s; /* don't forget to set a duration! */

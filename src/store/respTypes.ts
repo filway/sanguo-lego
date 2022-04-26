@@ -4,6 +4,7 @@ interface AttrProps {
   wx: string;
   complain: string;
   title: string;
+  tips: string;
 }
 
 export interface RespData<T = []> {

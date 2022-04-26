@@ -30,6 +30,7 @@ export interface TemplatesProps {
   title: string | undefined;
   totalTemplates?: number;
   currentNameEn?: string;
+  tips: string | undefined;
 }
 
 const stateStroage = sessionStorage.getItem("state");
@@ -43,6 +44,7 @@ const templates: Module<TemplatesProps, GlobalDataProps> = {
     cp: "",
     totalTemplates: 0,
     title: "",
+    tips: "",
   },
   mutations: {
     fetchTemplates(state, rawData: RespListData<TemplateProps[]>) {
@@ -55,6 +57,7 @@ const templates: Module<TemplatesProps, GlobalDataProps> = {
       state.data = rawData.data;
       state.cp = rawData.attr?.complain;
       state.title = rawData.attr?.title;
+      state.tips = rawData.attr?.tips;
       sessionStorage.setItem("wx", rawData.attr ? rawData.attr.wx : "");
     },
     translate(state, rawData: RespData<string>) {
