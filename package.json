@@ -16,7 +16,6 @@
     "@types/opentype.js": "^1.3.2",
     "animate.css": "^4.1.1",
     "axios": "^0.21.1",
-    "babel-plugin-transform-remove-console": "^6.9.4",
     "cheerio": "*",
     "core-js": "^3.6.5",
     "default-passive-events": "^2.0.0",

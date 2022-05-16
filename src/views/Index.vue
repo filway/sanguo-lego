@@ -72,30 +72,14 @@
           <div class="page-bg-02-right">
             <div
               :class="`page-bg-img page-insert-${key}`"
-              :style="
-                `background-image: url(` +
-                require(`../assets/img/cj2/${bgImgIndexArr[key]}/3.jpg`) +
-                `)`
-              "
+              :style="`background-color: #7F7F81`"
             ></div>
             <div
               :class="`page-bg-img page-insert-${key}`"
-              :style="
-                `background-image: url(` +
-                require(`../assets/img/cj2/${bgImgIndexArr[key]}/4.jpg`) +
-                `)`
-              "
+              :style="`background-color: #B2B2B2`"
             ></div>
           </div>
         </div>
-        <div
-          :class="`page-bg page-bg-03 page-bg-img page-insert-${key}`"
-          :style="
-            `background-image: url(` +
-            require(`../assets/img/cj2/${bgImgIndexArr[key]}/5.jpg`) +
-            `)`
-          "
-        ></div>
         <div
           :class="`page-bg page-bg-04 page-bg-img page-insert-${key}`"
           :style="

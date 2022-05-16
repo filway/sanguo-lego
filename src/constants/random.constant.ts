@@ -116,6 +116,14 @@ interface layoutPropsType {
   randomNameEnFontSize: number;
 }
 const layoutProps: layoutPropsType[] = [];
+layoutProps[0] = {
+  randomI1: [268, 264, 263],
+  randomI2: [145, 146, 144],
+  randomIx: [260, 190, 190],
+  randomIy: [210, 285, 200],
+  randomNameFontSize: 75,
+  randomNameEnFontSize: 25,
+};
 layoutProps[1] = {
   randomI1: [220, 288, 263],
   randomI2: [175.39, 120, 144],

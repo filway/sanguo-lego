@@ -31,6 +31,10 @@ const useCreateLogo = async (
     trueMaterialPath = svgToBase64(item.svg);
     const trueNameColor = rgb;
     const trueSloganColor = rgb;
+    if (item.name.length === 0) {
+      // 中英文都没有
+      item.len = 0
+    }
     const layoutProps = getLayoutPropsByNameLength(item.len, item.randomIndex);
     const {
       imageX,
@@ -110,7 +114,7 @@ const useCreateLogo = async (
     groupImage.add(img);
     group.add(title);
     group.add(subTitle);
-    if (randonI === 2) {
+    if (item.len === 0) {
       img.size(160, 160);
     } else {
       img.size(110, 110);
