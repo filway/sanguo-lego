@@ -44,6 +44,7 @@
       <p>如果您对智能生成的LOGO不是100%满意可以选择付费升级，设计师人工修改</p>
     </div>
     <!-- <img :src="imgBase64" alt="" width="340" /> -->
+    <span v-html="cp"></span>
   </div>
 </template>
 
@@ -72,6 +73,7 @@ export default defineComponent({
     const store = useStore<GlobalDataProps>();
 
     const logoList = computed(() => store.state.templates.data);
+    const cp = computed(() => store.state.templates.cp);
     provide("key", currentIndex);
 
     const previewData = ref<any[]>([]);
@@ -136,6 +138,7 @@ export default defineComponent({
       isLoading,
       previewData,
       imgBase64,
+      cp,
     };
   },
 });

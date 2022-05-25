@@ -1,3 +1,4 @@
+import { Stage } from "driver.js";
 import { computed } from "vue";
 import { Module } from "vuex";
 import store, { actionWrapper, GlobalDataProps } from "./index";
@@ -28,6 +29,7 @@ export interface TemplatesProps {
   data: TemplateProps[];
   totalTemplates?: number;
   currentNameEn?: string;
+  cp: string | undefined;
 }
 
 const stateStroage = sessionStorage.getItem("state");
@@ -39,6 +41,7 @@ const templates: Module<TemplatesProps, GlobalDataProps> = {
   state: {
     data: sData,
     totalTemplates: 0,
+    cp: "",
   },
   mutations: {
     fetchTemplates(state, rawData: RespListData<TemplateProps[]>) {
@@ -50,6 +53,7 @@ const templates: Module<TemplatesProps, GlobalDataProps> = {
       });
       state.data = rawData.data;
       sessionStorage.setItem("wx", rawData.attr ? rawData.attr.wx : "");
+      state.cp = rawData.attr?.complain;
     },
     translate(state, rawData: RespData<string>) {
       state.currentNameEn = rawData.data;

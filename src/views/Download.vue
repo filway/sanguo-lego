@@ -119,7 +119,7 @@ import { Dialog, Toast } from "vant";
 import axios, { AxiosResponse } from "axios";
 import { copyToClipboard, svgToBase64, findFontExt } from "@/helper";
 import { SVG } from "@svgdotjs/svg.js";
-import { base64Data, RespData } from "@/store/respTypes";
+import { base64Data, downloadUrlData, RespData } from "@/store/respTypes";
 
 type infoType = {
   phone: string;
@@ -246,22 +246,26 @@ export default defineComponent({
                           base64: fstrImage,
                           svg: svg,
                         })
-                        .then((resp) => {
-                          //console.log(resp);
-                          resolve(true);
-                          Dialog.confirm({
-                            title: "小Ku提示",
-                            message:
-                              "您的源文件已成功生成，请联系您的专属客服领取，客服微信号：" +
-                              wx,
-                          })
-                            .then(() => {
-                              console.log("confirm2");
+                        .then(
+                          (resp: AxiosResponse<RespData<downloadUrlData>>) => {
+                            const respData = resp.data.data;
+
+                            const { jpg, png, svg } = respData;
+                            resolve(true);
+                            Dialog.confirm({
+                              title: "小Ku提示",
+                              message:
+                                "您的源文件已成功生成，请联系您的专属客服领取，客服微信号：" +
+                                wx,
                             })
-                            .catch(() => {
-                              console.log("cancel2");
-                            });
-                        })
+                              .then(() => {
+                                console.log("confirm2");
+                              })
+                              .catch(() => {
+                                console.log("cancel2");
+                              });
+                          }
+                        )
                         .catch((e) => {
                           console.log(e);
                           resolve(false);
