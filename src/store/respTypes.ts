@@ -32,6 +32,7 @@ export interface downloadUrlData {
   png: string;
   jpg: string;
   svg: string;
+  zip: string;
 }
 export type RespListData<T> = RespData<T>;
 export type RespUploadData = RespData<UploadData>;

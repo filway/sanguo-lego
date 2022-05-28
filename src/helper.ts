@@ -20,11 +20,12 @@ import { nextTick } from "vue";
 
 export const materialDownLoad = (
   src: string,
-  ext: enableDownloadType | enableImageDownloadType
+  ext: enableDownloadType | enableImageDownloadType,
+  filename = ""
 ): void => {
   const aLink = document.createElement("a");
   aLink.href = src;
-  aLink.download = "test." + ext;
+  aLink.download = filename ? filename + "." + ext : "test." + ext;
   if (ext === "svg") {
     aLink.dataset.downloadurl = [
       "image/svg+xml;charset=utf-8",

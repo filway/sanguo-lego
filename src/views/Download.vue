@@ -112,12 +112,17 @@
 import { computed, defineComponent, onMounted, ref } from "vue";
 import HeaderNav from "@/components/HeaderNav.vue";
 import { TemplateProps } from "@/store/templates";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import useCreateLogo from "@/hooks/useCreateLogo";
 import { useStore } from "vuex";
 import { Dialog, Toast } from "vant";
 import axios, { AxiosResponse } from "axios";
-import { copyToClipboard, svgToBase64, findFontExt } from "@/helper";
+import {
+  copyToClipboard,
+  svgToBase64,
+  findFontExt,
+  materialDownLoad,
+} from "@/helper";
 import { SVG } from "@svgdotjs/svg.js";
 import { base64Data, downloadUrlData, RespData } from "@/store/respTypes";
 
@@ -136,6 +141,8 @@ export default defineComponent({
     const isSvgCode = svgCode?.length > 1;
     const logoRef = ref<HTMLElement>();
     const route = useRoute();
+    const router = useRouter();
+    const sn = localStorage.getItem("sn") as string;
     const store = useStore();
     let logoList = ref<TemplateProps[]>([]);
     const currentId = route.params.id as string;
@@ -241,25 +248,31 @@ export default defineComponent({
                       axios
                         .post("/downsvg", {
                           mater_id: currentId,
-                          sn: localStorage.getItem("sn"),
+                          sn,
                           mobile: info.value.phone,
                           base64: fstrImage,
                           svg: svg,
                         })
                         .then(
                           (resp: AxiosResponse<RespData<downloadUrlData>>) => {
-                            const respData = resp.data.data;
+                            const { zip } = resp.data.data;
 
-                            const { jpg, png, svg } = respData;
+                            materialDownLoad(zip as string, "zip", sn);
+
                             resolve(true);
                             Dialog.confirm({
                               title: "小Ku提示",
-                              message:
-                                "您的源文件已成功生成，请联系您的专属客服领取，客服微信号：" +
-                                wx,
+                              message: "您的源文件已成功生成",
+                              showCancelButton: false,
                             })
                               .then(() => {
                                 console.log("confirm2");
+                                router.push({
+                                  path: "/",
+                                  query: {
+                                    sn,
+                                  },
+                                });
                               })
                               .catch(() => {
                                 console.log("cancel2");

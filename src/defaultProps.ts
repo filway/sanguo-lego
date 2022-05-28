@@ -1,4 +1,4 @@
-export type enableDownloadType = "svg" | "png" | "jpg";
+export type enableDownloadType = "svg" | "png" | "jpg" | "zip";
 export type enableImageDownloadType = "png" | "jpg";
 export type previewPropsType = {
   url: string;
