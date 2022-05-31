@@ -118,7 +118,7 @@ export default defineComponent({
       console.log("跳转下载");
     };
     onMounted(async () => {
-      let { sn } = route.query;
+      let { sn } = route.params;
       localStorage.setItem("sn", sn as string);
       //获取logo list
       await store.dispatch("fetchTemplates", {

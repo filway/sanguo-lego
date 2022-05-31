@@ -15,7 +15,7 @@ const router = createRouter({
   history: createWebHistory(),
   routes: [
     {
-      path: "/",
+      path: "/:sn",
       name: "index",
       component: Index,
       meta: { title: "logo智能设计", disableLoading: true },
