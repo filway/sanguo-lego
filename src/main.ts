@@ -27,6 +27,7 @@ import "default-passive-events";
 import "animate.css";
 import "./assets/fonts/font.scss";
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
+import wxsdk from "./wxsdk";
 import { RespData } from "./store/respTypes";
 
 export type ICustomAxiosConfig = AxiosRequestConfig & {
@@ -64,5 +65,5 @@ axios.interceptors.response.use(
   }
 );
 
-app.use(Vant).use(router).use(store);
+app.use(Vant).use(router).use(store).use(wxsdk);
 app.mount("#app");

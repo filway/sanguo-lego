@@ -109,7 +109,13 @@
   </div>
 </template>
 <script lang="ts">
-import { computed, defineComponent, onMounted, ref } from "vue";
+import {
+  computed,
+  defineComponent,
+  getCurrentInstance,
+  onMounted,
+  ref,
+} from "vue";
 import HeaderNav from "@/components/HeaderNav.vue";
 import { TemplateProps } from "@/store/templates";
 import { useRoute, useRouter } from "vue-router";
@@ -122,6 +128,7 @@ import {
   svgToBase64,
   findFontExt,
   materialDownLoad,
+  getEnv,
 } from "@/helper";
 import { SVG } from "@svgdotjs/svg.js";
 import { base64Data, downloadUrlData, RespData } from "@/store/respTypes";
@@ -137,6 +144,18 @@ export default defineComponent({
     HeaderNav,
   },
   setup() {
+    // 小程序相关
+    const env = getEnv();
+    const weixin =
+      getCurrentInstance()?.appContext.config.globalProperties.$wechat;
+    const goToDownloadZip = (zipUrl: string) => {
+      weixin.miniProgram.navigateTo({
+        url: `/pages/download-zip/download-zip?zip=${encodeURIComponent(
+          zipUrl
+        )}`,
+      });
+    };
+
     const svgCode = localStorage.getItem("downloadsvg") as string;
     const isSvgCode = svgCode?.length > 1;
     const logoRef = ref<HTMLElement>();
@@ -257,7 +276,11 @@ export default defineComponent({
                           (resp: AxiosResponse<RespData<downloadUrlData>>) => {
                             const { zip } = resp.data.data;
 
-                            materialDownLoad(zip as string, "zip", sn);
+                            if (env === "miniprogram") {
+                              goToDownloadZip(zip);
+                            } else {
+                              materialDownLoad(zip as string, "zip", sn);
+                            }
 
                             resolve(true);
                             Dialog.confirm({
@@ -268,10 +291,7 @@ export default defineComponent({
                               .then(() => {
                                 console.log("confirm2");
                                 router.push({
-                                  path: "/",
-                                  query: {
-                                    sn,
-                                  },
+                                  path: "/" + sn,
                                 });
                               })
                               .catch(() => {
@@ -340,6 +360,7 @@ export default defineComponent({
       isShowWxDialog,
       wx,
       copyWx,
+      env,
     };
   },
 });

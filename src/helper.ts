@@ -273,3 +273,15 @@ export const replaceText = (cls: string, family: string) => {
     });
   }
 };
+
+// 判断所处环境
+export const getEnv = () => {
+  const ua = window.navigator.userAgent.toLowerCase() as any;
+  if (ua.match(/miniprogram/i) == "miniprogram") {
+    return "miniprogram";
+  } else if (ua.match(/micromessenger/i) == "micromessenger") {
+    return "micromessenger";
+  } else {
+    return "other";
+  }
+};
