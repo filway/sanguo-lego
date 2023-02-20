@@ -16,20 +16,12 @@
     <van-row class="iconsWrapper">
       <van-col span="6" class="icon-left">
         <div class="circleBox">
-          <van-icon
-            @click="openPreviewDialog"
-            name="browsing-history-o"
-            size="1.2rem"
-          />
+          <van-icon @click="openPreviewDialog" name="browsing-history-o" size="1.2rem" />
         </div>
       </van-col>
       <van-col span="12" class="icon-center">
         <div class="circleBox">
-          <van-icon
-            name="replay"
-            @click="selectPostionImage(template.randomIndex)"
-            size="1.2rem"
-          />
+          <van-icon name="replay" @click="selectPostionImage(template.randomIndex)" size="1.2rem" />
         </div>
       </van-col>
       <van-col span="6" class="icon-right">
@@ -66,19 +58,10 @@
         </div>
       </van-col>
     </van-row>
-    <van-tabs
-      @click="onClickTab"
-      background="#f8f8f8"
-      class="tabsWrapper"
-      v-model:active="active"
-    >
+    <van-tabs @click="onClickTab" background="#f8f8f8" class="tabsWrapper" v-model:active="active">
       <van-tab title="title1" class="tab2">
         <template #title>
-          <van-icon
-            class="iconfont"
-            class-prefix="icon"
-            name="tubiao"
-            size="1.2rem"
+          <van-icon class="iconfont" class-prefix="icon" name="tubiao" size="1.2rem"
         /></template>
         <div class="titleBox">
           <span class="tabContentTitle activeTitle">图标</span>
@@ -117,26 +100,24 @@
               @click="selectPostionImage(1)"
               :src="require('../assets/img/vertical.png')"
             />
-            <van-image
+            <!-- <van-image
               height="1.8rem"
               fit="contain"
               class="rightImage"
               v-show="imageActive === 2"
               @click="selectPostionImage(2)"
               :src="require('../assets/img/center_active.png')"
-            />
-            <van-image
+            /> -->
+            <!-- <van-image
               height="1.8rem"
               fit="contain"
               class="rightImage"
               v-show="imageActive !== 2"
               @click="selectPostionImage(2)"
               :src="require('../assets/img/center.png')"
-            />
+            /> -->
           </van-col>
-          <van-col span="3"
-            ><div @click="resetSvg" class="smallImg"></div
-          ></van-col>
+          <van-col span="3"><div @click="resetSvg" class="smallImg"></div></van-col>
           <van-col span="3">
             <van-popover v-model:show="showImgPopover" placement="top">
               <div class="sliderBox">
@@ -182,11 +163,7 @@
       </van-tab>
       <van-tab title="title2" class="tab2">
         <template #title>
-          <van-icon
-            class="iconfont"
-            class-prefix="icon"
-            name="hengxiangwenben"
-            size="1.2rem"
+          <van-icon class="iconfont" class-prefix="icon" name="hengxiangwenben" size="1.2rem"
         /></template>
         <div class="titleBox">
           <span
@@ -240,10 +217,10 @@
             :class="[sloganEffectItemActive == 2 ? 'sloganEffectActive2' : '']"
             @click="toggleSloganEffectItemActive(2)"
           ></div>
-          <div
+          <!-- <div
             :class="[sloganEffectItemActive == 3 ? 'sloganEffectActive3' : '']"
             @click="toggleSloganEffectItemActive(3)"
-          ></div>
+          ></div> -->
         </div>
         <div class="settingBox">
           <span @click="isShowNameInput = true">{{
@@ -258,7 +235,7 @@
               class="familyPopover"
             >
               <van-tabs v-model:active="activeFont" color="#3286fe">
-                <van-tab title="中文" title-class="familyTitle"
+                <van-tab title="字体" title-class="familyTitle"
                   ><div
                     v-for="(item, index) in familyOptions"
                     :key="index"
@@ -275,7 +252,7 @@
                     </div>
                   </div></van-tab
                 >
-                <van-tab title="英文" title-class="familyTitle"
+                <!-- <van-tab title="英文" title-class="familyTitle"
                   ><div
                     v-for="(item, index) in englishFamilyOptions"
                     :key="index"
@@ -291,16 +268,12 @@
                       {{ item.text }}
                     </div>
                   </div></van-tab
-                >
+                > -->
               </van-tabs>
 
               <template #reference>
-                <span v-show="tab2ContentTitleActive === 0">{{
-                  currentNameFamily
-                }}</span>
-                <span v-show="tab2ContentTitleActive === 1">{{
-                  currentSloganFamily
-                }}</span>
+                <span v-show="tab2ContentTitleActive === 0">{{ currentNameFamily }}</span>
+                <span v-show="tab2ContentTitleActive === 1">{{ currentSloganFamily }}</span>
 
                 <span><van-icon name="arrow-up" /></span>
               </template>
@@ -311,41 +284,21 @@
               <div class="sliderBox2" v-show="tab2ContentTitleActive === 0">
                 <div>
                   <h5 style="margin-top: 0">左右: {{ lrLogoValue }}</h5>
-                  <van-slider
-                    v-model="lrLogoValue"
-                    :min="-375"
-                    :max="375"
-                    :button-size="18"
-                  />
+                  <van-slider v-model="lrLogoValue" :min="-375" :max="375" :button-size="18" />
                 </div>
                 <div>
                   <h5>上下: {{ udLogoValue }}</h5>
-                  <van-slider
-                    v-model="udLogoValue"
-                    :min="-400"
-                    :max="400"
-                    :button-size="18"
-                  />
+                  <van-slider v-model="udLogoValue" :min="-400" :max="400" :button-size="18" />
                 </div>
               </div>
               <div class="sliderBox2" v-show="tab2ContentTitleActive === 1">
                 <div>
                   <h5 style="margin-top: 0">左右: {{ lrSloganValue }}</h5>
-                  <van-slider
-                    v-model="lrSloganValue"
-                    :min="-375"
-                    :max="375"
-                    :button-size="18"
-                  />
+                  <van-slider v-model="lrSloganValue" :min="-375" :max="375" :button-size="18" />
                 </div>
                 <div>
                   <h5>上下: {{ udSloganValue }}</h5>
-                  <van-slider
-                    v-model="udSloganValue"
-                    :min="-400"
-                    :max="400"
-                    :button-size="18"
-                  />
+                  <van-slider v-model="udSloganValue" :min="-400" :max="400" :button-size="18" />
                 </div>
               </div>
               <template #reference>
@@ -357,11 +310,7 @@
       </van-tab>
       <van-tab title="title3" class="tab2" style="margin-bottom: 1rem">
         <template #title>
-          <van-icon
-            class="iconfont"
-            class-prefix="icon"
-            name="yanse"
-            size="1.2rem"
+          <van-icon class="iconfont" class-prefix="icon" name="yanse" size="1.2rem"
         /></template>
         <div class="titleBox">
           <span
@@ -391,7 +340,7 @@
             @click="toggleTab3Title(3)"
             >图标</span
           >
-          <span
+          <!-- <span
             :class="[
               tab3ContentTitleActive == 2
                 ? 'tabContentTitle activeTitle'
@@ -399,7 +348,7 @@
             ]"
             @click="toggleTab3Title(2)"
             >背景</span
-          >
+          > -->
         </div>
         <div class="colorBox" v-show="tab3ContentTitleActive === 3">
           <div
@@ -437,431 +386,422 @@
 </template>
 
 <script lang="ts">
-import useCreateLogo from "@/hooks/useCreateLogo";
-import store from "@/store";
-import { TemplateProps } from "@/store/templates";
-import {
-  computed,
-  defineComponent,
-  nextTick,
-  onMounted,
-  ref,
-  watch,
-} from "vue";
-import { useRoute } from "vue-router";
-import { SVG } from "@svgdotjs/svg.js";
-import "@svgdotjs/svg.filter.js";
-import {
-  englishFontFamilyArr,
-  fontFamilyArr,
-  randomFamilyText,
-} from "../constants/random.constant";
-import ColorPicker from "@/components/ColorPicker.vue";
-import PreviewDialog from "@/components/PreviewDialog.vue";
-import HeaderNav from "@/components/HeaderNav.vue";
-import { getColor, getLayoutPropsByNameLength } from "@/helper";
-import { previewPropsArr } from "@/constants/preview.constant";
-import { Toast } from "vant";
-import cheerio from "cheerio";
-import useDriver from "@/hooks/useDriver";
+import useCreateLogo from '@/hooks/useCreateLogo'
+import store from '@/store'
+import { TemplateProps } from '@/store/templates'
+import { computed, defineComponent, nextTick, onMounted, ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
+import { SVG } from '@svgdotjs/svg.js'
+import '@svgdotjs/svg.filter.js'
+import { englishFontFamilyArr, fontFamilyArr, randomFamilyText } from '../constants/random.constant'
+import ColorPicker from '@/components/ColorPicker.vue'
+import PreviewDialog from '@/components/PreviewDialog.vue'
+import HeaderNav from '@/components/HeaderNav.vue'
+import { getColor, getLayoutPropsByNameLength } from '@/helper'
+import { previewPropsArr } from '@/constants/preview.constant'
+import { Toast } from 'vant'
+import cheerio from 'cheerio'
+import useDriver from '@/hooks/useDriver'
 
 export default defineComponent({
-  name: "Editor",
+  name: 'Editor',
   components: {
     ColorPicker,
     PreviewDialog,
     HeaderNav,
   },
   setup() {
-    const route = useRoute();
-    const svgRef = ref<SVGElement | null>(null);
-    let logoList = ref<TemplateProps[]>([]);
-    const currentId = route.params.id as string;
-    const marteralId = ref(parseInt(currentId, 0));
+    const route = useRoute()
+    const svgRef = ref<SVGElement | null>(null)
+    let logoList = ref<TemplateProps[]>([])
+    const currentId = route.params.id as string
+    const marteralId = ref(parseInt(currentId, 0))
     const template = computed<TemplateProps>(() =>
       store.getters.getTemplateById(parseInt(currentId, 0))
-    );
+    )
 
     //替换svg元素
     const replaceSvgArea = (newXml: string) => {
-      const div = document.createElement("div");
-      newXml = newXml.replace(/<!--\s*(.*)\s*-->/, "");
-      newXml = newXml.replace(/<\?xml.*\?>/, "");
-      newXml = newXml.trim();
-      div.innerHTML = newXml;
-      const svgNode = svgRef.value?.childNodes[0];
-      svgNode?.lastChild?.remove();
-      svgNode?.appendChild(div.childNodes[0]);
-    };
+      const div = document.createElement('div')
+      newXml = newXml.replace(/<!--\s*(.*)\s*-->/, '')
+      newXml = newXml.replace(/<\?xml.*\?>/, '')
+      newXml = newXml.trim()
+      div.innerHTML = newXml
+      const svgNode = svgRef.value?.childNodes[0]
+      svgNode?.lastChild?.remove()
+      svgNode?.appendChild(div.childNodes[0])
+    }
 
     //吸取图标的颜色
-    const colors = ref(getColor(template.value.svg));
-    const isMove = ref(true); //是否需要移动logo和slogan
-    const colorItemActive = ref(-1);
+    const colors = ref(getColor(template.value.svg))
+    const isMove = ref(true) //是否需要移动logo和slogan
+    const colorItemActive = ref(-1)
     const getActiveItemColor = () => {
-      const activeColorItemEls = document.getElementsByClassName("colorActive");
+      const activeColorItemEls = document.getElementsByClassName('colorActive')
       if (activeColorItemEls.length > 0) {
-        return activeColorItemEls[0].getAttribute("data-color");
+        return activeColorItemEls[0].getAttribute('data-color')
       }
-    };
+    }
     const toggleColorItem = (key: number) => {
-      colorItemActive.value = key;
+      colorItemActive.value = key
       nextTick(() => {
-        currentImageColor.value = getActiveItemColor() || "#ffffff";
-      });
-    };
-    const currentImageColor = ref("");
+        currentImageColor.value = getActiveItemColor() || '#ffffff'
+      })
+    }
+    const currentImageColor = ref('')
     const changeImageColor = (color: string) => {
-      if (color === "") {
-        color = "#ffffff";
+      if (color === '') {
+        color = '#ffffff'
       }
-      currentImageColor.value = color;
-      const activeColorItemEls = document.getElementsByClassName("colorActive");
+      currentImageColor.value = color
+      const activeColorItemEls = document.getElementsByClassName('colorActive')
       if (activeColorItemEls.length > 0) {
-        const activeItemColor = getActiveItemColor() || "#ffffff";
-        const activeColorItemEl = activeColorItemEls[0] as HTMLElement;
-        activeColorItemEl.setAttribute("data-color", color);
+        const activeItemColor = getActiveItemColor() || '#ffffff'
+        const activeColorItemEl = activeColorItemEls[0] as HTMLElement
+        activeColorItemEl.setAttribute('data-color', color)
         nextTick(() => {
-          colors.value[colorItemActive.value] = color;
-          var regex = new RegExp(activeItemColor, "g");
-          const logoElement = document.getElementsByClassName("svg-logo0");
-          const html = logoElement[0].outerHTML;
-          const newHtml = html.replace(regex, color);
-          replaceSvgArea(newHtml);
+          colors.value[colorItemActive.value] = color
+          var regex = new RegExp(activeItemColor, 'g')
+          const logoElement = document.getElementsByClassName('svg-logo0')
+          const html = logoElement[0].outerHTML
+          const newHtml = html.replace(regex, color)
+          replaceSvgArea(newHtml)
           //logoElement[0].outerHTML = newHtml;
-        });
+        })
       }
-    };
+    }
 
-    const createLogoLoading = ref(false);
-    const active = ref(0);
-    const activeFont = ref(0);
-    const imageActive = ref(template.value.randomIndex);
-    const tab2ContentTitleActive = ref(0);
-    const showImgPopover = ref(false);
-    const showFamilyPopover = ref(false);
-    const isShowNameInput = ref(false);
-    const initKeyValueArr = [110, 110, 160];
-    const initLsValue = computed(
-      () => initKeyValueArr[template.value.randomIndex || 0]
-    );
+    const createLogoLoading = ref(false)
+    const active = ref(0)
+    const activeFont = ref(0)
+    const imageActive = ref(template.value.randomIndex)
+    const tab2ContentTitleActive = ref(0)
+    const showImgPopover = ref(false)
+    const showFamilyPopover = ref(false)
+    const isShowNameInput = ref(false)
+    const initKeyValueArr = [110, 110, 160]
+    const initLsValue = computed(() => initKeyValueArr[template.value.randomIndex || 0])
     const onClickTab = (index: number) => {
       if (index === 1) {
-        isMove.value = true;
+        isMove.value = true
       } else if (index === 0) {
-        isMove.value = false;
+        isMove.value = false
       }
-    };
+    }
     const initValues = () => {
-      lrImgValue.value = 0;
-      udImgValue.value = 0;
-      lsImgValue.value = initLsValue.value;
-      lrLogoValue.value = 0;
-      udLogoValue.value = 0;
-      lrSloganValue.value = 0;
-      udSloganValue.value = 0;
-    };
+      lrImgValue.value = 0
+      udImgValue.value = 0
+      lsImgValue.value = initLsValue.value
+      lrLogoValue.value = 0
+      udLogoValue.value = 0
+      lrSloganValue.value = 0
+      udSloganValue.value = 0
+    }
     const selectPostionImage = (index: number) => {
-      imageActive.value = index;
-      template.value.randomIndex = index;
-      const svgChild = svgRef.value?.childNodes[0];
-      svgRef.value?.removeChild(svgChild as Node);
-      createLogoLoading.value = true;
-      initValues();
+      imageActive.value = index
+      template.value.randomIndex = index
+      const svgChild = svgRef.value?.childNodes[0]
+      svgRef.value?.removeChild(svgChild as Node)
+      createLogoLoading.value = true
+      initValues()
 
       setTimeout(() => {
         useCreateLogo(logoList.value, true, {
           randomIndex: index,
-          randomTitleFamily: template.value.randomTitleFamily || "",
-          randomSubTitleFamily: template.value.randomSubTitleFamily || "",
-        });
-        createLogoLoading.value = false;
-        replaceWhenLayoutChange();
-        colorItemActive.value = -1;
-        colors.value = getColor(template.value.svg);
-      }, 500);
-    };
-    logoList.value.push(template.value);
+          randomTitleFamily: template.value.randomTitleFamily || '',
+          randomSubTitleFamily: template.value.randomSubTitleFamily || '',
+        })
+        createLogoLoading.value = false
+        replaceWhenLayoutChange()
+        colorItemActive.value = -1
+        colors.value = getColor(template.value.svg)
+      }, 500)
+    }
+    logoList.value.push(template.value)
     const replaceWhenLayoutChange = () => {
       const $ = cheerio.load(template.value.svg, {
         xml: true,
-      });
-      const logoElement = document.getElementsByClassName("svg-logo0");
-      const transformAttr = logoElement[0].getAttribute("transform");
+      })
+      const logoElement = document.getElementsByClassName('svg-logo0')
+      const transformAttr = logoElement[0].getAttribute('transform')
       const { imageX, imageY } = getLayoutPropsByNameLength(
         template.value.len,
         template.value.randomIndex
-      );
+      )
       // 169
-      $("svg")
-        .attr("width", initLsValue.value.toString())
-        .attr("height", initLsValue.value.toString())
-        .addClass("svg-logo0")
-        .attr("transform", transformAttr)
-        .attr("x", imageX.toString())
-        .attr("y", imageY.toString());
+      $('svg')
+        .attr('width', initLsValue.value.toString())
+        .attr('height', initLsValue.value.toString())
+        .addClass('svg-logo0')
+        .attr('transform', transformAttr)
+        .attr('x', imageX.toString())
+        .attr('y', imageY.toString())
 
-      lrImgValue.value = imageX;
-      udImgValue.value = imageY;
+      lrImgValue.value = imageX
+      udImgValue.value = imageY
 
-      replaceSvgArea($.html());
+      replaceSvgArea($.html())
       //logoElement[0].outerHTML = $.html();
-    };
+    }
 
     onMounted(async () => {
       nextTick(() => {
-        var drawImg = SVG().addTo(".smallImg").size(20, 20);
-        drawImg.image(template.value.materialPath).size(20, 20);
-      });
+        var drawImg = SVG().addTo('.smallImg').size(20, 20)
+        drawImg.image(template.value.materialPath).size(20, 20)
+      })
 
-      await useCreateLogo(logoList.value, false);
-      replaceWhenLayoutChange();
+      await useCreateLogo(logoList.value, false)
+      replaceWhenLayoutChange()
       //replaceText(".svg-name0", "hyfx");
-      const visted = sessionStorage.getItem("visted");
+      const visted = sessionStorage.getItem('visted')
       if (!visted) {
-        sessionStorage.setItem("visted", "1");
+        sessionStorage.setItem('visted', '1')
         //首次进入编辑页面，引导教学
-        useDriver();
+        useDriver()
       }
-    });
+    })
     // image slider滑动
-    const lrImgValue = ref(0);
-    const udImgValue = ref(0);
-    const lsImgValue = ref(initLsValue.value);
+    const lrImgValue = ref(0)
+    const udImgValue = ref(0)
+    const lsImgValue = ref(initLsValue.value)
     // logo slogan slider滑动
-    const lrLogoValue = ref(0);
-    const lrSloganValue = ref(0);
-    const udLogoValue = ref(0);
-    const udSloganValue = ref(0);
+    const lrLogoValue = ref(0)
+    const lrSloganValue = ref(0)
+    const udLogoValue = ref(0)
+    const udSloganValue = ref(0)
     const onSliderChange = (value: number, type: number) => {
-      const draw = SVG(".svg-logo0");
+      const draw = SVG('.svg-logo0')
       switch (type) {
         case 1:
-          draw.move(value, udImgValue.value);
-          break;
+          draw.move(value, udImgValue.value)
+          break
         case 2:
-          draw.move(lrImgValue.value, value);
-          break;
+          draw.move(lrImgValue.value, value)
+          break
         case 3:
-          draw.size(value, value);
-          break;
+          draw.size(value, value)
+          break
       }
-    };
+    }
     watch(
       () => lrLogoValue.value,
       (newValue, oldValue) => {
         if (isMove.value) {
-          const drawName = SVG(".svg-name0");
-          drawName.dmove(newValue - oldValue, 0);
+          const drawName = SVG('.svg-name0')
+          drawName.dmove(newValue - oldValue, 0)
         }
       }
-    );
+    )
     watch(
       () => udLogoValue.value,
       (newValue, oldValue) => {
         if (isMove.value) {
-          const drawName = SVG(".svg-name0");
-          drawName.dmove(0, newValue - oldValue);
+          const drawName = SVG('.svg-name0')
+          drawName.dmove(0, newValue - oldValue)
         }
       }
-    );
+    )
     watch(
       () => lrSloganValue.value,
       (newValue, oldValue) => {
         if (isMove.value) {
-          const drawName = SVG(".svg-slogan0");
-          drawName.dmove(newValue - oldValue, 0);
+          const drawName = SVG('.svg-slogan0')
+          drawName.dmove(newValue - oldValue, 0)
         }
       }
-    );
+    )
     watch(
       () => udSloganValue.value,
       (newValue, oldValue) => {
         if (isMove.value) {
-          const drawName = SVG(".svg-slogan0");
-          drawName.dmove(0, newValue - oldValue);
+          const drawName = SVG('.svg-slogan0')
+          drawName.dmove(0, newValue - oldValue)
         }
       }
-    );
+    )
     // tab2的逻辑
     const toggleTab2Title = (value: number) => {
-      tab2ContentTitleActive.value = value;
-    };
+      tab2ContentTitleActive.value = value
+    }
     const resetSvg = () => {
-      initValues();
+      initValues()
       const { imageX, imageY } = getLayoutPropsByNameLength(
         template.value.len,
         template.value.randomIndex
-      );
-      lrImgValue.value = imageX;
-      udImgValue.value = imageY;
-      onSliderChange(imageX, 1);
-      onSliderChange(imageY, 2);
-      onSliderChange(initLsValue.value, 3);
-    };
+      )
+      lrImgValue.value = imageX
+      udImgValue.value = imageY
+      onSliderChange(imageX, 1)
+      onSliderChange(imageY, 2)
+      onSliderChange(initLsValue.value, 3)
+    }
     // tab2弹窗输入的name
-    const inputName = ref(template.value.name);
-    const inputNameEn = ref(template.value.name_en);
+    const inputName = ref(template.value.name)
+    const inputNameEn = ref(template.value.name_en)
     const onOpenNameDialog = () => {
-      inputName.value = template.value.name;
-      inputNameEn.value = template.value.name_en;
-    };
+      inputName.value = template.value.name
+      inputNameEn.value = template.value.name_en
+    }
     const onCloseNameDialog = (action: string) =>
-      new Promise((resolve) => {
-        if (action === "cancel" || !action) {
-          resolve(true);
-          return true;
+      new Promise(resolve => {
+        if (action === 'cancel' || !action) {
+          resolve(true)
+          return true
         }
         if (inputName.value.length === 0 || inputNameEn.value.length === 0) {
-          Toast.fail("不能为空");
-          resolve(false);
-          return false;
+          Toast.fail('不能为空')
+          resolve(false)
+          return false
         }
         setTimeout(() => {
           //判断是名称还是口号的修改
-          let drawText;
+          let drawText
           if (tab2ContentTitleActive.value === 0) {
-            drawText = SVG(".svg-name0");
-            drawText.node.textContent = inputName.value;
-            template.value.name = inputName.value;
+            drawText = SVG('.svg-name0')
+            drawText.node.textContent = inputName.value
+            template.value.name = inputName.value
             // 翻译
             store
-              .dispatch("translate", {
+              .dispatch('translate', {
                 data: { keyword: inputName.value },
               })
               .then(() => {
-                drawText = SVG(".svg-slogan0");
-                const cNameEn = store.getters.getCurrentNameEn;
-                drawText.node.textContent = cNameEn;
-                template.value.name_en = cNameEn;
-              });
+                drawText = SVG('.svg-slogan0')
+                const cNameEn = store.getters.getCurrentNameEn
+                drawText.node.textContent = cNameEn
+                template.value.name_en = cNameEn
+              })
           } else {
-            drawText = SVG(".svg-slogan0");
-            drawText.node.textContent = inputNameEn.value;
-            template.value.name_en = inputNameEn.value;
+            drawText = SVG('.svg-slogan0')
+            drawText.node.textContent = inputNameEn.value
+            template.value.name_en = inputNameEn.value
           }
-          resolve(true);
-        }, 1000);
-      });
-    const familyOptions = ref(fontFamilyArr);
-    const englishFamilyOptions = ref(englishFontFamilyArr);
-    const selectedFamily = ref("");
+          resolve(true)
+        }, 1000)
+      })
+    const familyOptions = ref(fontFamilyArr)
+    const englishFamilyOptions = ref(englishFontFamilyArr)
+    const selectedFamily = ref('')
     const selectFontFamily = (text: string, family: string) => {
-      showFamilyPopover.value = false;
+      showFamilyPopover.value = false
       if (tab2ContentTitleActive.value === 0) {
-        SVG(".svg-name0").attr("font-family", family);
-        currentNameFamily.value = text;
+        SVG('.svg-name0').attr('font-family', family)
+        currentNameFamily.value = text
         //replaceText(".svg-name0", family);
       } else {
-        SVG(".svg-slogan0").attr("font-family", family);
-        currentSloganFamily.value = text;
+        SVG('.svg-slogan0').attr('font-family', family)
+        currentSloganFamily.value = text
         //replaceText(".svg-slogan0", family);
       }
-    };
-    const currentNameFamily = ref(randomFamilyText[template.value.randomIndex]);
-    const currentSloganFamily = ref(
-      randomFamilyText[template.value.randomIndex]
-    );
+    }
+    const currentNameFamily = ref(randomFamilyText[template.value.randomIndex])
+    const currentSloganFamily = ref(randomFamilyText[template.value.randomIndex])
 
     //tab3 颜色
     const toggleTab3Title = (value: number) => {
-      tab3ContentTitleActive.value = value;
-    };
-    const tab3ContentTitleActive = ref(0);
-    const currentNameColor = ref("");
+      tab3ContentTitleActive.value = value
+    }
+    const tab3ContentTitleActive = ref(0)
+    const currentNameColor = ref('')
     const changeNameColor = (color: string) => {
-      if (color === "") {
-        color = "#000000";
+      if (color === '') {
+        color = '#000000'
       }
-      currentNameColor.value = color;
-      SVG(".svg-name0").attr("fill", color);
-    };
+      currentNameColor.value = color
+      SVG('.svg-name0').attr('fill', color)
+    }
 
-    const currentSloganColor = ref("");
+    const currentSloganColor = ref('')
     const changeSloganColor = (color: string) => {
-      if (color === "") {
-        color = "#000000";
+      if (color === '') {
+        color = '#000000'
       }
-      currentSloganColor.value = color;
-      SVG(".svg-slogan0").attr("fill", color);
-    };
+      currentSloganColor.value = color
+      SVG('.svg-slogan0').attr('fill', color)
+    }
     //背景色
-    const currentBackColor = ref("#ffffff");
+    const currentBackColor = ref('#ffffff')
     const changeBackColor = (color: string) => {
-      if (color === "") {
-        color = "#ffffff";
+      if (color === '') {
+        color = '#ffffff'
       }
-      currentBackColor.value = color;
-    };
+      currentBackColor.value = color
+    }
 
     // 预览
-    const showPreview = ref(false);
-    const previewData = ref<any[]>([]);
+    const showPreview = ref(false)
+    const previewData = ref<any[]>([])
 
     const openPreviewDialog = () => {
-      let svgObj = SVG(".svg0");
-      const svg = svgObj.node.outerHTML;
+      let svgObj = SVG('.svg0')
+      const svg = svgObj.node.outerHTML
       //替换掉svgjs:data，否则图片加载不出
-      previewData.value = [];
-      previewPropsArr.forEach((item) => {
-        const $ = cheerio.load(svg, { xml: true });
-        const img_w = item.w;
-        const img_h = item.h;
-        $("svg").removeClass("svg0");
-        $("svg svg svg").removeClass("svg-logo0");
-        $("svg svg g .svg-name0").removeClass("svg-name0");
-        $("svg svg g .svg-slogan0").removeClass("svg-slogan0");
-        const left = item.x;
-        const top = item.y;
-        const rotate = `rotate(${item.r}deg)`;
+      previewData.value = []
+      previewPropsArr.forEach(item => {
+        const $ = cheerio.load(svg, { xml: true })
+        const img_w = item.w
+        const img_h = item.h
+        $('svg').removeClass('svg0')
+        $('svg svg svg').removeClass('svg-logo0')
+        $('svg svg g .svg-name0').removeClass('svg-name0')
+        $('svg svg g .svg-slogan0').removeClass('svg-slogan0')
+        const left = item.x
+        const top = item.y
+        const rotate = `rotate(${item.r}deg)`
 
-        $("svg").css("position", "absolute");
-        $("svg").css("width", img_w.toString() + "px");
-        $("svg").css("height", img_h.toString() + "px");
-        $("svg").css("left", left.toString() + "px");
-        $("svg").css("top", top.toString() + "px");
-        $("svg").css("transform", rotate);
+        $('svg').css('position', 'absolute')
+        $('svg').css('width', img_w.toString() + 'px')
+        $('svg').css('height', img_h.toString() + 'px')
+        $('svg').css('left', left.toString() + 'px')
+        $('svg').css('top', top.toString() + 'px')
+        $('svg').css('transform', rotate)
 
         previewData.value.push({
           url: item.url,
           svg: $.html(),
-        });
-      });
-      showPreview.value = true;
-    };
+        })
+      })
+      showPreview.value = true
+    }
     const closePreviewDialog = () => {
-      showPreview.value = false;
-    };
+      showPreview.value = false
+    }
 
     //slogan 滤镜效果
-    const sloganEffectItemActive = ref(0);
+    const sloganEffectItemActive = ref(0)
 
     const toggleSloganEffectItemActive = (key: number) => {
-      sloganEffectItemActive.value = key;
+      sloganEffectItemActive.value = key
       if (key === 3) {
-        SVG(".svg-slogan0").unfilter();
-        SVG(".svg-slogan0").filterWith((add) => {
-          if (currentSloganColor.value === "#ffffff") {
-            add.flood("#000000", 1);
+        SVG('.svg-slogan0').unfilter()
+        SVG('.svg-slogan0').filterWith(add => {
+          if (currentSloganColor.value === '#ffffff') {
+            add.flood('#000000', 1)
           } else {
-            add.flood(SVG(".svg-slogan0").attr("fill"), 1);
+            add.flood(SVG('.svg-slogan0').attr('fill'), 1)
           }
-          add.composite("SourceGraphic", "", "over");
-          add.attr("width", 1).attr("height", 1).attr("x", 0).attr("y", 0);
-        });
-        changeSloganColor("#ffffff");
+          add.composite('SourceGraphic', '', 'over')
+          add.attr('width', 1).attr('height', 1).attr('x', 0).attr('y', 0)
+        })
+        changeSloganColor('#ffffff')
       } else if (key === 1) {
-        SVG(".svg-slogan0").unfilter();
-        changeSloganColor("#000000");
+        SVG('.svg-slogan0').unfilter()
+        changeSloganColor('#000000')
       } else if (key === 2) {
-        // SVG(".svg-slogan0").unfilter();
-        // SVG(".svg-slogan0").filterWith((add) => {
-        //   add.turbulence(0.2, 2, 1, "noStitch", "turbulence");
-        //   add.displacementMap("turbulence", "SourceGraphic", 25, "R", "G");
-        // });
-        console.warn("效果待加入~~");
+        // 字体下面加个下划线
+        SVG('.svg-slogan0').unfilter()
+        SVG('.svg-slogan0').filterWith(add => {
+          if (currentSloganColor.value === '#ffffff') {
+            add.flood('#000000', 1)
+          } else {
+            add.flood(SVG('.svg-slogan0').attr('fill'), 1)
+          }
+          add.composite('SourceGraphic', '', 'over')
+          add.attr('width', 1).attr('height', 1).attr('x', 0).attr('y', 0)
+        })
+        changeSloganColor('#ffffff')
       }
-    };
+    }
 
     return {
       logoList,
@@ -918,9 +858,9 @@ export default defineComponent({
       currentImageColor,
       sloganEffectItemActive,
       toggleSloganEffectItemActive,
-    };
+    }
   },
-});
+})
 </script>
 
 <style scoped lang="scss">
@@ -943,15 +883,15 @@ export default defineComponent({
   margin-bottom: 0.8rem;
   align-items: center;
   > div:first-child {
-    background-image: url("../assets/img/slogan1.png");
+    background-image: url('../assets/img/slogan1.png');
     background-size: 100% 100%;
   }
   > div:nth-child(2) {
-    background-image: url("../assets/img/slogan2.png");
+    background-image: url('../assets/img/slogan2.png');
     background-size: 100% 100%;
   }
   > div:nth-child(3) {
-    background-image: url("../assets/img/slogan3.png");
+    background-image: url('../assets/img/slogan3.png');
     background-size: 100% 100%;
   }
   div {
@@ -965,15 +905,15 @@ export default defineComponent({
     justify-content: center;
   }
   .sloganEffectActive1 {
-    background-image: url("../assets/img/slogan1_active.jpg") !important;
+    background-image: url('../assets/img/slogan1_active.jpg') !important;
     background-size: 100% 100%;
   }
   .sloganEffectActive2 {
-    background-image: url("../assets/img/slogan2_active.jpg") !important;
+    background-image: url('../assets/img/slogan2_active.jpg') !important;
     background-size: 100% 100%;
   }
   .sloganEffectActive3 {
-    background-image: url("../assets/img/slogan3_active.png") !important;
+    background-image: url('../assets/img/slogan3_active.png') !important;
     background-size: 100% 100%;
   }
 }
@@ -1177,7 +1117,7 @@ export default defineComponent({
         box-shadow: 0 2px 12px #3232331f;
         .van-image {
           background: #fff;
-          width: 33.333%;
+          width: 50%;
           /deep/ img {
             width: 100%;
             height: 100%;

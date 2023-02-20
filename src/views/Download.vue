@@ -72,13 +72,13 @@
         因源文件较大，我们将通过邮箱的方式发送给您，如邮箱接收不便，留下联系方式后可联系您的专属客服获取源文件
       </p> -->
       <van-field clearable label="" placeholder="请输入您的手机" v-model="info.phone" type="tel" />
-      <van-field
+      <!-- <van-field
         clearable
         label=""
         placeholder="请输入您的邮箱"
         v-model="info.email"
         type="email"
-      />
+      /> -->
     </van-dialog>
     <van-dialog
       v-model:show="isShowWxDialog"
