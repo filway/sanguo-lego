@@ -237,7 +237,7 @@ export default defineComponent({
                           Dialog.confirm({
                             title: '小Ku提示',
                             message:
-                              '您的源文件已成功生成，请联系您的专属客服领取，客服微信号：' + wx,
+                              '您的源文件已成功生成，请直接联系客服领取',
                           })
                             .then(() => {
                               console.log('confirm2')
