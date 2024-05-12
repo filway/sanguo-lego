@@ -35,9 +35,9 @@ export type ICustomAxiosConfig = AxiosRequestConfig & {
 
 const app = createApp(App);
 
-const baseApiURL = "http://logoo.anben02.com";
+const baseApiURL = "https://lgg.qiyuan3.cn";
 
-axios.defaults.baseURL = `${baseApiURL}/api/webapi`;
+axios.defaults.baseURL = `${baseApiURL}/api/vipapi`;
 axios.interceptors.request.use((config) => {
   const newConfig = config as ICustomAxiosConfig;
   store.commit("setError", { status: false, message: "" });

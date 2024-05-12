@@ -4,8 +4,10 @@ import { createStore, ActionContext } from "vuex";
 import { forEach } from "lodash-es";
 import templates, { TemplatesProps } from "./templates";
 import global, { GlobalStatus } from "./global";
+import list, { ListResProps } from "./list"
 
 export interface GlobalDataProps {
+  list: ListResProps;
   templates: TemplatesProps;
   global: GlobalStatus;
 }
@@ -49,6 +51,7 @@ export function actionWrapper(
 }
 const store = createStore({
   modules: {
+    list,
     templates,
     global,
   },

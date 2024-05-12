@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
+import List from "../views/List.vue";
 import Index from "../views/Index.vue";
 import Editor from "../views/Editor.vue";
 import Download from "../views/Download.vue";
@@ -16,6 +17,12 @@ const router = createRouter({
   routes: [
     {
       path: "/",
+      name: "list",
+      component: List,
+      meta: { title: "logo智能设计", disableLoading: true },
+    },
+    {
+      path: "/design/:id",
       name: "index",
       component: Index,
       meta: { title: "logo智能设计", disableLoading: true },

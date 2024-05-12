@@ -8,9 +8,7 @@
       :previewData="previewData"
       @clickDownload="openDownloadDialog"
     ></preview-dialog>
-    <van-row class="logoTips">
-      <van-col span="24">Logo结果选择</van-col>
-    </van-row>
+    <header-nav :title="'Logo结果选择'" @back="$router.back(-1)" />
     <van-loading
       class="loadingBox"
       v-if="isLoading"
@@ -42,9 +40,9 @@
         </div>
         <div class="text-box animate__animated animate__bounce">点击选择此方案</div>
       </div>
-      <p v-show="logoList[currentPage].design" class="page-t">设计理念</p>
-      <div v-show="logoList[currentPage].design" class="ll-box">
-        <p class="page-p">{{ logoList[currentPage].design }}</p>
+      <p v-show="logoList[currentPage] && logoList[currentPage].design" class="page-t">设计理念</p>
+      <div v-show="logoList[currentPage] && logoList[currentPage].design" class="ll-box">
+        <p class="page-p">{{ logoList[currentPage] ? logoList[currentPage].design : "" }}</p>
       </div>
       <div
         class="page-screen"
@@ -112,25 +110,24 @@
     </div>
 
     <div class="pageBox" v-show="!isLoading">
-      <div class="pagenation-big" v-show="currentPage === 0" @click="nextPage()">下一款方案</div>
       <div class="pagenation-small-box">
         <div
           class="pagenation-small"
-          v-show="currentPage > 0 && currentPage < logoList.length - 1"
+          v-show="currentPage === logoList.length - 1"
           @click="prevPage()"
         >
           上一款方案
         </div>
         <div
           class="pagenation-small"
-          v-show="currentPage > 0 && currentPage < logoList.length - 1"
+          v-show="currentPage === 0"
           @click="nextPage()"
         >
           下一款方案
         </div>
-      </div>
-      <div class="pagenation-big" v-show="currentPage === logoList.length - 1" @click="prevPage()">
-        上一款方案
+        <div class="pagenation-small"  @click="goBack()">
+          返回首页
+        </div>
       </div>
     </div>
     <div v-show="!isLoading" class="tipsBox">
@@ -147,7 +144,7 @@
 <script lang="ts">
 import { computed, defineComponent, onMounted, provide, ref } from 'vue'
 import { GlobalDataProps } from '../store/index'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import useCreateLogo from '@/hooks/useCreateLogo'
 import PreviewDialog from '@/components/PreviewDialog.vue'
@@ -156,11 +153,14 @@ import { previewPropsArr } from '../constants/preview.constant'
 import { getSvgHtml, toTop } from '@/helper'
 import cheerio from 'cheerio'
 import $ from 'jquery'
+import HeaderNav from '@/components/HeaderNav.vue'
+
 
 export default defineComponent({
   name: 'Index',
   components: {
     PreviewDialog,
+    HeaderNav,
   },
   setup() {
     const showPreview = ref(false)
@@ -235,12 +235,18 @@ export default defineComponent({
       toTop()
     }
 
+    const router = useRouter()
+    const goBack = () => {
+      router.go(-1)
+    }
+
     onMounted(async () => {
-      let { sn } = route.query
-      localStorage.setItem('sn', sn as string)
+      toTop()
+      const id = route.params.id
+      const sn = localStorage.getItem('sn')
       //获取logo list
       await store.dispatch('fetchTemplates', {
-        data: { sn: sn || '' },
+        searchParams: { sn: sn || '', material_id: id || ''},
       })
       await useCreateLogo(logoList.value)
 
@@ -270,6 +276,7 @@ export default defineComponent({
       bgImgIndexArr,
       title,
       tips,
+      goBack
     }
   },
 })
@@ -277,6 +284,13 @@ export default defineComponent({
 
 <style scoped lang="scss">
 .homepage-container {
+  position: relative;
+  :deep(.header-nav-container) {
+    margin: 0 -1rem 1rem;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+  }
   .logoTips {
     margin-bottom: 1rem;
     font-weight: 300;
@@ -377,7 +391,7 @@ export default defineComponent({
   }
 
   min-height: 100vh;
-  padding: 0.5rem 1rem;
+  padding: 0 1rem 0.5rem;
   .logo-desc {
     color: #fff;
     background-color: #0201fd;

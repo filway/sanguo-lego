@@ -35,7 +35,7 @@ const useCreateLogo = async (
       // 中英文都没有
       item.len = 0
     }
-    const layoutProps = getLayoutPropsByNameLength(item.len, item.randomIndex);
+    const layoutProps = getLayoutPropsByNameLength(item.len, item.randomIndex || 0);
     const {
       imageX,
       imageY,
