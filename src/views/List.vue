@@ -9,6 +9,9 @@
       color="#fff"
       >加载中...</van-loading
     >
+
+    <div v-show="!isLoading" class="header-tips" v-html="tips"></div>
+
     <div v-show="!isLoading">
       <router-link :to="{path: `/design/${logo.materialId}`}"  v-for="(logo, key) in logoList"
                    :key="key">
@@ -30,7 +33,7 @@
     </div>
 
     <div class="pageBox" v-show="!isLoading">
-      <div class="pagenation-big" v-show="currentPage === 1" @click="nextPage()">下一款方案</div>
+      <div class="pagenation-big" v-show="currentPage === 1 && totalPage > 1" @click="nextPage()">下一款方案</div>
       <div class="pagenation-small-box">
         <div
             class="pagenation-small"
@@ -47,7 +50,7 @@
           下一款方案
         </div>
       </div>
-      <div class="pagenation-big" v-show="currentPage === totalPage" @click="prevPage()">
+      <div class="pagenation-big" v-show="currentPage === totalPage && currentPage !== 1" @click="prevPage()">
         上一款方案
       </div>
     </div>
@@ -77,6 +80,8 @@ export default defineComponent({
 
     // 声明一个代表当前页数的变量
     const currentPage = computed(() => store.state.list.now_page)
+
+    const tips = computed(() => store.state.list.tips)
 
     const nextPage = () => {
       if (currentPage.value === logoList.value.length) {
@@ -121,13 +126,29 @@ export default defineComponent({
       currentPage,
       nextPage,
       prevPage,
-      totalPage
+      totalPage,
+      tips
     };
   },
 });
 </script>
 <style scoped lang="scss">
 .listpage-container {
+  position: relative;
+  background: #f8f8f8;
+  padding-bottom: 0.5rem;
+  .header-tips {
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    font-size: 14px;
+    height: 3rem;
+    border-bottom: 1px solid #d9d9d9;
+  }
   .loadingBox {
     text-align: center;
     height: 12rem;

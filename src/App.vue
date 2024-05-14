@@ -3,7 +3,9 @@
     <van-loading v-if="showLoading" style="text-align: center" size="24px"
       >加载中...</van-loading
     >
-    <router-view />
+    <router-view v-if="!error.status" />
+    <van-empty v-else style="text-align: center; height: 100vh; display: flex; align-items: center; justify-content: center" />
+
   </div>
 </template>
 
@@ -31,6 +33,7 @@ export default defineComponent({
           Notify({
             type: "danger",
             message: error.value.message || "未知错误",
+            duration: 0,
           });
         }
       }
@@ -44,6 +47,7 @@ export default defineComponent({
     });
     return {
       showLoading,
+      error
     };
   },
 });

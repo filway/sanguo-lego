@@ -9,20 +9,22 @@ export interface ListResProps {
   now_page: number;
   page_size: number;
   total_page: number;
+  tips: string;
 }
 
-const stateStroage = sessionStorage.getItem("state");
-let now_page = 1;
-if (stateStroage != null) {
-  now_page = JSON.parse(stateStroage).list.now_page;
-}
+// const stateStroage = sessionStorage.getItem("state");
+// let now_page = 1;
+// if (stateStroage != null) {
+//   now_page = JSON.parse(stateStroage).list.now_page || 1;
+// }
 const list: Module<ListResProps, GlobalDataProps> = {
   state: {
     code: 0,
     list: [],
-    now_page,
+    now_page: 1,
     page_size: 10,
     total_page: 1,
+    tips: "",
   },
   mutations: {
     fetchList(state, rawData: ListResProps) {
@@ -32,6 +34,7 @@ const list: Module<ListResProps, GlobalDataProps> = {
       state.now_page = rawData.now_page
       state.page_size = rawData.page_size
       state.total_page = rawData.total_page
+      state.tips = rawData.tips
     },
     setNowPage(state, page: number) {
       state.now_page = page
