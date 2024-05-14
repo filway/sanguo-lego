@@ -12,7 +12,7 @@ export interface ListResProps {
 }
 
 const stateStroage = sessionStorage.getItem("state");
-let now_page = 0;
+let now_page = 1;
 if (stateStroage != null) {
   now_page = JSON.parse(stateStroage).list.now_page;
 }
