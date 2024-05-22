@@ -42,9 +42,9 @@
         </div>
         <div class="text-box animate__animated animate__bounce">点击选择此方案</div>
       </div>
-      <p v-show="logoList[currentPage].design" class="page-t">设计理念</p>
-      <div v-show="logoList[currentPage].design" class="ll-box">
-        <p class="page-p">{{ logoList[currentPage].design }}</p>
+      <p v-show="logoList[currentPage] && logoList[currentPage].design" class="page-t">设计理念</p>
+      <div v-show="logoList[currentPage] && logoList[currentPage].design" class="ll-box">
+        <p class="page-p">{{ logoList[currentPage] ? logoList[currentPage].design : "" }}</p>
       </div>
       <div
         class="page-screen"

@@ -97,6 +97,11 @@
         <div>微信号: {{ wx }}</div>
       </div>
     </van-dialog>
+    <van-dialog class="qrDialog" v-model:show="isShowQrCode" title="" :show-confirm-button="false" close-on-click-overlay>
+      <div class="image">
+        <img :src="qrCodeUrl" />
+      </div>
+    </van-dialog>
   </div>
 </template>
 <script lang="ts">
@@ -232,19 +237,28 @@ export default defineComponent({
                           svg: svg,
                         })
                         .then(resp => {
-                          //console.log(resp);
+                          console.log(resp);
+                          const respData = resp.data.data
+                          const { img } = respData
+                          const message = resp.data.message || '您的源文件已成功生成，请直接联系客服领取'
                           resolve(true)
-                          Dialog.confirm({
-                            title: '小Ku提示',
-                            message:
-                              '您的源文件已成功生成，请直接联系客服领取',
-                          })
-                            .then(() => {
-                              console.log('confirm2')
+                          // 判断img是否存在，如果存在则显示二维码
+                          if (img) {
+                            qrCodeUrl.value = img
+                            isShowQrCode.value = true
+                          } else {
+                            // 不存在则显示提示信息
+                            Dialog.confirm({
+                              title: '小Ku提示',
+                              message,
                             })
-                            .catch(() => {
-                              console.log('cancel2')
-                            })
+                                .then(() => {
+                                  console.log('confirm2')
+                                })
+                                .catch(() => {
+                                  console.log('cancel2')
+                                })
+                          }
                         })
                         .catch(e => {
                           console.log(e)
@@ -271,6 +285,8 @@ export default defineComponent({
     }
     // wx弹窗
     const isShowWxDialog = ref(false)
+    const isShowQrCode = ref(false)
+    const qrCodeUrl = ref('')
     const wx = sessionStorage.getItem('wx') || ''
     onMounted(async () => {
       if (isSvgCode) {
@@ -307,6 +323,8 @@ export default defineComponent({
       isShowWxDialog,
       wx,
       copyWx,
+      isShowQrCode,
+      qrCodeUrl
     }
   },
 })
@@ -368,6 +386,18 @@ export default defineComponent({
       div {
         font-size: 14px;
         color: rgba(0, 0, 0, 0.719);
+      }
+    }
+  }
+  .qrDialog {
+    .image {
+      width: 100%;
+      height: auto;
+      border-radius: var(--van-dialog-border-radius);
+      img {
+        height: 100%;
+        width: 100%;
+        border-radius: inherit;
       }
     }
   }
