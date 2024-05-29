@@ -221,8 +221,8 @@ export default defineComponent({
 
                     const canvas = document.createElement('canvas')
                     // 获取Svg的宽高
-                    const svgWidth = SVG('.svg0').node.clientWidth as number
-                    const svgHeight = SVG('.svg0').node.clientHeight as number
+                    const svgWidth = 1024
+                    const svgHeight = 1024
                     console.log(svgWidth, svgHeight)
                     canvas?.setAttribute('width', svgWidth.toString())
                     canvas?.setAttribute('height', svgHeight.toString())
