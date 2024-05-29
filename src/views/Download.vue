@@ -6,6 +6,7 @@
         <div class="logo-box" v-for="(logo, key) in logoList" :key="key">
           <svg
             :style="{ backgroundColor: '#ffffff' }"
+            ref="svgRef"
             baseProfile="full"
             version="1.1"
             :class="'svg' + key"
@@ -113,9 +114,10 @@ import useCreateLogo from '@/hooks/useCreateLogo'
 import { useStore } from 'vuex'
 import { Dialog, Toast } from 'vant'
 import axios, { AxiosResponse } from 'axios'
-import { copyToClipboard, svgToBase64, findFontExt } from '@/helper'
+import {copyToClipboard, svgToBase64, findFontExt, replaceWhenLayoutChange2} from '@/helper'
 import { SVG } from '@svgdotjs/svg.js'
 import { base64Data, RespData } from '@/store/respTypes'
+import { Canvg } from "canvg"
 
 type infoType = {
   phone: string
@@ -131,6 +133,7 @@ export default defineComponent({
     const svgCode = localStorage.getItem('downloadsvg') as string
     const isSvgCode = svgCode?.length > 1
     const logoRef = ref<HTMLElement>()
+    const svgRef = ref<SVGElement | null>(null)
     const route = useRoute()
     const store = useStore()
     let logoList = ref<TemplateProps[]>([])
@@ -171,6 +174,8 @@ export default defineComponent({
               /**var p2 = /svgjs:data\s*?=\s*?([‘"])[\s\S]*?\1/g
                * 参数：mater_id（必填）  sn（必填） email(必填)  mobile(必填)  base64（必填） svg（必填）
                */
+                  // 去掉 .svg-logo 的transform属性
+              SVG('.svg-logo0').node.removeAttribute('transform')
               let svgObj = SVG('.svg0')
               svgObj.node.removeAttribute('xmlns:svgjs')
               svgObj.node.removeAttribute('svgjs:data')
@@ -207,64 +212,80 @@ export default defineComponent({
                     const svg1 = svgObj.svg()
                     //替换掉svgjs:data，否则图片加载不出
                     const p2 = /svgjs:data\s*?=\s*?([‘"])[\s\S]*?\1/g
-                    const svg = svg1.replace(p2, '')
-                    const base64 = svgToBase64(svg)
-                    const img = new Image()
-                    img.src = base64
-                    img.crossOrigin = 'anonymous'
+                    // 替换掉 xmlns:svgjs
+                    const p3 = /xmlns:svgjs\s*?=\s*?([‘"])[\s\S]*?\1/g
+                    const svg = svg1.replace(p2, '').replace(p3, '')
+
 
                     let fstrImage
-                    img.onerror = e => {
-                      console.error(e)
-                    }
-                    img.onload = function () {
-                      const canvas = document.createElement('canvas')
-                      canvas.width = 1024
-                      canvas.height = 1024
-                      const ctx = canvas.getContext('2d')
-                      const trueImgHeight = (1024 * img.height) / img.width
-                      ctx?.drawImage(img, 0, (1024 - trueImgHeight) / 2, 1024, trueImgHeight)
-                      fstrImage = canvas.toDataURL()
-                      //console.log(fstrImage);
 
-                      axios
-                        .post('/downsvg', {
-                          mater_id: currentId,
-                          sn: localStorage.getItem('sn'),
-                          mobile: info.value.phone,
-                          email: info.value.email,
-                          base64: fstrImage,
-                          svg: svg,
-                        })
-                        .then(resp => {
-                          console.log(resp);
-                          const respData = resp.data.data
-                          const { img } = respData
-                          const message = resp.data.message || '您的源文件已成功生成，请直接联系客服领取'
-                          resolve(true)
-                          // 判断img是否存在，如果存在则显示二维码
-                          if (img) {
-                            qrCodeUrl.value = img
-                            isShowQrCode.value = true
-                          } else {
-                            // 不存在则显示提示信息
-                            Dialog.confirm({
-                              title: '小Ku提示',
-                              message,
-                            })
-                                .then(() => {
-                                  console.log('confirm2')
-                                })
-                                .catch(() => {
-                                  console.log('cancel2')
-                                })
-                          }
-                        })
-                        .catch(e => {
-                          console.log(e)
-                          resolve(false)
-                        })
+                    const canvas = document.createElement('canvas')
+                    // 获取Svg的宽高
+                    const svgWidth = SVG('.svg0').node.clientWidth as number
+                    const svgHeight = SVG('.svg0').node.clientHeight as number
+                    console.log(svgWidth, svgHeight)
+                    canvas?.setAttribute('width', svgWidth.toString())
+                    canvas?.setAttribute('height', svgHeight.toString())
+                    // canvas.width = 1024
+                    // canvas.height = 1024
+                    const ctx = canvas.getContext('2d')
+                    // const trueImgHeight = (1024 * img.height) / img.width
+                    // ctx?.drawImage(img, 0, (1024 - trueImgHeight) / 2, 1024, trueImgHeight)
+                    // fstrImage = canvas.toDataURL()
+                    //console.log(fstrImage);
+
+                    if (!ctx) {
+                      Toast.fail('未知错误')
+                      resolve(false)
+                      return
                     }
+
+                    const v=  Canvg.fromString(ctx, svg)
+
+                    v.render().then(() => {
+                      fstrImage = canvas.toDataURL('image/png')
+                      console.log("canvas rendered")
+                      console.log(svg)
+                      console.log(fstrImage)
+                      axios
+                          .post('/downsvg', {
+                            mater_id: currentId,
+                            sn: localStorage.getItem('sn'),
+                            mobile: info.value.phone,
+                            email: info.value.email,
+                            base64: fstrImage,
+                            svg: svg,
+                          })
+                          .then(resp => {
+                            console.log(resp);
+                            const respData = resp.data.data
+                            const { img } = respData
+                            const message = resp.data.message || '您的源文件已成功生成，请直接联系客服领取'
+                            resolve(true)
+                            // 判断img是否存在，如果存在则显示二维码
+                            if (img) {
+                              qrCodeUrl.value = img
+                              isShowQrCode.value = true
+                            } else {
+                              // 不存在则显示提示信息
+                              Dialog.confirm({
+                                title: '小Ku提示',
+                                message,
+                              })
+                                  .then(() => {
+                                    console.log('confirm2')
+                                  })
+                                  .catch(() => {
+                                    console.log('cancel2')
+                                  })
+                            }
+                          })
+                          .catch(e => {
+                            console.log(e)
+                            resolve(false)
+                          })
+                    })
+
                   })
                   .catch(e => {
                     console.log(e)
@@ -288,6 +309,8 @@ export default defineComponent({
     const isShowQrCode = ref(false)
     const qrCodeUrl = ref('')
     const wx = sessionStorage.getItem('wx') || ''
+    const initKeyValueArr = [110, 110, 160]
+    const initLsValue = computed(() => initKeyValueArr[template.value.randomIndex || 0])
     onMounted(async () => {
       if (isSvgCode) {
         const logoBoxDom = document.getElementById('logoBox')
@@ -298,6 +321,7 @@ export default defineComponent({
         }
       } else {
         await useCreateLogo(logoList.value, false)
+        replaceWhenLayoutChange2(template.value, initLsValue.value.toString(), initLsValue.value.toString(), svgRef);
       }
     })
     const copyWx = (action: string) => {
@@ -309,6 +333,7 @@ export default defineComponent({
         return true
       }
     }
+
     return {
       logoList,
       bgColor,
@@ -320,6 +345,7 @@ export default defineComponent({
       isSvgCode,
       svgCode,
       logoRef,
+      svgRef,
       isShowWxDialog,
       wx,
       copyWx,

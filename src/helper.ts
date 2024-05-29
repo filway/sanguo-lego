@@ -16,6 +16,8 @@ import cheerio from 'cheerio'
 import opentype from 'opentype.js'
 import { SVG } from '@svgdotjs/svg.js'
 import { imgNameArr } from './constants/preview.constant'
+import {TemplateProps} from "@/store/templates";
+import { Ref } from "vue"
 
 export const materialDownLoad = (
   src: string,
@@ -330,4 +332,40 @@ export const getSvgHtml = (logoList: any[]): any[] => {
     })
   }
   return htmlArr
+}
+
+//替换svg元素
+export const  replaceSvgArea2 = (newXml: string, svgRef: Ref<SVGElement | null>) => {
+  const div = document.createElement('div')
+  newXml = newXml.replace(/<!--\s*(.*)\s*-->/, '')
+  newXml = newXml.replace(/<\?xml.*\?>/, '')
+  newXml = newXml.trim()
+  div.innerHTML = newXml
+  const svgNode = svgRef.value?.childNodes[0]
+  svgNode?.lastChild?.remove()
+  svgNode?.appendChild(div.childNodes[0])
+}
+
+export const replaceWhenLayoutChange2 = (template: TemplateProps, width: string, height: string, svgRef: Ref<SVGElement | null>) => {
+  const $ = cheerio.load(template.svg, {
+    xml: true,
+  })
+  const logoElement = document.getElementsByClassName('svg-logo0')
+  const { imageX, imageY } = getLayoutPropsByNameLength(
+      template.len,
+      template.randomIndex
+  )
+  // 169
+  $('svg')
+      .attr('width', width)
+      .attr('height', height)
+      .addClass('svg-logo0')
+      .attr('x', imageX.toString())
+      .attr('y', imageY.toString())
+
+
+  replaceSvgArea2($.html(), svgRef)
+  //logoElement[0].outerHTML = $.html();
+
+  return { imageX, imageY }
 }

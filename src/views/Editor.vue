@@ -772,6 +772,7 @@ export default defineComponent({
 
     const toggleSloganEffectItemActive = (key: number) => {
       sloganEffectItemActive.value = key
+      let svgObj = SVG('.svg0')
       if (key === 3) {
         SVG('.svg-slogan0').unfilter()
         SVG('.svg-slogan0').filterWith(add => {
@@ -786,20 +787,22 @@ export default defineComponent({
         changeSloganColor('#ffffff')
       } else if (key === 1) {
         SVG('.svg-slogan0').unfilter()
-        changeSloganColor('#000000')
+        // 移除掉之前的滤镜效果
+        // svgObj.defs().remove()
+        // changeSloganColor('#000000')
       } else if (key === 2) {
         // 字体下面加个下划线
         SVG('.svg-slogan0').unfilter()
-        SVG('.svg-slogan0').filterWith(add => {
-          if (currentSloganColor.value === '#ffffff') {
-            add.flood('#000000', 1)
-          } else {
-            add.flood(SVG('.svg-slogan0').attr('fill'), 1)
-          }
-          add.composite('SourceGraphic', '', 'over')
-          add.attr('width', 1).attr('height', 1).attr('x', 0).attr('y', 0)
-        })
-        changeSloganColor('#ffffff')
+        // SVG('.svg-slogan0').filterWith(add => {
+        //   if (currentSloganColor.value === '#ffffff') {
+        //     add.flood('#000000', 1)
+        //   } else {
+        //     add.flood(SVG('.svg-slogan0').attr('fill'), 1)
+        //   }
+        //   add.composite('SourceGraphic', '', 'over')
+        //   add.attr('width', 1).attr('height', 1).attr('x', 0).attr('y', 0)
+        // })
+        // changeSloganColor('#ffffff')
       }
     }
 
