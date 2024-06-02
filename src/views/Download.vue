@@ -219,6 +219,7 @@ export default defineComponent({
 
                     let fstrImage
 
+                    // Canvg插件的方式转png
                     const canvas = document.createElement('canvas')
                     // 获取Svg的宽高
                     const svgWidth = 1024
@@ -226,27 +227,16 @@ export default defineComponent({
                     console.log(svgWidth, svgHeight)
                     canvas?.setAttribute('width', svgWidth.toString())
                     canvas?.setAttribute('height', svgHeight.toString())
-                    // canvas.width = 1024
-                    // canvas.height = 1024
                     const ctx = canvas.getContext('2d')
-                    // const trueImgHeight = (1024 * img.height) / img.width
-                    // ctx?.drawImage(img, 0, (1024 - trueImgHeight) / 2, 1024, trueImgHeight)
-                    // fstrImage = canvas.toDataURL()
-                    //console.log(fstrImage);
-
                     if (!ctx) {
                       Toast.fail('未知错误')
                       resolve(false)
                       return
                     }
 
-                    const v=  Canvg.fromString(ctx, svg)
+                    console.log(svg)
 
-                    v.render().then(() => {
-                      fstrImage = canvas.toDataURL('image/png')
-                      console.log("canvas rendered")
-                      console.log(svg)
-                      console.log(fstrImage)
+                    const downloadSvg = (fstrImage: string) => {
                       axios
                           .post('/downsvg', {
                             mater_id: currentId,
@@ -284,8 +274,40 @@ export default defineComponent({
                             console.log(e)
                             resolve(false)
                           })
-                    })
+                    }
 
+                    const v=  Canvg.fromString(ctx, svg)
+                    v.render().then(() => {
+                      fstrImage = canvas.toDataURL('image/png')
+                      console.log("canvas rendered")
+                      console.log(fstrImage)
+                      downloadSvg(fstrImage)
+                    }).catch(e => {
+                      console.log(e)
+                      // 插件转换失败，手写转换
+                      console.log('插件转换失败，手写转换')
+                      const base64 = svgToBase64(svg)
+                      const img = new Image()
+                      img.src = base64
+                      img.crossOrigin = 'anonymous'
+
+                      img.onerror = e => {
+                        console.error(e)
+                      }
+
+                      img.onload = function () {
+                        const canvas = document.createElement('canvas')
+                        canvas.width = 1024
+                        canvas.height = 1024
+                        const ctx = canvas.getContext('2d')
+                        const trueImgHeight = (1024 * img.height) / img.width
+                        ctx?.drawImage(img, 0, (1024 - trueImgHeight) / 2, 1024, trueImgHeight)
+                        fstrImage = canvas.toDataURL()
+                        console.log('drawImage success')
+                        console.log(fstrImage)
+                        downloadSvg(fstrImage)
+                      }
+                    })
                   })
                   .catch(e => {
                     console.log(e)
