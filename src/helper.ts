@@ -292,10 +292,15 @@ const fixSvgCode = (svgCode: string): string => {
 }
 
 export const getSvgHtml = (logoList: any[]): any[] => {
-  const htmlArr: any[] =
-    logoList.length === 10
-      ? [[], [], [], [], [], [], [], [], [], []]
-      : [[], [], [], [], [], [], [], []]
+  // const htmlArr: any[] =
+  //   logoList.length === 10
+  //     ? [[], [], [], [], [], [], [], [], [], []]
+  //     : [[], [], [], [], [], [], [], []]
+    // 这里修改为根据logoList的长度来循环来生成htmlArr
+  const  htmlArr: any[] = []
+  for (let i = 0; i < logoList.length; i++) {
+    htmlArr.push([])
+  }
   for (let i = 0; i < logoList.length; i++) {
     const svgObj = SVG(`.svg${i}`)
     svgObj.node.removeAttribute('xmlns:svgjs')

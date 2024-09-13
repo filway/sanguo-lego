@@ -181,6 +181,15 @@ export default defineComponent({
 
     const bgImgIndexArr = ref([0, 0, 1, 1, 2, 2, 3, 3, 4, 4])
 
+    // 2024-09-13 判断logolist的长度，如果大于10，那么就减去10，然后循环数量，将bgImgIndexArr填充对应数量的4
+    if (logoList.value.length > 10) {
+      const num = logoList.value.length - 10
+      for (let i = 0; i < num; i++) {
+        bgImgIndexArr.value.push(4)
+      }
+    }
+    console.log(bgImgIndexArr.value)
+
     const imgBase64 = ref('')
     const openPreviewDialog = (id: number, index: number, key: number) => {
       currentId.value = id
