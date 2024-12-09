@@ -116,6 +116,13 @@ export default defineComponent({
             sn: localStorage.getItem('sn') || '',
             page: newValue,
           }})
+          // 清空现有的 SVG 容器
+          logoList.value.forEach((_, key) => {
+            const svgContainer = document.querySelector(`.svg${key}`);
+            if (svgContainer) {
+              svgContainer.innerHTML = '';
+            }
+          });
           await useCreateLogo(logoList.value, false)
         }
     );
