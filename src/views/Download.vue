@@ -28,14 +28,6 @@
         立即下载
       </van-button>
     </div>
-    <div class="imageBox">
-      <img src="../assets/img/bg2.jpeg" alt="" />
-      <div class="textBox">
-        <h2>想获得专有LOGO来商用？</h2>
-        <h2>交给我们为您量身定制LOGO</h2>
-      </div>
-      <button @click="isShowWxDialog = true">开始定制</button>
-    </div>
     <div class="qaBox">
       <h5>FQA常见问题</h5>
       <div>
@@ -47,7 +39,7 @@
       <div>
         <p class="qustion">问：我生成的LOGO能申请商标注册吗？</p>
         <p class="anwser">
-          答：文字部分可以申请商标注册，按文字商标进行文本核准，图形部分，无论是否标注【可商用】都不能申请商标，因为不符合图形商标的独有性原则，要申请商标需要进行定制化设计
+          答：文字部分可以申请商标注册，按文字商标进行文本核准，图形部分，无论是否标注【可商用】都不能申请商标，因为不符合图形商标的独有性原则
         </p>
       </div>
       <div>
